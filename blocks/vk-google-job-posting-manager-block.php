@@ -13,7 +13,7 @@
  * @see https://wordpress.org/gutenberg/handbook/blocks/writing-your-first-block-type/#enqueuing-block-scripts
  */
 
-require_once( dirname( dirname( __FILE__ ) ) . '/vk-job-posting.php' );
+require_once( dirname( dirname( __FILE__ ) ) . '/vk-google-job-posting-manager.php' );
 require_once( dirname( dirname( __FILE__ ) ) . '/inc/custom-field-builder/custom-field-builder-config.php' );
 
 function vk_job_posting_block_init() {

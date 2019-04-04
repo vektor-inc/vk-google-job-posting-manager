@@ -1,9 +1,9 @@
 module.exports = {
     mode: 'production',
     devtool: 'source-map',
-    entry: "./blocks/vk-job-posting/index.js",
+    entry: "./blocks/vk-google-job-posting-manager/index.js",
     output: {
-        filename: "./blocks/vk-job-posting/build.js"
+        filename: "./blocks/vk-google-job-posting-manager/build.js"
     },
     module: {
         rules: [
@@ -20,7 +20,7 @@ module.exports = {
                                 // JSをスキャンして、potを作成/アップデート
                                 '@wordpress/babel-plugin-makepot',
                                 {
-                                    'output': `./languages/vk-job-posting.pot`
+                                    'output': `./languages/vk-google-job-posting-manager.pot`
                                 }
                             ]
                         ]

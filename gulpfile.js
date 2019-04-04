@@ -8,7 +8,7 @@ var gulp = require('gulp'),
     cleanCss = require('gulp-clean-css');
 
 gulp.task('sass', function () {
-    return gulp.src(['./blocks/vk-job-posting/*.scss'])
+    return gulp.src(['./blocks/vk-google-job-posting-manager/*.scss'])
         .pipe($.plumber({
             errorHandler: $.notify.onError('<%= error.message %>')
         }))
@@ -17,12 +17,12 @@ gulp.task('sass', function () {
             errLogToConsole: true,
             outputStyle: 'compressed',
             includePaths: [
-                './blocks/vk-job-posting/'
+                './blocks/vk-google-job-posting-manager/'
             ]
         }))
         .pipe($.autoprefixer({browsers: ['last 2 version', '> 5%']}))
         .pipe($.sourcemaps.write('./map'))
-        .pipe(gulp.dest('./blocks/vk-job-posting/'));
+        .pipe(gulp.dest('./blocks/vk-google-job-posting-manager/'));
 });
 
 // Transpile and Compile Sass and Bundle it.
@@ -34,8 +34,8 @@ gulp.task('js', function () {
 
 // watch
 gulp.task('watch', function () {
-    gulp.watch('./blocks/vk-job-posting/*.js', ['js']);
-    gulp.watch('./blocks/vk-job-posting/*.scss', ['sass']);
+    gulp.watch('./blocks/vk-google-job-posting-manager/*.js', ['js']);
+    gulp.watch('./blocks/vk-google-job-posting-manager/*.scss', ['sass']);
 });
 
 // Build

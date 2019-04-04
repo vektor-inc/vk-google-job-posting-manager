@@ -9,7 +9,7 @@ module.exports = function( grunt ) {
 
 		addtextdomain: {
 			options: {
-				textdomain: 'vk-job-posting',
+				textdomain: 'vk-google-job-posting-manager',
 			},
 			update_all_domains: {
 				options: {
@@ -32,8 +32,8 @@ module.exports = function( grunt ) {
 				options: {
 					domainPath: '/languages',
 					exclude: [ '\.git/*', 'bin/*', 'node_modules/*', 'tests/*' ],
-					mainFile: 'vk-job-posting.php',
-					potFilename: 'vk-job-posting.pot',
+					mainFile: 'vk-google-job-posting-manager.php',
+					potFilename: 'vk-google-job-posting-manager.pot',
 					potHeaders: {
 						poedit: true,
 						'x-poedit-keywordslist': true

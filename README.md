@@ -1,2 +1,2 @@
-# vk-job-posting
+# vk-google-job-posting-manager
 

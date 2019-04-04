@@ -4,7 +4,7 @@
  *
  * @package Vk_Job_Posting
  */
-require_once dirname( dirname( __FILE__ ) ) . '/vk-job-posting.php';
+require_once dirname( dirname( __FILE__ ) ) . '/vk-google-job-posting-manager.php';
 require_once dirname( dirname( __FILE__ ) ) . '/inc/custom-field-builder/custom-field-builder-config.php';
 require_once dirname( dirname( __FILE__ ) ) . '/inc/custom-field-builder/package/custom-field-builder.php';
 

@@ -1,46 +1,46 @@
 <?php
 /**
  * Plugin Name:     VK Google Job Posting Manager
- * Plugin URI:      PLUGIN SITE HERE
+ * Plugin URI:      https://github.com/vektor-inc/vk-google-job-posting-manager
  * Description:     This is the plugin for Google Job posting.
  * Author:          Vektor,Inc.
  * Author URI:      https://www.vektor-inc.co.jp
- * Text Domain:     vk-job-posting
+ * Text Domain:     vk-google-job-posting-manager
  * Domain Path:     /languages
  * Version:         0.1.0
  *
- * @package         Vk_Job_Posting
+ * @package         Vk_Google_Job_Posting_Manager
  */
 
 require_once( dirname( __FILE__ ) . '/inc/custom-field-builder/package/custom-field-builder.php' );
 require_once( dirname( __FILE__ ) . '/inc/custom-field-builder/custom-field-builder-config.php' );
-require_once( dirname( __FILE__ ) . '/blocks/vk-job-posting-block.php' );
+require_once( dirname( __FILE__ ) . '/blocks/vk-google-job-posting-manager-block.php' );
 
-function vk_job_posts_activate( ) {
+function vk_gjpm_activate( ) {
 
 	flush_rewrite_rules();
-	update_option( 'vk_job_posts_create_jobpost_posttype', 'true' );
+	update_option( 'vk_gjpm_create_jobpost_posttype', 'true' );
 }
-register_activation_hook( __FILE__, 'vk_job_posts_activate' );
+register_activation_hook( __FILE__, 'vk_gjpm_activate' );
 
-$flag_custom_posttype = get_option('vk_job_posts_create_jobpost_posttype');
+$flag_custom_posttype = get_option('vk_gjpm_create_jobpost_posttype');
 if(isset($flag_custom_posttype) && $flag_custom_posttype == 'true'){
 	require_once( dirname( __FILE__ ) . '/inc/custom-posttype-builder.php' );
 }
 
 /**
  */
-function vk_job_posts_add_setting_menu() {
+function vk_gjpm_add_setting_menu() {
 	$custom_page = add_submenu_page(
 		'/options-general.php',
-		__( 'VK Job Posting Settings', 'vk-job-posting' ),
-		__( 'VK Job Posting Settings', 'vk-job-posting' ),
+		__( 'VK Job Posting Settings', 'vk-google-job-posting-manager' ),
+		__( 'VK Job Posting Settings', 'vk-google-job-posting-manager' ),
 		'activate_plugins',
-		'vk_job_posts_settings',
-		'vk_job_posts_render_settings'
+		'vk_gjpm_settings',
+		'vk_gjpm_render_settings'
 	);
 }
-add_action( 'admin_menu', 'vk_job_posts_add_setting_menu' );
+add_action( 'admin_menu', 'vk_gjpm_add_setting_menu' );
 
 function get_common_customfields_config() {
 
@@ -92,37 +92,37 @@ function get_common_customfields_config() {
 	return $label_option_name_pair_arr;
 }
 
-function vk_job_posts_render_settings() {
+function vk_gjpm_render_settings() {
 
 	$common_customfields = get_common_customfields_config();
 
-	vk_job_posts_save_data( $common_customfields );
+	vk_gjpm_save_data( $common_customfields );
 
-	echo vk_job_posts_create_common_form( $common_customfields );
+	echo vk_gjpm_create_common_form( $common_customfields );
 
 }
 
-function vk_job_posts_create_common_form( $common_customfields ) {
+function vk_gjpm_create_common_form( $common_customfields ) {
 
-	$form = '<h1>' . __( 'Settings', 'vk-job-posting' ) . '</h1>';
+	$form = '<h1>' . __( 'Settings', 'vk-google-job-posting-manager' ) . '</h1>';
 	$form .= '<form method="post" action="">';
 	$form .= wp_nonce_field( 'standing_on_the_shoulder_of_giants', '_nonce_vk_job_posts' );
-	$form .= '<h2>' . __( 'Common Fields', 'vk-job-posting' ) . '</h2>';
+	$form .= '<h2>' . __( 'Common Fields', 'vk-google-job-posting-manager' ) . '</h2>';
 
-	$form .= vk_job_posts_render_form_input( $common_customfields );
+	$form .= vk_gjpm_render_form_input( $common_customfields );
 
-	$form .= '<h2>' . __( 'Choose the post type to display job posting custom fields.', 'vk-job-posting' ) . '</h2>';
-	$form .= vk_job_posts_post_type_check_list();
+	$form .= '<h2>' . __( 'Choose the post type to display job posting custom fields.', 'vk-google-job-posting-manager' ) . '</h2>';
+	$form .= vk_gjpm_post_type_check_list();
 
-	$form .= '<h2>' . __( 'Create Job-Posts Post type.', 'vk-job-posting' ) . '</h2>';
-	$form .= vk_job_posts_create_jobpost_posttype();
+	$form .= '<h2>' . __( 'Create Job-Posts Post type.', 'vk-google-job-posting-manager' ) . '</h2>';
+	$form .= vk_gjpm_create_jobpost_posttype();
 	$form .= '<input type="submit" value="Save Changes">';
 	$form .= '</form>';
 
 	return $form;
 }
 
-function vk_job_posts_render_form_input( $common_customfields ) {
+function vk_gjpm_render_form_input( $common_customfields ) {
 
 	$form = '';
 
@@ -188,7 +188,7 @@ function vk_job_posts_render_form_input( $common_customfields ) {
 }
 
 
-function vk_job_posts_save_data( $common_customfields ) {
+function vk_gjpm_save_data( $common_customfields ) {
 
 	// nonce
 	if ( ! isset( $_POST['_nonce_vk_job_posts'] ) ) {
@@ -222,29 +222,29 @@ function vk_job_posts_save_data( $common_customfields ) {
 			}
 		}
 
-		vk_job_posts_save_check_list( );
+		vk_gjpm_save_check_list( );
 
-		vk_job_posts_save_create_jobpost_posttype( );
+		vk_gjpm_save_create_jobpost_posttype( );
 	}
 }
 
 
-function vk_job_posts_create_jobpost_posttype() {
+function vk_gjpm_create_jobpost_posttype() {
 
 	$list          = '<ul>';
-	$checked_saved = get_option( 'vk_job_posts_create_jobpost_posttype' );
+	$checked_saved = get_option( 'vk_gjpm_create_jobpost_posttype' );
 	$checked       = ( isset( $checked_saved ) && $checked_saved == 'true' ) ? ' checked' : '';
 	$list          .= '<li><label>';
-	$list          .= '<input type="checkbox" name="vk_job_posts_create_jobpost_posttype" value="true" ' . $checked . ' />' . __( 'Create The Post Type.', 'vk-job-posting' ) . '</label></li>';
+	$list          .= '<input type="checkbox" name="vk_gjpm_create_jobpost_posttype" value="true" ' . $checked . ' />' . __( 'Create The Post Type.', 'vk-google-job-posting-manager' ) . '</label></li>';
 
 	$list .= '</ul>';
 
 	return $list;
 }
 
-function vk_job_posts_save_create_jobpost_posttype(  ) {
+function vk_gjpm_save_create_jobpost_posttype(  ) {
 
-	$name = 'vk_job_posts_create_jobpost_posttype';
+	$name = 'vk_gjpm_create_jobpost_posttype';
 
 	if ( isset( $_POST[ $name ] ) ) {
 		update_option( $name, $_POST[ $name ] );
@@ -254,7 +254,7 @@ function vk_job_posts_save_create_jobpost_posttype(  ) {
 
 }
 
-function vk_job_posts_post_type_check_list() {
+function vk_gjpm_post_type_check_list() {
 
 	$args       = array(
 		'public' => true,
@@ -265,10 +265,10 @@ function vk_job_posts_post_type_check_list() {
 	foreach ( $post_types as $key => $value ) {
 		if ( $key != 'attachment' && $key != 'job-posts' ) {
 
-			$checked_saved = get_option( 'vk_job_posts_post_type_display_customfields' . $key );
+			$checked_saved = get_option( 'vk_gjpm_post_type_display_customfields' . $key );
 			$checked       = ( isset( $checked_saved ) && $checked_saved == 'true' ) ? ' checked' : '';
 			$list          .= '<li><label>';
-			$list          .= '<input type="checkbox" name="vk_job_posts_post_type_display_customfields' . $key . '" value="true"' . $checked . ' />' . esc_html( $value->label );
+			$list          .= '<input type="checkbox" name="vk_gjpm_post_type_display_customfields' . $key . '" value="true"' . $checked . ' />' . esc_html( $value->label );
 			$list          .= '</label></li>';
 		}
 	}
@@ -277,7 +277,7 @@ function vk_job_posts_post_type_check_list() {
 	return $list;
 }
 
-function vk_job_posts_save_check_list(  ) {
+function vk_gjpm_save_check_list(  ) {
 
 	$args       = array(
 		'public' => true,
@@ -287,7 +287,7 @@ function vk_job_posts_save_check_list(  ) {
 	foreach ( $post_types as $key => $value ) {
 		if ( $key != 'attachment' ) {
 
-			$name = 'vk_job_posts_post_type_display_customfields' . $key;
+			$name = 'vk_gjpm_post_type_display_customfields' . $key;
 
 			if ( isset( $_POST[ $name ] ) ) {
 				update_option( $name, $_POST[ $name ] );
@@ -298,18 +298,18 @@ function vk_job_posts_save_check_list(  ) {
 	}
 }
 
-function vk_job_posts_print_jsonLD_in_footer() {
+function vk_gjpm_print_jsonLD_in_footer() {
 
 	$post_id       = get_the_ID();
 
-	$custom_fields = vk_job_posts_get_custom_fields( $post_id );
+	$custom_fields = vk_gjpm_get_custom_fields( $post_id );
 
-	echo vk_job_posts_generate_jsonLD( $custom_fields );
+	echo vk_gjpm_generate_jsonLD( $custom_fields );
 
 }
-add_action( 'wp_print_footer_scripts', 'vk_job_posts_print_jsonLD_in_footer' );
+add_action( 'wp_print_footer_scripts', 'vk_gjpm_print_jsonLD_in_footer' );
 
-function vk_job_posts_get_custom_fields( $post_id ) {
+function vk_gjpm_get_custom_fields( $post_id ) {
 
 	$post          = get_post( $post_id );
 	$custom_fields = get_post_custom( $post_id );
@@ -350,7 +350,7 @@ function use_common_values( $custom_fields ) {
 }
 
 
-function vk_job_posts_generate_jsonLD( $custom_fields ) {
+function vk_gjpm_generate_jsonLD( $custom_fields ) {
 
 	if ( ! isset( $custom_fields['vkjp_title'] ) ) {
 		return;
