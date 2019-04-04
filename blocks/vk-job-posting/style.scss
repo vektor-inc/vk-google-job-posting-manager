@@ -1,0 +1,34 @@
+/**
+ * The following styles get applied both on the front of your site and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.vk_job-posting_table-default {
+
+	th, td {
+		width: 50%;
+		padding: 10px;
+		border:1px solid #dedede!important;
+	}
+
+	thead th {
+		text-align: left;
+	}
+}
+
+.vk_job-posting_table-stripe {
+
+	th, td {
+		width: 50%;
+		padding: 10px;
+		border:none!important;
+	}
+
+	thead th {
+		text-align: left;
+	}
+
+	tbody tr:nth-of-type(odd) {
+		background: #e0e0e0;
+	}
+}
