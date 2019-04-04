@@ -16,7 +16,7 @@
 require_once( dirname( dirname( __FILE__ ) ) . '/vk-google-job-posting-manager.php' );
 require_once( dirname( dirname( __FILE__ ) ) . '/inc/custom-field-builder/custom-field-builder-config.php' );
 
-function vk_job_posting_block_init() {
+function vk_gjpm_block_init() {
 	// Skip block registration if Gutenberg is not enabled/merged.
 	if ( ! function_exists( 'register_block_type' ) ) {
 		return;
@@ -76,7 +76,7 @@ function vk_job_posting_block_init() {
 		},
 	) );
 }
-add_action( 'init', 'vk_job_posting_block_init' );
+add_action( 'init', 'vk_gjpm_block_init' );
 
 /**
  *

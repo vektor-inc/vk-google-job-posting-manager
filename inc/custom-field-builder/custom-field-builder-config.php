@@ -28,7 +28,7 @@ class Job_Posting_Custom_Fields {
 
 			} elseif ( $key != 'attachment' ) {
 
-				$show_metabox = get_option( 'vk_job_posts_post_type_display_customfields' . $key );
+				$show_metabox = get_option( 'vk_gjpm_post_type_display_customfields' . $key );
 				if ( isset( $show_metabox ) && $show_metabox == 'true' ) {
 					Job_Posting_Custom_Fields::add_metabox( $key );
 				}

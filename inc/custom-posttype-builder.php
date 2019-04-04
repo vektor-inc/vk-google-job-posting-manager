@@ -60,7 +60,7 @@ add_action( 'init', 'job_posts_init' );
  *
  * @return array Messages for the `job_posts` post type.
  */
-function vk_job_posts_updated_messages( $messages ) {
+function vk_gjpm_posts_updated_messages( $messages ) {
 	global $post;
 
 	$permalink = get_permalink( $post );
@@ -88,4 +88,4 @@ function vk_job_posts_updated_messages( $messages ) {
 
 	return $messages;
 }
-add_filter( 'post_updated_messages', 'vk_job_posts_updated_messages' );
+add_filter( 'post_updated_messages', 'vk_gjpm_posts_updated_messages' );

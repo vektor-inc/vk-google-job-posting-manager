@@ -106,7 +106,7 @@ function vk_gjpm_create_common_form( $common_customfields ) {
 
 	$form = '<h1>' . __( 'Settings', 'vk-google-job-posting-manager' ) . '</h1>';
 	$form .= '<form method="post" action="">';
-	$form .= wp_nonce_field( 'standing_on_the_shoulder_of_giants', '_nonce_vk_job_posts' );
+	$form .= wp_nonce_field( 'standing_on_the_shoulder_of_giants', 'vk_gjpm_nonce' );
 	$form .= '<h2>' . __( 'Common Fields', 'vk-google-job-posting-manager' ) . '</h2>';
 
 	$form .= vk_gjpm_render_form_input( $common_customfields );
@@ -191,10 +191,10 @@ function vk_gjpm_render_form_input( $common_customfields ) {
 function vk_gjpm_save_data( $common_customfields ) {
 
 	// nonce
-	if ( ! isset( $_POST['_nonce_vk_job_posts'] ) ) {
+	if ( ! isset( $_POST['vk_gjpm_nonce'] ) ) {
 		return;
 	}
-	if ( ! wp_verify_nonce( $_POST['_nonce_vk_job_posts'], 'standing_on_the_shoulder_of_giants' ) ) {
+	if ( ! wp_verify_nonce( $_POST['vk_gjpm_nonce'], 'standing_on_the_shoulder_of_giants' ) ) {
 		return;
 	}
 
