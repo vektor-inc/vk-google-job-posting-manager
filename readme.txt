@@ -2,7 +2,7 @@
 Contributors: vektor-inc,kurudrive,naoki0h
 Donate link:
 Tags: Google Job Posting, Recruitment, Gutenberg.
-Requires at least: 5.0.0
+Requires at least: 5.0
 Tested up to: 5.1.1
 Stable tag: 0.1.0
 License: GPLv2 or later
