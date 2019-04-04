@@ -1,9 +1,9 @@
 module.exports = {
     mode: 'production',
     devtool: 'source-map',
-    entry: "./blocks/vk-google-job-posting-manager/index.js",
+    entry: "./blocks/create-table/index.js",
     output: {
-        filename: "./blocks/vk-google-job-posting-manager/build.js"
+        filename: "./blocks/create-table/build.js"
     },
     module: {
         rules: [

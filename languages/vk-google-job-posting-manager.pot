@@ -3,18 +3,18 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "X-Generator: babel-plugin-makepot\n"
 
-#: blocks/vk-job-posting/index.js:12
+#: blocks/create-table/index.js:12
 msgid "Job Posting"
 msgstr ""
 
-#: blocks/vk-job-posting/index.js:44
+#: blocks/create-table/index.js:44
 msgid "Table Style"
 msgstr ""
 
-#: blocks/vk-job-posting/index.js:50
+#: blocks/create-table/index.js:50
 msgid "Default"
 msgstr ""
 
-#: blocks/vk-job-posting/index.js:54
+#: blocks/create-table/index.js:54
 msgid "Stripe"
 msgstr ""

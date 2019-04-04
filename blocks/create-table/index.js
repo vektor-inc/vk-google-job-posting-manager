@@ -7,10 +7,10 @@ const {RangeControl, ServerSideRender, PanelBody, SelectControl} = wp.components
 const {Fragment} = wp.element;
 const {InspectorControls} = wp.editor;
 
-registerBlockType('vk-blocks/job-posting', {
+registerBlockType('vk-google-job-posting-manager/create-table', {
 
-		title: __( 'Job Posting', 'vk-job-posting' ),
-		category: 'vk-blocks-cat',
+		title: __( 'Job Posting', 'vk-google-job-posting-manager' ),
+		category: 'widgets',
 		attributes: {
 			id: {
 				type: 'number',
@@ -41,17 +41,17 @@ registerBlockType('vk-blocks/job-posting', {
 							step={1}
 						/>
 						<SelectControl
-							label={__('Table Style', 'vk-job-posting')}
+							label={__('Table Style', 'vk-google-job-posting-manager')}
 							value={style}
 							onChange={(value) => setAttributes({style: value})}
 							options={[
 								{
 									value: 'default',
-									label: __('Default', 'vk-job-posting'),
+									label: __('Default', 'vk-google-job-posting-manager'),
 								},
 								{
 									value: 'stripe',
-									label: __('Stripe', 'vk-job-posting'),
+									label: __('Stripe', 'vk-google-job-posting-manager'),
 								}
 							]}
 						/>
@@ -59,7 +59,7 @@ registerBlockType('vk-blocks/job-posting', {
 				</InspectorControls>
 				<div>
 					<ServerSideRender
-						block="vk-blocks/job-posting"
+						block="vk-google-job-posting-manager/create-table"
 						attributes={attributes}
 					/>
 				</div>
