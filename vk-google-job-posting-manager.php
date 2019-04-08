@@ -206,15 +206,15 @@ function vgjpm_save_data( $common_customfields ) {
 
 		if ( $value['type'] == 'text' || $value['type'] == 'select' ) {
 
-			update_option( 'common_' . $key, $_POST[ 'common_' . $key ] );
+			update_option( 'common_' . sanitize_text_field( $key ), vgjpm_sanitize_arr($_POST[ 'common_' . $key ]) );
 
 		} elseif ( $value['type'] == 'checkbox' ) {
 
-			$checkbox_key = 'common_' . $key;
+			$checkbox_key = 'common_' . sanitize_text_field( $key );
 
 			if ( isset( $_POST[ $checkbox_key ] ) && is_array( $_POST[ $checkbox_key ] ) ) {
 
-				update_option( $checkbox_key, $_POST[ $checkbox_key ] );
+				update_option( $checkbox_key, vgjpm_sanitize_arr( $_POST[ $checkbox_key ] ) );
 
 			}else{
 				update_option( $checkbox_key, [] );
@@ -247,7 +247,7 @@ function vgjpm_save_create_jobpost_posttype(  ) {
 	$name = 'vgjpm_create_jobpost_posttype';
 
 	if ( isset( $_POST[ $name ] ) ) {
-		update_option( $name, $_POST[ $name ] );
+		update_option( $name, sanitize_text_field( $_POST[ $name ] ) );
 	} else {
 		update_option( $name, false );
 	}
@@ -287,10 +287,10 @@ function vgjpm_save_check_list(  ) {
 	foreach ( $post_types as $key => $value ) {
 		if ( $key != 'attachment' ) {
 
-			$name = 'vgjpm_post_type_display_customfields' . $key;
+			$name = 'vgjpm_post_type_display_customfields' . sanitize_text_field( $key );
 
 			if ( isset( $_POST[ $name ] ) ) {
-				update_option( $name, $_POST[ $name ] );
+				update_option( $name, sanitize_text_field( $_POST[ $name ] ) );
 			} else {
 				update_option( $name, 'false' );
 			}
@@ -402,4 +402,19 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 </script>';
 
 	return $JSON;
+}
+
+function vgjpm_sanitize_arr( $target_arr ) {
+
+	if ( is_array( $target_arr ) ) {
+		foreach ( $target_arr as $cva_key => $cva_value ) {
+			$target_arr[ sanitize_text_field( $cva_key ) ] = sanitize_text_field( $cva_value );
+		}
+
+		return $target_arr;
+
+	} else {
+
+		return sanitize_text_field($target_arr);
+	}
 }
