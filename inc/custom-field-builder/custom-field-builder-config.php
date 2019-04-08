@@ -7,7 +7,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 	require_once( dirname( __FILE__ ) . '/package/custom-field-builder.php' );
 }
 
-class Job_Posting_Custom_Fields {
+class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder{
 
 	public static function init() {
 		add_action( 'admin_menu', array( __CLASS__, 'check_post_type_show_metabox' ), 10, 2 );
@@ -24,13 +24,13 @@ class Job_Posting_Custom_Fields {
 		foreach ( $post_types as $key => $value ) {
 			if ( $key == 'job-posts' ) {
 
-				Job_Posting_Custom_Fields::add_metabox( 'job-posts' );
+				self::add_metabox( 'job-posts' );
 
 			} elseif ( $key != 'attachment' ) {
 
-				$show_metabox = get_option( 'vk_gjpm_post_type_display_customfields' . $key );
+				$show_metabox = get_option( 'vgjpm_post_type_display_customfields' . $key );
 				if ( isset( $show_metabox ) && $show_metabox == 'true' ) {
-					Job_Posting_Custom_Fields::add_metabox( $key );
+					self::add_metabox( $key );
 				}
 			}
 		}
@@ -50,9 +50,9 @@ class Job_Posting_Custom_Fields {
 
 	public static function fields_form() {
 		global $post;
-		$custom_fields_array = Job_Posting_Custom_Fields::custom_fields_array();
+		$custom_fields_array = self::custom_fields_array();
 		$befor_custom_fields = '';
-		VK_Custom_Field_Builder::form_table( $custom_fields_array, $befor_custom_fields );
+		self::form_table( $custom_fields_array, $befor_custom_fields );
 	}
 
 	public static function custom_fields_array() {
@@ -199,9 +199,9 @@ class Job_Posting_Custom_Fields {
 	}
 
 	public static function save_custom_fields() {
-		$custom_fields_array = Job_Posting_Custom_Fields::custom_fields_array();
-		VK_Custom_Field_Builder::save_cf_value( $custom_fields_array );
+		$custom_fields_array = self::custom_fields_array();
+		self::save_cf_value( $custom_fields_array );
 	}
 }
 
-Job_Posting_Custom_Fields::init();
+VGJPM_Custom_Field_Job_Post::init();

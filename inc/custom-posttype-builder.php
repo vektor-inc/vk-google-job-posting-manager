@@ -1,6 +1,6 @@
 <?php
 
-function job_posts_init() {
+function vgjpm_job_post_init() {
 	register_post_type( 'job-posts', array(
 		'labels'                => array(
 			'name'                  => __( 'Job posts', 'vk-job-posting' ),
@@ -52,7 +52,7 @@ function job_posts_init() {
 	) );
 
 }
-add_action( 'init', 'job_posts_init' );
+add_action( 'init', 'vgjpm_job_post_init' );
 
 /**
  *
@@ -60,7 +60,7 @@ add_action( 'init', 'job_posts_init' );
  *
  * @return array Messages for the `job_posts` post type.
  */
-function vk_gjpm_posts_updated_messages( $messages ) {
+function vgjpm_posts_updated_messages( $messages ) {
 	global $post;
 
 	$permalink = get_permalink( $post );
@@ -88,4 +88,4 @@ function vk_gjpm_posts_updated_messages( $messages ) {
 
 	return $messages;
 }
-add_filter( 'post_updated_messages', 'vk_gjpm_posts_updated_messages' );
+add_filter( 'post_updated_messages', 'vgjpm_posts_updated_messages' );

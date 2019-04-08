@@ -16,7 +16,7 @@
 require_once( dirname( dirname( __FILE__ ) ) . '/vk-google-job-posting-manager.php' );
 require_once( dirname( dirname( __FILE__ ) ) . '/inc/custom-field-builder/custom-field-builder-config.php' );
 
-function vk_gjpm_block_init() {
+function vgjpm_block_init() {
 	// Skip block registration if Gutenberg is not enabled/merged.
 	if ( ! function_exists( 'register_block_type' ) ) {
 		return;
@@ -72,11 +72,11 @@ function vk_gjpm_block_init() {
 			]
 		],
 		'render_callback' => function ( $attributes ) {
-			return vk_gjpm_render_job_posting_table( $attributes['id'], $attributes['style'], $attributes['className'] );
+			return vgjpm_render_job_posting_table( $attributes['id'], $attributes['style'], $attributes['className'] );
 		},
 	) );
 }
-add_action( 'init', 'vk_gjpm_block_init' );
+add_action( 'init', 'vgjpm_block_init' );
 
 /**
  *
@@ -86,9 +86,9 @@ add_action( 'init', 'vk_gjpm_block_init' );
  * @return array
  */
 
-function vk_gjpm_get_label( $custom_fields, $custom_fileds_key ) {
+function vgjpm_get_label( $custom_fields, $custom_fileds_key ) {
 
-	$Job_Posting_Custom_Fields = new Job_Posting_Custom_Fields;
+	$Job_Posting_Custom_Fields = new VGJPM_Custom_Field_Job_Post;
 	$config                    = $Job_Posting_Custom_Fields->custom_fields_array();
 
 	$options_arr = $config[ $custom_fileds_key ]['options'];
@@ -116,14 +116,14 @@ function vk_gjpm_get_label( $custom_fields, $custom_fileds_key ) {
 
 }
 
-function vk_gjpm_render_job_posting_table( $id, $style, $className ) {
+function vgjpm_render_job_posting_table( $id, $style, $className ) {
 
-	$custom_fields = vk_gjpm_get_custom_fields( $id );
+	$custom_fields = vgjpm_get_custom_fields( $id );
 
 	if ( ! isset( $custom_fields['vkjp_title'] ) ) {
 		return;
 	}
-	$custom_fields = use_common_values( $custom_fields );
+	$custom_fields = vgjpm_use_common_values( $custom_fields );
 
 	if($className !== ''){
 		$className .= ' '.$className;
@@ -152,7 +152,7 @@ function vk_gjpm_render_job_posting_table( $id, $style, $className ) {
     <tr>
         <td>' . __( 'Base Salary', 'vk-google-job-posting-manager' ) . '</td>
         
-        <td>' . __( 'Average Value', 'vk-google-job-posting-manager' ) . '：' . esc_html( $custom_fields['vkjp_value'] ) . '(' . vk_gjpm_get_label( $custom_fields, 'vkjp_unitText' ) . ')' . '<br>' . esc_html( $custom_fields['vkjp_minValue'] ) . '~' . esc_html( $custom_fields['vkjp_maxValue'] ) . '(' . vk_gjpm_get_label( $custom_fields, 'vkjp_currency' ) . ')' . '</td>
+        <td>' . __( 'Average Value', 'vk-google-job-posting-manager' ) . '：' . esc_html( $custom_fields['vkjp_value'] ) . '(' . vgjpm_get_label( $custom_fields, 'vkjp_unitText' ) . ')' . '<br>' . esc_html( $custom_fields['vkjp_minValue'] ) . '~' . esc_html( $custom_fields['vkjp_maxValue'] ) . '(' . vgjpm_get_label( $custom_fields, 'vkjp_currency' ) . ')' . '</td>
     </tr>
     <tr>
         <td>' . __( 'Work Location', 'vk-google-job-posting-manager' ) . '</td>
@@ -160,7 +160,7 @@ function vk_gjpm_render_job_posting_table( $id, $style, $className ) {
     </tr>
     <tr>
         <td>' . __( 'Employment Type', 'vk-google-job-posting-manager' ) . '</td>
-        <td>' . vk_gjpm_get_label( $custom_fields, 'vkjp_employmentType' ) . '</td>
+        <td>' . vgjpm_get_label( $custom_fields, 'vkjp_employmentType' ) . '</td>
     </tr>
     <tr>
         <td>' . __( 'Incentive Compensation', 'vk-google-job-posting-manager' ) . '</td>
