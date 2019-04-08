@@ -129,20 +129,20 @@ function vgjpm_render_form_input( $common_customfields ) {
 	foreach ( $common_customfields as $key => $value ) {
 
 		if ( $value['type'] == 'text' ) {
-			$form .= esc_html( $value['label'] ) . ':<br> <input type="text" name="common_' . $key . '" value="' . get_option( 'common_' . $key ) . '"><br>';
+			$form .= esc_html( $value['label'] ) . ':<br> <input type="text" name="common_' . esc_attr( $key ) . '" value="' . get_option( 'common_' . esc_attr( $key ) ) . '"><br>';
 
 		} elseif ( $value['type'] == 'date' ) {
 
-			$form .= esc_html( $value['label'] ) . ':<br> <input type="date" name="common_' . $key . '" value="' . get_option( 'common_' . $key ) . '"><br>';
+			$form .= esc_html( $value['label'] ) . ':<br> <input type="date" name="common_' . esc_attr( $key ) . '" value="' . get_option( 'common_' . esc_attr( $key ) ) . '"><br>';
 
 		} elseif ( $value['type'] == 'select' ) {
 
 			$form .= '<label>' . esc_html( $value['label'] ) . ':<br>';
-			$form .= '<select name="common_' . $key . '"  >';
+			$form .= '<select name="common_' . esc_attr( $key ) . '"  >';
 
 			foreach ( $value['options'] as $option_value => $option_label ) {
 
-				$saved = get_option( 'common_' . $key );
+				$saved = get_option( 'common_' . esc_attr( $key ) );
 
 				if ( $saved == $option_value ) {
 					$selected = ' selected="selected"';
@@ -151,7 +151,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 				}
 
-				$form .= '<option value="' . esc_attr( $option_value ) . '" ' . $selected . '>' . esc_html( $option_label ) . '</option>';
+				$form .= '<option value="' . esc_attr( $option_value ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $option_label ) . '</option>';
 			}
 			$form .= '</select>';
 			$form .= '</label><br>';
@@ -163,7 +163,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 			$form .= '<ul>';
 
-			$saved = get_option( 'common_' . $key );
+			$saved = get_option( 'common_' . esc_attr( $key ) );
 
 
 			if ( $value['type'] == 'checkbox' ) {
@@ -175,7 +175,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 					} else {
 						$selected = '';
 					}
-					$form .= '<li style="list-style: none"><label><input type="checkbox" name="common_' . esc_attr( $key ) . '[]" value="' . esc_attr( $option_value ) . '" ' . $selected . '  /><span>' . esc_html( $option_label ) . '</span></label></li>';
+					$form .= '<li style="list-style: none"><label><input type="checkbox" name="common_' . esc_attr( $key ) . '[]" value="' . esc_attr( $option_value ) . '" ' . esc_attr( $selected ) . '  /><span>' . esc_html( $option_label ) . '</span></label></li>';
 
 				}
 				$form .= '</ul>';
@@ -235,7 +235,7 @@ function vgjpm_create_jobpost_posttype() {
 	$checked_saved = get_option( 'vgjpm_create_jobpost_posttype' );
 	$checked       = ( isset( $checked_saved ) && $checked_saved == 'true' ) ? ' checked' : '';
 	$list          .= '<li><label>';
-	$list          .= '<input type="checkbox" name="vgjpm_create_jobpost_posttype" value="true" ' . $checked . ' />' . __( 'Create The Post Type.', 'vk-google-job-posting-manager' ) . '</label></li>';
+	$list          .= '<input type="checkbox" name="vgjpm_create_jobpost_posttype" value="true" ' . esc_attr( $checked ) . ' />' . __( 'Create The Post Type.', 'vk-google-job-posting-manager' ) . '</label></li>';
 
 	$list .= '</ul>';
 
@@ -268,7 +268,7 @@ function vgjpm_post_type_check_list() {
 			$checked_saved = get_option( 'vgjpm_post_type_display_customfields' . $key );
 			$checked       = ( isset( $checked_saved ) && $checked_saved == 'true' ) ? ' checked' : '';
 			$list          .= '<li><label>';
-			$list          .= '<input type="checkbox" name="vgjpm_post_type_display_customfields' . $key . '" value="true"' . $checked . ' />' . esc_html( $value->label );
+			$list          .= '<input type="checkbox" name="vgjpm_post_type_display_customfields' . esc_attr($key) . '" value="true"' . esc_attr($checked) . ' />' . esc_html( $value->label );
 			$list          .= '</label></li>';
 		}
 	}
@@ -373,8 +373,8 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
   "hiringOrganization" : {
     "@type" : "Organization",
     "name" : "' . esc_attr( $custom_fields['vkjp_name'] ) . '",
-    "sameAs" : "' . esc_attr( $custom_fields['vkjp_sameAs'] ) . '",
-    "logo" : "' . esc_attr( $custom_fields['vkjp_logo'] ) . '"
+    "sameAs" : "' . esc_url( $custom_fields['vkjp_sameAs'] ) . '",
+    "logo" : "' . esc_url( $custom_fields['vkjp_logo'] ) . '"
   },
   "jobLocation": {
   "@type": "Place",

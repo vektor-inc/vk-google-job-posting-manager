@@ -130,8 +130,8 @@ function vgjpm_render_job_posting_table( $id, $style, $className ) {
 	}
 
 	$html = '
-	<div class="vk_vk-google-job-posting-manager'.$className.'">
-	<table class="vk_vk-google-job-posting-manager_table-'. $style .'">
+	<div class="vk_vk-google-job-posting-manager' . esc_attr( $className ) . '">
+	<table class="vk_vk-google-job-posting-manager_table-' . esc_attr( $style ) . '">
     <tbody>
     <tr>
         <td>' . __( 'Posted Date', 'vk-google-job-posting-manager' ) . '</td>
