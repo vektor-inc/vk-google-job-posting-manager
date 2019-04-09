@@ -73,7 +73,6 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 				if ( $value['type'] == 'text' || $value['type'] == 'url' ) {
 
-
 					if ( isset( $value['before_text'] ) && $value['before_text'] ) {
 						$form_html .= esc_html( $value['before_text'] ) . ' ';
 					}
@@ -83,8 +82,6 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 					if ( isset( $value['after_text'] ) && $value['after_text'] ) {
 						$form_html .= ' ' . esc_html( $value['after_text'] );
 					}
-
-
 				} elseif ( $value['type'] == 'date' ) {
 					$form_html .= '<input class="form-control" type="date" id="' . $key . '" name="' . $key . '" value="' . self::form_post_value( $key ) . '" size="70">';
 
@@ -161,7 +158,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 					}
 				}
 				if ( $value['description'] ) {
-					$form_html .= '<div class="description">' . apply_filters( 'the_content', $value['description'] ) . '</div>';
+					$form_html .= '<div class="description">' . wp_kses_post( $value['description'] ) . '</div>';
 				}
 				$form_html .= '</td></tr>';
 			}
@@ -196,15 +193,14 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				$field_value = ( isset( $_POST[ $key ] ) ) ? $_POST[ $key ] : '';
 
 				$parent_key = $value['parent'];
-				$new_array= array();
+				$new_array  = array();
 
+				if ( ! empty( $parent_key ) ) {
 
-				if ( !empty( $parent_key ) ) {
+					$save_key = 'vkjp_' . $parent_key;
+					$key      = str_replace( 'vkjp_', '', $key );
 
-					$save_key = 'vkjp_'.$parent_key;
-					$key = str_replace('vkjp_', '', $key);
-
-					$pre_value = get_post_meta( $post->ID, $save_key, false );
+					$pre_value         = get_post_meta( $post->ID, $save_key, false );
 					$pre_value[ $key ] = $field_value;
 
 					update_post_meta( $post->ID, $save_key, $pre_value );
@@ -223,7 +219,6 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 						delete_post_meta( $post->ID, $key, get_post_meta( $post->ID, $key, false ) );
 					}
 				}
-
 			} // foreach ($custom_fields_all_array as $key => $value) {
 		}
 
