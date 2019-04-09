@@ -16,15 +16,15 @@ require_once( dirname( __FILE__ ) . '/inc/custom-field-builder/package/custom-fi
 require_once( dirname( __FILE__ ) . '/inc/custom-field-builder/custom-field-builder-config.php' );
 require_once( dirname( __FILE__ ) . '/blocks/vk-google-job-posting-manager-block.php' );
 
-function vgjpm_activate( ) {
+function vgjpm_activate() {
 
 	flush_rewrite_rules();
 	update_option( 'vgjpm_create_jobpost_posttype', 'true' );
 }
 register_activation_hook( __FILE__, 'vgjpm_activate' );
 
-$flag_custom_posttype = get_option('vgjpm_create_jobpost_posttype');
-if(isset($flag_custom_posttype) && $flag_custom_posttype == 'true'){
+$flag_custom_posttype = get_option( 'vgjpm_create_jobpost_posttype' );
+if ( isset( $flag_custom_posttype ) && $flag_custom_posttype == 'true' ) {
 	require_once( dirname( __FILE__ ) . '/inc/custom-posttype-builder.php' );
 }
 
@@ -45,7 +45,7 @@ add_action( 'admin_menu', 'vgjpm_add_setting_menu' );
 function vgjpm_get_common_customfields_config() {
 
 	$VGJPM_Custom_Field_Job_Post = new VGJPM_Custom_Field_Job_Post;
-	$labels =$VGJPM_Custom_Field_Job_Post->custom_fields_array();
+	$labels                      = $VGJPM_Custom_Field_Job_Post->custom_fields_array();
 
 	$common_customfields = array(
 		'vkjp_value',
@@ -68,12 +68,11 @@ function vgjpm_get_common_customfields_config() {
 		'vkjp_addressRegion',
 		'vkjp_addressLocality',
 		'vkjp_streetAddress',
-		'vkjp_validThrough'
+		'vkjp_validThrough',
 	);
 
 	foreach ( $labels as $key => $value ) {
-		if(in_array($key,$common_customfields)){
-
+		if ( in_array( $key, $common_customfields ) ) {
 
 			$new_array = array(
 				'label'       => $value['label'],
@@ -104,7 +103,7 @@ function vgjpm_render_settings() {
 
 function vgjpm_create_common_form( $common_customfields ) {
 
-	$form = '<h1>' . __( 'Settings', 'vk-google-job-posting-manager' ) . '</h1>';
+	$form  = '<h1>' . __( 'Settings', 'vk-google-job-posting-manager' ) . '</h1>';
 	$form .= '<form method="post" action="">';
 	$form .= wp_nonce_field( 'standing_on_the_shoulder_of_giants', 'vgjpm_nonce' );
 	$form .= '<h2>' . __( 'Common Fields', 'vk-google-job-posting-manager' ) . '</h2>';
@@ -156,7 +155,6 @@ function vgjpm_render_form_input( $common_customfields ) {
 			$form .= '</select>';
 			$form .= '</label><br>';
 
-
 		} elseif ( $value['type'] == 'checkbox' ) {
 
 			$form .= '<p>' . esc_html( $value['label'] ) . ':</p>';
@@ -165,12 +163,11 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 			$saved = get_option( 'common_' . esc_attr( $key ) );
 
-
 			if ( $value['type'] == 'checkbox' ) {
 
 				foreach ( $value['options'] as $option_value => $option_label ) {
 
-					if ( is_array($saved) && in_array( $option_value, $saved ) ) {
+					if ( is_array( $saved ) && in_array( $option_value, $saved ) ) {
 						$selected = ' checked';
 					} else {
 						$selected = '';
@@ -182,7 +179,6 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 			}
 		}
-
 	}
 	return $form;
 }
@@ -206,7 +202,7 @@ function vgjpm_save_data( $common_customfields ) {
 
 		if ( $value['type'] == 'text' || $value['type'] == 'select' ) {
 
-			update_option( 'common_' . sanitize_text_field( $key ), vgjpm_sanitize_arr($_POST[ 'common_' . $key ]) );
+			update_option( 'common_' . sanitize_text_field( $key ), vgjpm_sanitize_arr( $_POST[ 'common_' . $key ] ) );
 
 		} elseif ( $value['type'] == 'checkbox' ) {
 
@@ -216,15 +212,15 @@ function vgjpm_save_data( $common_customfields ) {
 
 				update_option( $checkbox_key, vgjpm_sanitize_arr( $_POST[ $checkbox_key ] ) );
 
-			}else{
+			} else {
 				update_option( $checkbox_key, [] );
 
 			}
 		}
 
-		vgjpm_save_check_list( );
+		vgjpm_save_check_list();
 
-		vgjpm_save_create_jobpost_posttype( );
+		vgjpm_save_create_jobpost_posttype();
 	}
 }
 
@@ -234,15 +230,15 @@ function vgjpm_create_jobpost_posttype() {
 	$list          = '<ul>';
 	$checked_saved = get_option( 'vgjpm_create_jobpost_posttype' );
 	$checked       = ( isset( $checked_saved ) && $checked_saved == 'true' ) ? ' checked' : '';
-	$list          .= '<li><label>';
-	$list          .= '<input type="checkbox" name="vgjpm_create_jobpost_posttype" value="true" ' . esc_attr( $checked ) . ' />' . __( 'Create The Post Type.', 'vk-google-job-posting-manager' ) . '</label></li>';
+	$list         .= '<li><label>';
+	$list         .= '<input type="checkbox" name="vgjpm_create_jobpost_posttype" value="true" ' . esc_attr( $checked ) . ' />' . __( 'Create The Post Type.', 'vk-google-job-posting-manager' ) . '</label></li>';
 
 	$list .= '</ul>';
 
 	return $list;
 }
 
-function vgjpm_save_create_jobpost_posttype(  ) {
+function vgjpm_save_create_jobpost_posttype() {
 
 	$name = 'vgjpm_create_jobpost_posttype';
 
@@ -267,9 +263,9 @@ function vgjpm_post_type_check_list() {
 
 			$checked_saved = get_option( 'vgjpm_post_type_display_customfields' . $key );
 			$checked       = ( isset( $checked_saved ) && $checked_saved == 'true' ) ? ' checked' : '';
-			$list          .= '<li><label>';
-			$list          .= '<input type="checkbox" name="vgjpm_post_type_display_customfields' . esc_attr($key) . '" value="true"' . esc_attr($checked) . ' />' . esc_html( $value->label );
-			$list          .= '</label></li>';
+			$list         .= '<li><label>';
+			$list         .= '<input type="checkbox" name="vgjpm_post_type_display_customfields' . esc_attr( $key ) . '" value="true"' . esc_attr( $checked ) . ' />' . esc_html( $value->label );
+			$list         .= '</label></li>';
 		}
 	}
 	$list .= '</ul>';
@@ -277,7 +273,7 @@ function vgjpm_post_type_check_list() {
 	return $list;
 }
 
-function vgjpm_save_check_list(  ) {
+function vgjpm_save_check_list() {
 
 	$args       = array(
 		'public' => true,
@@ -300,7 +296,7 @@ function vgjpm_save_check_list(  ) {
 
 function vgjpm_print_jsonLD_in_footer() {
 
-	$post_id       = get_the_ID();
+	$post_id = get_the_ID();
 
 	$custom_fields = vgjpm_get_custom_fields( $post_id );
 
@@ -316,14 +312,14 @@ function vgjpm_get_custom_fields( $post_id ) {
 
 	foreach ( (array) $custom_fields as $key => $value ) {
 
-		$custom_fields[$key] = maybe_unserialize($value[0]);
+		$custom_fields[ $key ] = maybe_unserialize( $value[0] );
 
 		if ( substr_count( $key, 'vkjp_' ) == 0 ) {
-			unset($custom_fields[$key]);
+			unset( $custom_fields[ $key ] );
 		}
 	}
 
-	if(isset($post->post_date)){
+	if ( isset( $post->post_date ) ) {
 		$custom_fields['vkjp_datePosted'] = $post->post_date;
 	}
 
@@ -336,7 +332,7 @@ function vgjpm_use_common_values( $custom_fields ) {
 
 		$temp = get_option( 'common_' . $key, null );
 
-		if ( $custom_fields[ $key ] == ''  && isset( $temp ) ) {
+		if ( $custom_fields[ $key ] == '' && isset( $temp ) ) {
 
 			$custom_fields[ $key ] = $temp;
 
@@ -415,6 +411,6 @@ function vgjpm_sanitize_arr( $target_arr ) {
 
 	} else {
 
-		return sanitize_text_field($target_arr);
+		return sanitize_text_field( $target_arr );
 	}
 }
