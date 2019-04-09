@@ -111,20 +111,29 @@ function vgjpm_render_settings() {
 
 }
 
+
+/**
+ * [vgjpm_create_common_form description]
+ *
+ * @param  [type] $common_customfields [description]
+ * @return [type]                      [description]
+ */
 function vgjpm_create_common_form( $common_customfields ) {
 
 	$form  = '<h1>' . __( 'Settings', 'vk-google-job-posting-manager' ) . '</h1>';
 	$form .= '<form method="post" action="">';
-	$form .= wp_nonce_field( 'standing_on_the_shoulder_of_giants', 'vgjpm_nonce' );
-	$form .= '<h2>' . __( 'Common Fields', 'vk-google-job-posting-manager' ) . '</h2>';
-
-	$form .= vgjpm_render_form_input( $common_customfields );
 
 	$form .= '<h2>' . __( 'Choose the post type to display job posting custom fields.', 'vk-google-job-posting-manager' ) . '</h2>';
 	$form .= vgjpm_post_type_check_list();
 
 	$form .= '<h2>' . __( 'Create Job-Posts Post type.', 'vk-google-job-posting-manager' ) . '</h2>';
 	$form .= vgjpm_create_jobpost_posttype();
+
+	$form .= wp_nonce_field( 'standing_on_the_shoulder_of_giants', 'vgjpm_nonce' );
+	$form .= '<h2>' . __( 'Common Fields', 'vk-google-job-posting-manager' ) . '</h2>';
+
+	$form .= vgjpm_render_form_input( $common_customfields );
+
 	$form .= '<input type="submit" value="Save Changes" class="button button-primary">';
 	$form .= '</form>';
 
