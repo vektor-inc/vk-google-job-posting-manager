@@ -115,7 +115,7 @@ function vgjpm_create_common_form( $common_customfields ) {
 
 	$form .= '<h2>' . __( 'Create Job-Posts Post type.', 'vk-google-job-posting-manager' ) . '</h2>';
 	$form .= vgjpm_create_jobpost_posttype();
-	$form .= '<input type="submit" value="Save Changes">';
+	$form .= '<input type="submit" value="Save Changes" class="button button-primary">';
 	$form .= '</form>';
 
 	return $form;
