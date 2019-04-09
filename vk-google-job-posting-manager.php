@@ -12,24 +12,41 @@
  * @package         Vk_Google_Job_Posting_Manager
  */
 
+ /*
+ -------------------------------------------*/
+ /*
+  Setting & load file
+ /*-------------------------------------------*/
+
+$data = get_file_data(
+	__FILE__, array(
+		'version'    => 'Version',
+		'textdomain' => 'Text Domain',
+	)
+);
+ define( 'VGJPM_VERSION', $data['version'] );
+ define( 'VGJPM_BASENAME', plugin_basename( __FILE__ ) );
+ define( 'VGJPM_URL', plugin_dir_url( __FILE__ ) );
+ define( 'VGJPM_DIR', plugin_dir_path( __FILE__ ) );
+
 require_once( dirname( __FILE__ ) . '/inc/custom-field-builder/package/custom-field-builder.php' );
 require_once( dirname( __FILE__ ) . '/inc/custom-field-builder/custom-field-builder-config.php' );
 require_once( dirname( __FILE__ ) . '/blocks/vk-google-job-posting-manager-block.php' );
 
 function vgjpm_activate() {
 
-	flush_rewrite_rules();
-	update_option( 'vgjpm_create_jobpost_posttype', 'true' );
+	 flush_rewrite_rules();
+	 update_option( 'vgjpm_create_jobpost_posttype', 'true' );
 }
-register_activation_hook( __FILE__, 'vgjpm_activate' );
+	register_activation_hook( __FILE__, 'vgjpm_activate' );
 
-$flag_custom_posttype = get_option( 'vgjpm_create_jobpost_posttype' );
+	$flag_custom_posttype = get_option( 'vgjpm_create_jobpost_posttype' );
 if ( isset( $flag_custom_posttype ) && $flag_custom_posttype == 'true' ) {
 	require_once( dirname( __FILE__ ) . '/inc/custom-posttype-builder.php' );
 }
 
-/**
- */
+	/**
+	 */
 function vgjpm_add_setting_menu() {
 	$custom_page = add_submenu_page(
 		'/options-general.php',
@@ -50,6 +67,13 @@ function vgjpm_set_plugin_meta( $links ) {
 	return $links;
 }
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'vgjpm_set_plugin_meta', 10, 1 );
+
+// Add Admin Setting Page css
+function vgjpm_admin_css() {
+	wp_enqueue_style( 'vgjpm-admin-style', plugin_dir_url( __FILE__ ) . 'assets/css/admin.css', array(), VGJPM_VERSION, 'all' );
+}
+add_action( 'admin_enqueue_scripts', 'vgjpm_admin_css' );
+
 
 
 function vgjpm_get_common_customfields_config() {
@@ -112,44 +136,57 @@ function vgjpm_render_settings() {
 }
 
 
-/**
- * Common setting page
- *
- * @param  [type] $common_customfields [description]
- * @return [type]                      [description]
- */
+	/**
+	 * Common setting page
+	 *
+	 * @param  [type] $common_customfields [description]
+	 * @return [type]                      [description]
+	 */
 function vgjpm_create_common_form( $common_customfields ) {
 
-	$form  = '<h1>' . __( 'Job Posting Manager Settings', 'vk-google-job-posting-manager' ) . '</h1>';
+	$form = '<div class="vgjpm">';
+
+	$form .= '<h1>' . __( 'Job Posting Manager Settings', 'vk-google-job-posting-manager' ) . '</h1>';
+
 	$form .= '<form method="post" action="">';
 
-	$form .= '<h2>' . __( 'Choose the post type to display job posting custom fields.', 'vk-google-job-posting-manager' ) . '</h2>';
-	$form .= vgjpm_post_type_check_list();
+	$form .= wp_nonce_field( 'standing_on_the_shoulder_of_giants', 'vgjpm_nonce' );
 
 	$form .= '<h2>' . __( 'Create Job-Posts Post type.', 'vk-google-job-posting-manager' ) . '</h2>';
+
+	$form .= '<p>' . __( 'This plugin automatically create post type for Job Posting.<br>If you have already created custom post type for Job Post, please remove this check and select post type of next check boxes.', 'vk-google-job-posting-manager' ) . '</p>';
 	$form .= vgjpm_create_jobpost_posttype();
 
-	$form .= wp_nonce_field( 'standing_on_the_shoulder_of_giants', 'vgjpm_nonce' );
+	$form .= '<h2>' . __( 'Choose the post type to display job posting custom fields.', 'vk-google-job-posting-manager' ) . '</h2>';
+
+	$form .= vgjpm_post_type_check_list();
+
 	$form .= '<h2>' . __( 'Common Fields', 'vk-google-job-posting-manager' ) . '</h2>';
+
+	$form .= '<p>' . __( 'If a single page is filled in, the content of the single page takes precedence.', 'vk-google-job-posting-manager' ) . '</p>';
 
 	$form .= vgjpm_render_form_input( $common_customfields );
 
 	$form .= '<input type="submit" value="Save Changes" class="button button-primary">';
+
 	$form .= '</form>';
+
+	$form .= '<div class="footer-logo"><a href="https://www.vektor-inc.co.jp"><img src="' . plugin_dir_url( __FILE__ ) . 'assets/images/vektor_logo.png" alt="Vektor,Inc." /></a></div>';
+	$form .= '</div>';
 
 	return $form;
 }
 
 
-/**
- * Common setting page form
- *
- * @param  [type] $common_customfields [description]
- * @return [type]                      [description]
- */
+	/**
+	 * Common setting page form
+	 *
+	 * @param  [type] $common_customfields [description]
+	 * @return [type]                      [description]
+	 */
 function vgjpm_render_form_input( $common_customfields ) {
 
-	$form = '<table class="form-table">';
+	$form = '<table class="admin-table">';
 
 	foreach ( $common_customfields as $key => $value ) {
 

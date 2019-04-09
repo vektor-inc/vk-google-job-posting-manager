@@ -1,0 +1,37 @@
+.vgjpm{
+	padding:1em 2em 1em 1em;
+	h2 {
+		font-size: 1.6em;
+		margin-top:2em;
+		margin-bottom:1rem;
+		padding-bottom:0.3em;
+		border-bottom:1px solid #ccc;
+	}
+	.admin-table{
+	width:100%;
+	margin-bottom:15px;
+	th,
+	td {
+		padding: 5px;
+		border-bottom:1px solid #ccc;
+	}
+	th {
+		text-align: left;
+		width:200px;
+		font-weight: normal;
+		white-space: nowrap;
+	}
+	td {
+		input[type=text] {
+			width:100%;
+		}
+	}
+} // .admin-table{
+	.footer-logo {
+		text-align: right;
+		img {
+			width:150px;
+			height:auto;
+		}
+	}
+}

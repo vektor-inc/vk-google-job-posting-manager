@@ -9,6 +9,21 @@ var gulp = require('gulp'),
 		runSequence = require('run-sequence');
 
 gulp.task('sass', function () {
+		return gulp.src('./assets/_scss/*.scss',{ base: './assets/_scss' })
+			.pipe($.plumber({
+					errorHandler: $.notify.onError('<%= error.message %>')
+			}))
+			.pipe($.sass({
+					errLogToConsole: true,
+					outputStyle: 'compressed',
+					includePaths: [
+							'./assets/css/'
+					]
+			}))
+			.pipe($.autoprefixer({browsers: ['last 2 version', '> 5%']}))
+			.pipe(gulp.dest('./assets/css/'));
+});
+gulp.task('sass_block', function () {
     return gulp.src(['./blocks/create-table/*.scss'])
         .pipe($.plumber({
             errorHandler: $.notify.onError('<%= error.message %>')
@@ -23,7 +38,7 @@ gulp.task('sass', function () {
         }))
         .pipe($.autoprefixer({browsers: ['last 2 version', '> 5%']}))
         .pipe($.sourcemaps.write('./map'))
-        .pipe(gulp.dest('./blocks/create-table/'));
+        .pipe(gulp.dest('./blocks/create-table/'))
 });
 
 // Transpile and Compile Sass and Bundle it.
@@ -36,7 +51,8 @@ gulp.task('js', function () {
 // watch
 gulp.task('watch', function () {
     gulp.watch('./blocks/create-table/*.js', ['js']);
-    gulp.watch('./blocks/create-table/*.scss', ['sass']);
+    gulp.watch('./blocks/create-table/*.scss', ['sass_block']);
+		gulp.watch('./assets/_scss/*.scss', ['sass']);
 });
 
 // Build
