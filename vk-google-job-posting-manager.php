@@ -35,7 +35,7 @@ function vgjpm_add_setting_menu() {
 		'/options-general.php',
 		__( 'VK Google Job Posting Manager', 'vk-google-job-posting-manager' ),
 		__( 'VK Google Job Posting Manager', 'vk-google-job-posting-manager' ),
-		'activate_plugins',
+		'edit_others_posts',
 		'vgjpm_settings',
 		'vgjpm_render_settings'
 	);
