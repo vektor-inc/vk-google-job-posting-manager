@@ -113,14 +113,14 @@ function vgjpm_render_settings() {
 
 
 /**
- * [vgjpm_create_common_form description]
+ * Common setting page
  *
  * @param  [type] $common_customfields [description]
  * @return [type]                      [description]
  */
 function vgjpm_create_common_form( $common_customfields ) {
 
-	$form  = '<h1>' . __( 'Settings', 'vk-google-job-posting-manager' ) . '</h1>';
+	$form  = '<h1>' . __( 'Job Posting Manager Settings', 'vk-google-job-posting-manager' ) . '</h1>';
 	$form .= '<form method="post" action="">';
 
 	$form .= '<h2>' . __( 'Choose the post type to display job posting custom fields.', 'vk-google-job-posting-manager' ) . '</h2>';
@@ -140,22 +140,32 @@ function vgjpm_create_common_form( $common_customfields ) {
 	return $form;
 }
 
+
+/**
+ * Common setting page form
+ *
+ * @param  [type] $common_customfields [description]
+ * @return [type]                      [description]
+ */
 function vgjpm_render_form_input( $common_customfields ) {
 
-	$form = '';
+	$form = '<table class="form-table">';
 
 	foreach ( $common_customfields as $key => $value ) {
 
+		$form .= '<tr>';
+		$form .= '<th>' . esc_html( $value['label'] ) . '</th>';
+		$form .= '<td>';
+
 		if ( $value['type'] == 'text' ) {
-			$form .= esc_html( $value['label'] ) . ':<br> <input type="text" name="common_' . esc_attr( $key ) . '" value="' . get_option( 'common_' . esc_attr( $key ) ) . '"><br>';
+			$form .= '<input type="text" name="common_' . esc_attr( $key ) . '" value="' . get_option( 'common_' . esc_attr( $key ) ) . '">';
 
 		} elseif ( $value['type'] == 'date' ) {
 
-			$form .= esc_html( $value['label'] ) . ':<br> <input type="date" name="common_' . esc_attr( $key ) . '" value="' . get_option( 'common_' . esc_attr( $key ) ) . '"><br>';
+			$form .= '<input type="date" name="common_' . esc_attr( $key ) . '" value="' . get_option( 'common_' . esc_attr( $key ) ) . '">';
 
 		} elseif ( $value['type'] == 'select' ) {
 
-			$form .= '<label>' . esc_html( $value['label'] ) . ':<br>';
 			$form .= '<select name="common_' . esc_attr( $key ) . '"  >';
 
 			foreach ( $value['options'] as $option_value => $option_label ) {
@@ -172,11 +182,8 @@ function vgjpm_render_form_input( $common_customfields ) {
 				$form .= '<option value="' . esc_attr( $option_value ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $option_label ) . '</option>';
 			}
 			$form .= '</select>';
-			$form .= '</label><br>';
 
 		} elseif ( $value['type'] == 'checkbox' ) {
-
-			$form .= '<p>' . esc_html( $value['label'] ) . ':</p>';
 
 			$form .= '<ul>';
 
@@ -198,7 +205,11 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 			}
 		}
-	}
+		$form .= '</td>';
+		$form .= '</tr>';
+
+	} // foreach ( $common_customfields as $key => $value ) {
+	$form .= '</table>';
 	return $form;
 }
 
