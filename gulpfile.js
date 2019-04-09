@@ -71,6 +71,7 @@ gulp.task('copy_dist', function() {
 							'./**.png',
 							'./**.jpg',
 							'./**.md',
+							'./assets/**',
 							'./blocks/**',
 							'./inc/**',
 							"!./.distignore",
