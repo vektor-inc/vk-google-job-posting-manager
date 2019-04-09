@@ -42,6 +42,16 @@ function vgjpm_add_setting_menu() {
 }
 add_action( 'admin_menu', 'vgjpm_add_setting_menu' );
 
+
+// Add a link to this plugin's settings page
+function vgjpm_set_plugin_meta( $links ) {
+	$settings_link = '<a href="options-general.php?page=vgjpm_settings">' . __( 'Setting', 'vvk-google-job-posting-manager' ) . '</a>';
+	array_unshift( $links, $settings_link );
+	return $links;
+}
+add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'vgjpm_set_plugin_meta', 10, 1 );
+
+
 function vgjpm_get_common_customfields_config() {
 
 	$VGJPM_Custom_Field_Job_Post = new VGJPM_Custom_Field_Job_Post;
