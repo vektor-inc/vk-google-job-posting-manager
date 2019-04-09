@@ -33,8 +33,8 @@ if ( isset( $flag_custom_posttype ) && $flag_custom_posttype == 'true' ) {
 function vgjpm_add_setting_menu() {
 	$custom_page = add_submenu_page(
 		'/options-general.php',
-		__( 'VK Job Posting Settings', 'vk-google-job-posting-manager' ),
-		__( 'VK Job Posting Settings', 'vk-google-job-posting-manager' ),
+		__( 'VK Google Job Posting Manager', 'vk-google-job-posting-manager' ),
+		__( 'VK Google Job Posting Manager', 'vk-google-job-posting-manager' ),
 		'activate_plugins',
 		'vgjpm_settings',
 		'vgjpm_render_settings'
