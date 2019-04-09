@@ -5,7 +5,8 @@ var gulp = require('gulp'),
     webpackConfig = require('./webpack.config'),
     sass = require('gulp-sass'),
     autoprefixer = require('gulp-autoprefixer'),
-    cleanCss = require('gulp-clean-css');
+    cleanCss = require('gulp-clean-css'),
+		runSequence = require('run-sequence');
 
 gulp.task('sass', function () {
     return gulp.src(['./blocks/create-table/*.scss'])
@@ -43,3 +44,38 @@ gulp.task('build', ['js', 'sass']);
 
 // Default Tasks
 gulp.task('default', ['watch']);
+
+// copy dist ////////////////////////////////////////////////
+
+gulp.task('copy_dist', function() {
+    return gulp.src(
+            [
+							'./**.php',
+							'./**.txt',
+							'./**.png',
+							'./**.jpg',
+							'./**.md',
+							'./blocks/**',
+							'./inc/**',
+							"!./.distignore",
+							"!./.gitignore",
+							"!./Gruntfile.js",
+							"!./gulpfile.js",
+							"!./**.yml",
+							"!./**.json",
+							"!./**.dist",
+							"!./**.config.js",
+            ],
+            { base: './' }
+        )
+        .pipe( gulp.dest( 'dist' ) ); // distディレクトリに出力
+} );
+// gulp.task('build:dist',function(){
+//     /* ここで、CSS とか JS をコンパイルする */
+// });
+
+gulp.task('dist', function(cb){
+    // return runSequence( 'build:dist', 'copy', cb );
+    // return runSequence( 'build:dist', 'copy_dist', cb );
+    return runSequence( 'copy_dist', cb );
+});
