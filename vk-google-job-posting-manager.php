@@ -37,10 +37,12 @@ function vgjpm_activate() {
 
 	 flush_rewrite_rules();
 	 update_option( 'vgjpm_create_jobpost_posttype', 'true' );
-}
-	register_activation_hook( __FILE__, 'vgjpm_activate' );
+	 load_plugin_textdomain( 'vk-google-job-posting-manager', false, basename( dirname( __FILE__ ) ) . '/languages' );
 
-	$flag_custom_posttype = get_option( 'vgjpm_create_jobpost_posttype' );
+}
+register_activation_hook( __FILE__, 'vgjpm_activate' );
+
+$flag_custom_posttype = get_option( 'vgjpm_create_jobpost_posttype' );
 if ( isset( $flag_custom_posttype ) && $flag_custom_posttype == 'true' ) {
 	require_once( dirname( __FILE__ ) . '/inc/custom-posttype-builder.php' );
 }
