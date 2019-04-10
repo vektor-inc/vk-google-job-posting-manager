@@ -89,7 +89,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder{
 				'required'    => false,
 			),
 			'vkjp_unitText'                    => array(
-				'label'       => __( 'Salary Payment Period', 'vk-google-job-posting-manager' ),
+				'label'       => __( 'The Cycle Period of Salary Payment', 'vk-google-job-posting-manager' ),
 				'type'        => 'select',
 				'options'     => array( 'HOUR' => __( 'Per hour', 'vk-google-job-posting-manager' ), 'MONTH' => __( 'Per month', 'vk-google-job-posting-manager' ), 'YEAR' => __( 'Per year', 'vk-google-job-posting-manager' ) ),
 				'description' => __( 'Please select the term.', 'vk-google-job-posting-manager' ),
@@ -190,7 +190,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder{
 			'vkjp_validThrough'  => array(
 				'label'       => __( 'Expiry Date', 'vk-google-job-posting-manager' ),
 				'type'        => 'date',
-				'description' => __( 'Please enter expiry date, If you have one. Example : "2017-02-24"、"2017-02-24T19:33:17+00:00". If you are not sure about expiry date, please leave it blank.', 'vk-google-job-posting-manager' ),
+				'description' => __( 'Please enter expiry date. If you are not sure about expiry date, please leave it blank.', 'vk-google-job-posting-manager' ),
 				'required'    => false,
 			)
 		);
