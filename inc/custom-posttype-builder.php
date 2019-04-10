@@ -68,22 +68,22 @@ function vgjpm_posts_updated_messages( $messages ) {
 	$messages['job-posts'] = array(
 		0  => '', // Unused. Messages start at index 1.
 		/* translators: %s: post permalink */
-		1  => sprintf( __( 'Job posts updated. <a target="_blank" href="%s">View job posts</a>', 'vk-google-job-posting-manager' ), esc_url( $permalink ) ),
+		1  => sprintf( __( 'Job posts updated <a target="_blank" href="%s">View job posts</a>', 'vk-google-job-posting-manager' ), esc_url( $permalink ) ),
 		2  => __( 'Custom field updated.', 'vk-google-job-posting-manager' ),
 		3  => __( 'Custom field deleted.', 'vk-google-job-posting-manager' ),
 		4  => __( 'Job posts updated.', 'vk-google-job-posting-manager' ),
 		/* translators: %s: date and time of the revision */
 		5  => isset( $_GET['revision'] ) ? sprintf( __( 'Job posts restored to revision from %s', 'vk-google-job-posting-manager' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
 		/* translators: %s: post permalink */
-		6  => sprintf( __( 'Job posts published. <a href="%s">View job posts</a>', 'vk-google-job-posting-manager' ), esc_url( $permalink ) ),
+		6  => sprintf( __( 'Job posts published <a href="%s">View job posts</a>', 'vk-google-job-posting-manager' ), esc_url( $permalink ) ),
 		7  => __( 'Job posts saved.', 'vk-google-job-posting-manager' ),
 		/* translators: %s: post permalink */
-		8  => sprintf( __( 'Job posts submitted. <a target="_blank" href="%s">Preview job posts</a>', 'vk-google-job-posting-manager' ), esc_url( add_query_arg( 'preview', 'true', $permalink ) ) ),
+		8  => sprintf( __( 'Job posts submitted <a target="_blank" href="%s">Preview job posts</a>', 'vk-google-job-posting-manager' ), esc_url( add_query_arg( 'preview', 'true', $permalink ) ) ),
 		/* translators: 1: Publish box date format, see https://secure.php.net/date 2: Post permalink */
 		9  => sprintf( __( 'Job posts scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview job posts</a>', 'vk-google-job-posting-manager' ),
 			date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( $permalink ) ),
 		/* translators: %s: post permalink */
-		10 => sprintf( __( 'Job posts draft updated. <a target="_blank" href="%s">Preview job posts</a>', 'vk-google-job-posting-manager' ), esc_url( add_query_arg( 'preview', 'true', $permalink ) ) ),
+		10 => sprintf( __( 'Job posts draft updated <a target="_blank" href="%s">Preview job posts</a>', 'vk-google-job-posting-manager' ), esc_url( add_query_arg( 'preview', 'true', $permalink ) ) ),
 	);
 
 	return $messages;

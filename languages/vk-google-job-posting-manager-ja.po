@@ -1,4 +1,4 @@
-# Copyright (C) 2019 Vektor,Inc.
+# Copyright (C) 2019 Vektor,Inc
 # This file is distributed under the same license as the VK Google Job Posting Manager plugin.
 msgid ""
 msgstr ""
@@ -9,8 +9,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2019-04-10T05:40:56+00:00\n"
-"PO-Revision-Date: 2019-04-10 15:53+0900\n"
+"POT-Creation-Date: 2019-04-10 16:14+0900\n"
+"PO-Revision-Date: 2019-04-10 17:23+0900\n"
 "X-Generator: Poedit 2.2.1\n"
 "X-Domain: vk-google-job-posting-manager\n"
 "Last-Translator: \n"
@@ -18,25 +18,23 @@ msgstr ""
 "Language: ja_JP\n"
 
 #. Plugin Name of the plugin
-#: vk-google-job-posting-manager.php:55 vk-google-job-posting-manager.php:56
+#: vk-google-job-posting-manager.php:59 vk-google-job-posting-manager.php:60
 msgid "VK Google Job Posting Manager"
 msgstr "VK Google Job Posting Manager"
 
 #. Plugin URI of the plugin
-#, fuzzy
 msgid "https://github.com/vektor-inc/vk-google-job-posting-manager"
 msgstr "https://github.com/vektor-inc/vk-google-job-posting-manager"
 
 #. Description of the plugin
-msgid "This is the plugin for Google Job posting."
-msgstr "これは、Google の求人投稿のためのプラグインです."
+msgid "This is the plugin for Google Job posting"
+msgstr "これはGoogle の求人投稿のためのプラグインです"
 
 #. Author of the plugin
-msgid "Vektor,Inc."
-msgstr "株式会社ベクトル."
+msgid "Vektor,Inc"
+msgstr "株式会社ベクトル"
 
 #. Author URI of the plugin
-#, fuzzy
 msgid "https://www.vektor-inc.co.jp"
 msgstr "https://www.vektor-inc.co.jp"
 
@@ -45,19 +43,22 @@ msgid "Posted Date"
 msgstr "掲載日"
 
 #: blocks/vk-google-job-posting-manager-block.php:141
+#: inc/custom-field-builder/custom-field-builder-config.php:191
 msgid "Expiry Date"
 msgstr "有効期限"
 
 #: blocks/vk-google-job-posting-manager-block.php:145
+#: inc/custom-field-builder/custom-field-builder-config.php:62
 msgid "Job Title"
 msgstr "職種名"
 
 #: blocks/vk-google-job-posting-manager-block.php:149
+#: inc/custom-field-builder/custom-field-builder-config.php:68
 msgid "Description"
 msgstr "詳細"
 
 #: blocks/vk-google-job-posting-manager-block.php:153
-#, fuzzy
+#: inc/custom-field-builder/custom-field-builder-config.php:74
 msgid "Base Salary"
 msgstr "基本給"
 
@@ -70,90 +71,456 @@ msgid "Work Location"
 msgstr "職場住所"
 
 #: blocks/vk-google-job-posting-manager-block.php:162
+#: inc/custom-field-builder/custom-field-builder-config.php:136
 msgid "Employment Type"
 msgstr "雇用形態"
 
 #: blocks/vk-google-job-posting-manager-block.php:166
+#: inc/custom-field-builder/custom-field-builder-config.php:106
 msgid "Incentive Compensation"
-msgstr "インセンティブ"
+msgstr "賞与"
 
 #: blocks/vk-google-job-posting-manager-block.php:170
-#, fuzzy
+#: inc/custom-field-builder/custom-field-builder-config.php:112
 msgid "Salary Raise"
 msgstr "昇給"
 
 #: blocks/vk-google-job-posting-manager-block.php:174
+#: inc/custom-field-builder/custom-field-builder-config.php:118
 msgid "Work Hours"
 msgstr "勤務時間"
 
 #: blocks/vk-google-job-posting-manager-block.php:179
+#: inc/custom-field-builder/custom-field-builder-config.php:124
 msgid "Experience Requirements"
-msgstr "必要経験"
+msgstr "この仕事に必要とされる経験・スキル"
 
 #: blocks/vk-google-job-posting-manager-block.php:183
-#, fuzzy
+#: inc/custom-field-builder/custom-field-builder-config.php:130
 msgid "Special Commitments"
-msgstr "特別コミットメント"
+msgstr "福利厚生"
 
 #: blocks/vk-google-job-posting-manager-block.php:187
+#: inc/custom-field-builder/custom-field-builder-config.php:143
 msgid "Hiring Organization Name"
 msgstr "組織名"
 
 #: blocks/vk-google-job-posting-manager-block.php:191
+#: inc/custom-field-builder/custom-field-builder-config.php:149
 msgid "Hiring Organization Website"
 msgstr "組織のウェブサイト"
 
 #: blocks/vk-google-job-posting-manager-block.php:195
+#: inc/custom-field-builder/custom-field-builder-config.php:155
 msgid "Hiring Organization Logo"
 msgstr "組織のロゴ"
 
-#: vk-google-job-posting-manager.php:151
+#: inc/custom-posttype-builder.php:6 inc/custom-posttype-builder.php:7
+#: inc/custom-posttype-builder.php:30
+msgid "Job posts"
+msgstr "求人投稿"
+
+#: inc/custom-posttype-builder.php:8
+msgid "All Job posts"
+msgstr "求人投稿一覧"
+
+#: inc/custom-posttype-builder.php:9
+msgid "Job posts Archives"
+msgstr "求人投稿アーカイブ"
+
+#: inc/custom-posttype-builder.php:10
+msgid "Job posts Attributes"
+msgstr "ジョブ投稿属性"
+
+#: inc/custom-posttype-builder.php:11
+msgid "Insert into job posts"
+msgstr "求人投稿への挿入"
+
+#: inc/custom-posttype-builder.php:12
+msgid "Uploaded to this job posts"
+msgstr "この求人投稿にアップロードする"
+
+#: inc/custom-posttype-builder.php:13
+msgctxt "job-posts"
+msgid "Featured Image"
+msgstr "アイキャッチ画像"
+
+#: inc/custom-posttype-builder.php:14
+msgctxt "job-posts"
+msgid "Set featured image"
+msgstr "アイキャッチ画像を設定"
+
+#: inc/custom-posttype-builder.php:15
+msgctxt "job-posts"
+msgid "Remove featured image"
+msgstr "アイキャッチ画像を削除する"
+
+#: inc/custom-posttype-builder.php:16
+msgctxt "job-posts"
+msgid "Use as featured image"
+msgstr "アイキャッチ画像として使用"
+
+#: inc/custom-posttype-builder.php:17
+msgid "Filter job posts list"
+msgstr "求人投稿のリストをフィルターする"
+
+#: inc/custom-posttype-builder.php:18
+msgid "Job posts list navigation"
+msgstr "求人投稿リストのナビゲーション"
+
+#: inc/custom-posttype-builder.php:19
+msgid "Job posts list"
+msgstr "求人投稿一覧"
+
+#: inc/custom-posttype-builder.php:20
+msgid "New Job posts"
+msgstr "新しい求人投稿"
+
+#: inc/custom-posttype-builder.php:21
+msgid "Add New"
+msgstr "新規追加"
+
+#: inc/custom-posttype-builder.php:22
+msgid "Add New Job posts"
+msgstr "新しい求人投稿の追加"
+
+#: inc/custom-posttype-builder.php:23
+msgid "Edit Job posts"
+msgstr "求人投稿の編集"
+
+#: inc/custom-posttype-builder.php:24 inc/custom-posttype-builder.php:25
+msgid "View Job posts"
+msgstr "求人投稿の表示"
+
+#: inc/custom-posttype-builder.php:26
+msgid "Search job posts"
+msgstr "求人投稿の検索"
+
+#: inc/custom-posttype-builder.php:27
+msgid "No job posts found"
+msgstr "求人投稿が見つかりません"
+
+#: inc/custom-posttype-builder.php:28
+msgid "No job posts found in trash"
+msgstr "ゴミ箱に求人投稿が見つかりませんでした"
+
+#: inc/custom-posttype-builder.php:29
+msgid "Parent Job posts:"
+msgstr "親の求人投稿:"
+
+#. translators: %s: post permalink
+#: inc/custom-posttype-builder.php:71
+msgid "Job posts updated. <a target=\"_blank\" href=\"%s\">View job posts</a>"
+msgstr ""
+"求人投稿を更新しました。<a target=\"_blank\" href=\"%s\">求人投稿の表示</a>"
+
+#: inc/custom-posttype-builder.php:72
+msgid "Custom field updated."
+msgstr "カスタムフィールドを更新しました。"
+
+#: inc/custom-posttype-builder.php:73
+msgid "Custom field deleted."
+msgstr "カスタムフィールドを削除しました。"
+
+#: inc/custom-posttype-builder.php:74
+msgid "Job posts updated."
+msgstr "求人投稿を更新しました。"
+
+#. translators: %s: date and time of the revision
+#: inc/custom-posttype-builder.php:76
+msgid "Job posts restored to revision from %s"
+msgstr "%s からリビジョンに復元する"
+
+#. translators: %s: post permalink
+#: inc/custom-posttype-builder.php:78
+msgid "Job posts published. <a href=\"%s\">View job posts</a>"
+msgstr "求人投稿を公開しました。<a href=\"%s\">求人投稿の表示</a>"
+
+#: inc/custom-posttype-builder.php:79
+msgid "Job posts saved."
+msgstr "ジョブの投稿が保存する."
+
+#. translators: %s: post permalink
+#: inc/custom-posttype-builder.php:81
+msgid ""
+"Job posts submitted. <a target=\"_blank\" href=\"%s\">Preview job posts</a>"
+msgstr ""
+"求人投稿を提出しました<a target=\"_blank\" href=\"%s\">求人投稿のプレビュー</"
+"a>"
+
+#. translators: 1: Publish box date format, see https://secure.php.net/date 2: Post permalink
+#: inc/custom-posttype-builder.php:83
+msgid ""
+"Job posts scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href="
+"\"%2$s\">Preview job posts</a>"
+msgstr ""
+"スケジュールされた求人投稿: <strong>%1$s</strong>。<a target=\"_blank\" href="
+"\"%2$s\">求人投稿のプレビュー</a>"
+
+#. translators: %s: post permalink
+#: inc/custom-posttype-builder.php:86
+msgid ""
+"Job posts draft updated. <a target=\"_blank\" href=\"%s\">Preview job posts</"
+"a>"
+msgstr ""
+"求人投稿の下書きが更新されました。<a target=\"_blank\" href=\"%s\">求人投稿の"
+"プレビュー</a>"
+
+#: inc/custom-field-builder/package/custom-field-builder.php:149
+msgid "Choose Image"
+msgstr "画像を選択"
+
+#: inc/custom-field-builder/package/custom-field-builder.php:151
+msgid "Delete Image"
+msgstr "イメージを削除"
+
+#: inc/custom-field-builder/package/custom-field-builder.php:155
+msgid "Select file"
+msgstr "ファイルを選択してください"
+
+#: inc/custom-field-builder/package/custom-field-builder.php:157
+msgid "View file"
+msgstr "ファイルの表示"
+
+#: inc/custom-field-builder/package/custom-field-flexible-table.php:65
+#: inc/custom-field-builder/package/custom-field-flexible-table.php:66
+msgid "Delete Row"
+msgstr "行の削除"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:42
+msgid "Please enter details of your recruitment."
+msgstr "採用の詳細を入力してください。"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:64
+msgid ""
+"Example: Software Engineer, Barista. Please enter only the name of the job. "
+"Please do not include the job code, address, date, salary, company name."
+msgstr ""
+"例: ソフトウェアエンジニア、バリスタ。ジョブの名前だけを入力してください。"
+"ジョブコード、住所、日付、給与、会社名は含めないでください。"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:70
+msgid "Please enter specific description of the job."
+msgstr "仕事の具体的な説明を入力してください。"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:76
+msgid "Please enter the base salary in integer. Ex：250000"
+msgstr "基本給を整数で入力してください。例: 250000"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:80
+msgid "Minimum Value of Salary"
+msgstr "給与の最低額"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:82
+msgid "Please enter the minimum value of the salary. Ex：150000"
+msgstr "給与の最低額を入力してください。例: 150000"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:86
+msgid "Max Value of Salary"
+msgstr "給与の最大額"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:88
+msgid "Please enter the max value of the salary. Ex：250000"
+msgstr "給与の最高額を入力してください。例: 250000"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:92
+msgid "Salary per ?"
+msgstr "給与支給期間の単位"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:94
+msgid "Per hour"
+msgstr "時給"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:94
+msgid "Per month"
+msgstr "月給"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:94
+msgid "Per year"
+msgstr "年収"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:95
+msgid "Please select the term."
+msgstr "用語を選択してください."
+
+#: inc/custom-field-builder/custom-field-builder-config.php:99
+msgid "Currency"
+msgstr "通貨単位"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:101
+msgid "YEN"
+msgstr "円"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:101
+msgid "USD"
+msgstr "ドル"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:102
+msgid "Please select the currency"
+msgstr "通貨単位を選択してください"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:108
+msgid "Please enter the description of incentive compensation."
+msgstr "インセンティブの説明を入力してください。"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:114
+#: inc/custom-field-builder/custom-field-builder-config.php:139
+msgid "Please enter the description of salary raise."
+msgstr "昇給の説明を入力してください。"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:120
+msgid "Please enter the description of work hours."
+msgstr "勤務時間の説明を入力してください。"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:126
+msgid ""
+"Please enter the description of experience requirements. If you have the one."
+msgstr "必要な経験についての説明を入力してください。"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:132
+msgid "Please enter the description of special commitments"
+msgstr "福利厚生の説明を入力してください"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:138
+msgid "FULL TIME"
+msgstr "正社員"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:138
+msgid "PART TIME"
+msgstr "アルバイト"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:138
+msgid "CONTRACTOR"
+msgstr "業務委託"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:138
+msgid "TEMPORARY"
+msgstr "派遣社員"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:138
+msgid "INTERN"
+msgstr "インターン"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:138
+msgid "VOLUNTEER"
+msgstr "ボランティア"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:138
+msgid "PER DIEM"
+msgstr "日雇い"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:138
+msgid "OTHER"
+msgstr "その他"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:145
+msgid "Example : Vektor,Inc. Do not include address of organization"
+msgstr "例: 株式会社ベクトル。 住所を含めないでください"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:151
+msgid "Example : https://www.vektor-inc.co.jp/"
+msgstr "例: https://www.vektor-inc.co.jp/"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:157
+msgid "Example : https://www.vektor-inc.co.jp/logo.png"
+msgstr "例: https://www.vektor-inc.co.jp/logo.png"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:161
+msgid "Postal Code of ork Location"
+msgstr "郵便番号"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:163
+msgid "Example : 94043. Do not include hyphens. "
+msgstr "例: 94043。ハイフンは含めないでください. "
+
+#: inc/custom-field-builder/custom-field-builder-config.php:167
+msgid "Country of Work Location"
+msgstr "国"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:169
+msgid "Please enter country code. Example : US"
+msgstr "国番号を入力してください。例: US"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:173
+msgid "Address Region of Work Location"
+msgstr "都道府県"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:175
+msgid "Example : CA"
+msgstr "例: CA"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:179
+msgid "Address Locality of Work Location"
+msgstr "市区町村"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:181
+msgid "Example : Mountain View"
+msgstr "例: マウンテンビュー"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:185
+msgid "Street Address of Work Location"
+msgstr "住所"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:187
+msgid "Example : 1600 Amphitheatre Pkwy"
+msgstr "例: アンフィテアトルムパークウェイ1600"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:193
+msgid ""
+"Please enter expiry date, If you have one. Example : "
+"\"2017-02-24\"、\"2017-02-24T19:33:17+00:00\". If you are not sure about "
+"expiry date, please leave it blank."
+msgstr ""
+"求人の有効期限を入力してください。例: 「2017-02-24」、「2017-24T19:00」の形式"
+"で入力して下さい。有効期限がわからない場合は、空欄のままにしてください。"
+
+#: vk-google-job-posting-manager.php:155
 msgid "Job Posting Manager Settings"
 msgstr "VK Google Job Posting Managerの設定"
 
-#: vk-google-job-posting-manager.php:157
+#: vk-google-job-posting-manager.php:161
 msgid "Create Job-Posts Post type."
-msgstr "求人専用の投稿タイプを作成します."
+msgstr "求人専用の投稿タイプを作成"
 
-#: vk-google-job-posting-manager.php:159
-#, fuzzy
+#: vk-google-job-posting-manager.php:163
 msgid ""
 "This plugin automatically create post type for Job Posting.<br>If you have "
 "already created custom post type for Job Post, please remove this check and "
 "select post type of next check boxes."
 msgstr ""
-"このプラグインは、求人投稿の投稿タイプを自動的に作成します。<br>求人投稿のカ"
-"スタム投稿タイプをすでに作成している場合は、このチェックを外して、次のチェッ"
-"クボックスの投稿タイプを選択してください。"
-
-#: vk-google-job-posting-manager.php:162
-msgid "Choose the post type to display job posting custom fields."
-msgstr ""
-"求人情報入力用のカスタムフィールドを表示する投稿タイプを選択して下さい."
+"このプラグインは、求人投稿の投稿タイプを自動的に作成します。<br>求人の投稿タ"
+"イプを作成する必要がない場合はチェックを外し、一つ下のチェックボックスから入"
+"力フォームを表示したい投稿タイプを選択して下さい。"
 
 #: vk-google-job-posting-manager.php:166
+msgid "Choose the post type to display job posting custom fields."
+msgstr "求人情報入力フォームを表示する投稿タイプ"
+
+#: vk-google-job-posting-manager.php:170
 msgid "Common Fields"
 msgstr "共通の求人項目"
 
-#: vk-google-job-posting-manager.php:168
-#, fuzzy
+#: vk-google-job-posting-manager.php:172
 msgid ""
 "If a single page is filled in, the content of the single page takes "
 "precedence."
 msgstr "1つのページが入力されると、1つのページの内容が優先されます。"
 
-#: vk-google-job-posting-manager.php:303
-#, fuzzy
+#: vk-google-job-posting-manager.php:307
 msgid "Create The Post Type."
-msgstr "投稿タイプを作成します。"
+msgstr "投稿タイプを作成."
 
 #: blocks/create-table/index.js:12
 msgid "Job Posting"
-msgstr "Job Posting"
+msgstr "求人投稿"
+
+#: blocks/create-table/index.js:35
+msgid "Please enter the post ID which you want to display"
+msgstr "表示したい投稿ID を入力してください"
 
 #: blocks/create-table/index.js:44
 msgid "Table Style"
-msgstr "スタイル"
+msgstr "テーブルのスタイル"
 
 #: blocks/create-table/index.js:50
 msgid "Default"
