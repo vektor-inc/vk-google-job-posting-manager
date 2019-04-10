@@ -1,7 +1,132 @@
+# Copyright (C) 2019 Vektor,Inc.
+# This file is distributed under the same license as the VK Google Job Posting Manager plugin.
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=utf-8\n"
-"X-Generator: babel-plugin-makepot\n"
+"Project-Id-Version: VK Google Job Posting Manager 0.2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/vk-google-job-posting-manager\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-04-10T05:40:56+00:00\n"
+"PO-Revision-Date: 2019-04-10T05:40:56+00:00\n"
+"X-Generator: WP-CLI 2.0.1\n"
+"X-Domain: vk-google-job-posting-manager\n"
+
+#. Plugin Name of the plugin
+#: vk-google-job-posting-manager.php:55
+#: vk-google-job-posting-manager.php:56
+msgid "VK Google Job Posting Manager"
+msgstr ""
+
+#. Plugin URI of the plugin
+msgid "https://github.com/vektor-inc/vk-google-job-posting-manager"
+msgstr ""
+
+#. Description of the plugin
+msgid "This is the plugin for Google Job posting."
+msgstr ""
+
+#. Author of the plugin
+msgid "Vektor,Inc."
+msgstr ""
+
+#. Author URI of the plugin
+msgid "https://www.vektor-inc.co.jp"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:137
+msgid "Posted Date"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:141
+msgid "Expiry Date"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:145
+msgid "Job Title"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:149
+msgid "Description"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:153
+msgid "Base Salary"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:155
+msgid "Average Value"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:158
+msgid "Work Location"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:162
+msgid "Employment Type"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:166
+msgid "Incentive Compensation"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:170
+msgid "Salary Raise"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:174
+msgid "Work Hours"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:179
+msgid "Experience Requirements"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:183
+msgid "Special Commitments"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:187
+msgid "Hiring Organization Name"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:191
+msgid "Hiring Organization Website"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:195
+msgid "Hiring Organization Logo"
+msgstr ""
+
+#: vk-google-job-posting-manager.php:151
+msgid "Job Posting Manager Settings"
+msgstr ""
+
+#: vk-google-job-posting-manager.php:157
+msgid "Create Job-Posts Post type."
+msgstr ""
+
+#: vk-google-job-posting-manager.php:159
+msgid "This plugin automatically create post type for Job Posting.<br>If you have already created custom post type for Job Post, please remove this check and select post type of next check boxes."
+msgstr ""
+
+#: vk-google-job-posting-manager.php:162
+msgid "Choose the post type to display job posting custom fields."
+msgstr ""
+
+#: vk-google-job-posting-manager.php:166
+msgid "Common Fields"
+msgstr ""
+
+#: vk-google-job-posting-manager.php:168
+msgid "If a single page is filled in, the content of the single page takes precedence."
+msgstr ""
+
+#: vk-google-job-posting-manager.php:303
+msgid "Create The Post Type."
+msgstr ""
 
 #: blocks/create-table/index.js:12
 msgid "Job Posting"
