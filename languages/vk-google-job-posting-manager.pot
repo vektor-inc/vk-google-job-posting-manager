@@ -1,6 +1,5 @@
 # Copyright (C) 2019 Vektor,Inc
 # This file is distributed under the same license as the VK Google Job Posting Manager plugin.
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: VK Google Job Posting Manager 0.2.0\n"
@@ -10,13 +9,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2019-04-10 16:14+0900\n"
-"PO-Revision-Date: 2019-04-10T07:13:24+00:00\n"
-"X-Generator: Poedit 2.2.1\n"
+"POT-Creation-Date: 2019-04-10T08:24:49+00:00\n"
+"PO-Revision-Date: 2019-04-10T08:24:49+00:00\n"
+"X-Generator: WP-CLI 2.0.1\n"
 "X-Domain: vk-google-job-posting-manager\n"
 
 #. Plugin Name of the plugin
-#: vk-google-job-posting-manager.php:59 vk-google-job-posting-manager.php:60
+#: vk-google-job-posting-manager.php:59
+#: vk-google-job-posting-manager.php:60
 msgid "VK Google Job Posting Manager"
 msgstr ""
 
@@ -113,7 +113,8 @@ msgstr ""
 msgid "Hiring Organization Logo"
 msgstr ""
 
-#: inc/custom-posttype-builder.php:6 inc/custom-posttype-builder.php:7
+#: inc/custom-posttype-builder.php:6
+#: inc/custom-posttype-builder.php:7
 #: inc/custom-posttype-builder.php:30
 msgid "Job posts"
 msgstr ""
@@ -186,7 +187,8 @@ msgstr ""
 msgid "Edit Job posts"
 msgstr ""
 
-#: inc/custom-posttype-builder.php:24 inc/custom-posttype-builder.php:25
+#: inc/custom-posttype-builder.php:24
+#: inc/custom-posttype-builder.php:25
 msgid "View Job posts"
 msgstr ""
 
@@ -208,7 +210,7 @@ msgstr ""
 
 #. translators: %s: post permalink
 #: inc/custom-posttype-builder.php:71
-msgid "Job posts updated. <a target=\"_blank\" href=\"%s\">View job posts</a>"
+msgid "Job posts updated <a target=\"_blank\" href=\"%s\">View job posts</a>"
 msgstr ""
 
 #: inc/custom-posttype-builder.php:72
@@ -230,7 +232,7 @@ msgstr ""
 
 #. translators: %s: post permalink
 #: inc/custom-posttype-builder.php:78
-msgid "Job posts published. <a href=\"%s\">View job posts</a>"
+msgid "Job posts published <a href=\"%s\">View job posts</a>"
 msgstr ""
 
 #: inc/custom-posttype-builder.php:79
@@ -239,7 +241,7 @@ msgstr ""
 
 #. translators: %s: post permalink
 #: inc/custom-posttype-builder.php:81
-msgid "Job posts submitted. <a target=\"_blank\" href=\"%s\">Preview job posts</a>"
+msgid "Job posts submitted <a target=\"_blank\" href=\"%s\">Preview job posts</a>"
 msgstr ""
 
 #. translators: 1: Publish box date format, see https://secure.php.net/date 2: Post permalink
@@ -249,7 +251,7 @@ msgstr ""
 
 #. translators: %s: post permalink
 #: inc/custom-posttype-builder.php:86
-msgid "Job posts draft updated. <a target=\"_blank\" href=\"%s\">Preview job posts</a>"
+msgid "Job posts draft updated <a target=\"_blank\" href=\"%s\">Preview job posts</a>"
 msgstr ""
 
 #: inc/custom-field-builder/package/custom-field-builder.php:149
@@ -306,7 +308,7 @@ msgid "Please enter the max value of the salary. Ex：250000"
 msgstr ""
 
 #: inc/custom-field-builder/custom-field-builder-config.php:92
-msgid "Salary per ?"
+msgid "Salary Payment Period"
 msgstr ""
 
 #: inc/custom-field-builder/custom-field-builder-config.php:94
@@ -455,7 +457,7 @@ msgid "Job Posting Manager Settings"
 msgstr ""
 
 #: vk-google-job-posting-manager.php:161
-msgid "Create Job-Posts Post type."
+msgid "Create Job-Posts Post type"
 msgstr ""
 
 #: vk-google-job-posting-manager.php:163
