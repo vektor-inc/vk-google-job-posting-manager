@@ -62,8 +62,8 @@ class VK_Custom_Field_Builder_Flexible_Table {
 				$form_table .= '<input class="flexible-field-item" type="text" id="' . $custom_fields_array['field_name'] . '[' . $key . '][' . $field_key . ']" name="' . $custom_fields_array['field_name'] . '[' . $key . '][' . $field_key . ']" value="' . esc_attr( $fields_value[ $key ][ $field_key ] ) . '"></td>';
 			}
 			$form_table .= '<td class="cell-control">
-			<input type="button" class="add-row button button-primary" value="'.__( 'Delete Row', 'vk-job-posting' ).'" />
-			<input type="button" class="del-row button" value="'.__( 'Delete Row', 'vk-job-posting' ).'" />
+			<input type="button" class="add-row button button-primary" value="'.__( 'Delete Row', 'vk-google-job-posting-manager' ).'" />
+			<input type="button" class="del-row button" value="'.__( 'Delete Row', 'vk-google-job-posting-manager' ).'" />
 			</td>';
 			$form_table .= '</tr>';
 		}

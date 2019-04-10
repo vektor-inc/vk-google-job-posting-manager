@@ -146,15 +146,15 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 					$form_html .= '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . self::form_post_value( $key ) . '" style="width:60%;" />';
 
-					$form_html .= '<button id="media_' . $key . '" class="cfb_media_btn btn btn-default button button-default">' . __( 'Choose Image', 'custom_field_builder_textdomain' ) . '</button> ';
+					$form_html .= '<button id="media_' . $key . '" class="cfb_media_btn btn btn-default button button-default">' . __( 'Choose Image', 'vk-google-job-posting-manager' ) . '</button> ';
 
-					$form_html .= '<a id="media_reset_' . $key . '" class="media_reset_btn btn btn-default button button-default">' . __( 'Delete Image', 'custom_field_builder_textdomain' ) . '</a>';
+					$form_html .= '<a id="media_reset_' . $key . '" class="media_reset_btn btn btn-default button button-default">' . __( 'Delete Image', 'vk-google-job-posting-manager' ) . '</a>';
 
 				} elseif ( $value['type'] == 'file' ) {
 					$form_html .= '<input name="' . $key . '" id="' . $key . '" value="' . self::form_post_value( $key ) . '" style="width:60%;" />
-<button id="media_src_' . $key . '" class="cfb_media_btn btn btn-default button button-default">' . __( 'Select file', 'custom_field_builder_textdomain' ) . '</button> ';
+<button id="media_src_' . $key . '" class="cfb_media_btn btn btn-default button button-default">' . __( 'Select file', 'vk-google-job-posting-manager' ) . '</button> ';
 					if ( $post->$key ) {
-						$form_html .= '<a href="' . esc_url( $post->$key ) . '" target="_blank" class="btn btn-default button button-default">' . __( 'View file', 'custom_field_builder_textdomain' ) . '</a>';
+						$form_html .= '<a href="' . esc_url( $post->$key ) . '" target="_blank" class="btn btn-default button button-default">' . __( 'View file', 'vk-google-job-posting-manager' ) . '</a>';
 					}
 				}
 				if ( $value['description'] ) {

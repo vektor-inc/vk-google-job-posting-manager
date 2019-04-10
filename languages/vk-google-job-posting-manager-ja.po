@@ -1,21 +1,164 @@
+# Copyright (C) 2019 Vektor,Inc.
+# This file is distributed under the same license as the VK Google Job Posting Manager plugin.
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=UTF-8\n"
-"X-Generator: Poedit 2.2.1\n"
-"Project-Id-Version: \n"
-"POT-Creation-Date: \n"
-"PO-Revision-Date: \n"
+"Project-Id-Version: VK Google Job Posting Manager 0.2.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/vk-google-job-"
+"posting-manager\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2019-04-10T05:40:56+00:00\n"
+"PO-Revision-Date: 2019-04-10 15:53+0900\n"
+"X-Generator: Poedit 2.2.1\n"
+"X-Domain: vk-google-job-posting-manager\n"
 "Last-Translator: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "Language: ja_JP\n"
 
-#: blocks/vk-job-posting/index.js:27
-msgid "Job Posting"
-msgstr ""
+#. Plugin Name of the plugin
+#: vk-google-job-posting-manager.php:55 vk-google-job-posting-manager.php:56
+msgid "VK Google Job Posting Manager"
+msgstr "VK Google Job Posting Manager"
 
-#: blocks/vk-job-posting/index.js:55
-msgid "Hello from the editor!"
+#. Plugin URI of the plugin
+#, fuzzy
+msgid "https://github.com/vektor-inc/vk-google-job-posting-manager"
+msgstr "https://github.com/vektor-inc/vk-google-job-posting-manager"
+
+#. Description of the plugin
+msgid "This is the plugin for Google Job posting."
+msgstr "これは、Google の求人投稿のためのプラグインです."
+
+#. Author of the plugin
+msgid "Vektor,Inc."
+msgstr "株式会社ベクトル."
+
+#. Author URI of the plugin
+#, fuzzy
+msgid "https://www.vektor-inc.co.jp"
+msgstr "https://www.vektor-inc.co.jp"
+
+#: blocks/vk-google-job-posting-manager-block.php:137
+msgid "Posted Date"
+msgstr "掲載日"
+
+#: blocks/vk-google-job-posting-manager-block.php:141
+msgid "Expiry Date"
+msgstr "有効期限"
+
+#: blocks/vk-google-job-posting-manager-block.php:145
+msgid "Job Title"
+msgstr "職種名"
+
+#: blocks/vk-google-job-posting-manager-block.php:149
+msgid "Description"
+msgstr "詳細"
+
+#: blocks/vk-google-job-posting-manager-block.php:153
+#, fuzzy
+msgid "Base Salary"
+msgstr "基本給"
+
+#: blocks/vk-google-job-posting-manager-block.php:155
+msgid "Average Value"
+msgstr "平均給与"
+
+#: blocks/vk-google-job-posting-manager-block.php:158
+msgid "Work Location"
+msgstr "職場住所"
+
+#: blocks/vk-google-job-posting-manager-block.php:162
+msgid "Employment Type"
+msgstr "雇用形態"
+
+#: blocks/vk-google-job-posting-manager-block.php:166
+msgid "Incentive Compensation"
+msgstr "インセンティブ"
+
+#: blocks/vk-google-job-posting-manager-block.php:170
+#, fuzzy
+msgid "Salary Raise"
+msgstr "昇給"
+
+#: blocks/vk-google-job-posting-manager-block.php:174
+msgid "Work Hours"
+msgstr "勤務時間"
+
+#: blocks/vk-google-job-posting-manager-block.php:179
+msgid "Experience Requirements"
+msgstr "必要経験"
+
+#: blocks/vk-google-job-posting-manager-block.php:183
+#, fuzzy
+msgid "Special Commitments"
+msgstr "特別コミットメント"
+
+#: blocks/vk-google-job-posting-manager-block.php:187
+msgid "Hiring Organization Name"
+msgstr "組織名"
+
+#: blocks/vk-google-job-posting-manager-block.php:191
+msgid "Hiring Organization Website"
+msgstr "組織のウェブサイト"
+
+#: blocks/vk-google-job-posting-manager-block.php:195
+msgid "Hiring Organization Logo"
+msgstr "組織のロゴ"
+
+#: vk-google-job-posting-manager.php:151
+msgid "Job Posting Manager Settings"
+msgstr "VK Google Job Posting Managerの設定"
+
+#: vk-google-job-posting-manager.php:157
+msgid "Create Job-Posts Post type."
+msgstr "求人専用の投稿タイプを作成します."
+
+#: vk-google-job-posting-manager.php:159
+#, fuzzy
+msgid ""
+"This plugin automatically create post type for Job Posting.<br>If you have "
+"already created custom post type for Job Post, please remove this check and "
+"select post type of next check boxes."
 msgstr ""
+"このプラグインは、求人投稿の投稿タイプを自動的に作成します。<br>求人投稿のカ"
+"スタム投稿タイプをすでに作成している場合は、このチェックを外して、次のチェッ"
+"クボックスの投稿タイプを選択してください。"
+
+#: vk-google-job-posting-manager.php:162
+msgid "Choose the post type to display job posting custom fields."
+msgstr ""
+"求人情報入力用のカスタムフィールドを表示する投稿タイプを選択して下さい."
+
+#: vk-google-job-posting-manager.php:166
+msgid "Common Fields"
+msgstr "共通の求人項目"
+
+#: vk-google-job-posting-manager.php:168
+#, fuzzy
+msgid ""
+"If a single page is filled in, the content of the single page takes "
+"precedence."
+msgstr "1つのページが入力されると、1つのページの内容が優先されます。"
+
+#: vk-google-job-posting-manager.php:303
+#, fuzzy
+msgid "Create The Post Type."
+msgstr "投稿タイプを作成します。"
+
+#: blocks/create-table/index.js:12
+msgid "Job Posting"
+msgstr "Job Posting"
+
+#: blocks/create-table/index.js:44
+msgid "Table Style"
+msgstr "スタイル"
+
+#: blocks/create-table/index.js:50
+msgid "Default"
+msgstr "デフォルト"
+
+#: blocks/create-table/index.js:54
+msgid "Stripe"
+msgstr "ストライプ"

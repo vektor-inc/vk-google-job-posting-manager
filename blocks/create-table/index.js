@@ -32,7 +32,7 @@ registerBlockType('vk-google-job-posting-manager/create-table', {
 				<InspectorControls>
 					<PanelBody>
 						<RangeControl
-							help={"Please enter the post ID which you want to display."}
+							help={__('Please enter the post ID which you want to display', 'vk-google-job-posting-manager')}
 							value={id}
 							onChange={(value) => {
 								setAttributes({id: value});

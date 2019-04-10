@@ -2,8 +2,8 @@
 /**
  * Plugin Name:     VK Google Job Posting Manager
  * Plugin URI:      https://github.com/vektor-inc/vk-google-job-posting-manager
- * Description:     This is the plugin for Google Job posting.
- * Author:          Vektor,Inc.
+ * Description:     This is the plugin for Google Job posting
+ * Author:          Vektor,Inc
  * Author URI:      https://www.vektor-inc.co.jp
  * Text Domain:     vk-google-job-posting-manager
  * Domain Path:     /languages
@@ -33,12 +33,17 @@ require_once( dirname( __FILE__ ) . '/inc/custom-field-builder/package/custom-fi
 require_once( dirname( __FILE__ ) . '/inc/custom-field-builder/custom-field-builder-config.php' );
 require_once( dirname( __FILE__ ) . '/blocks/vk-google-job-posting-manager-block.php' );
 
+
+function vgjpm_load_textdomain() {
+	load_plugin_textdomain( 'vk-google-job-posting-manager', false, 'vk-google-job-posting-manager/languages' );
+}
+add_action( 'plugins_loaded', 'vgjpm_load_textdomain' );
+
 function vgjpm_activate() {
 
-	 flush_rewrite_rules();
+	load_plugin_textdomain( 'vk-google-job-posting-manager', false, 'vk-google-job-posting-manager/languages' );
+	flush_rewrite_rules();
 	 update_option( 'vgjpm_create_jobpost_posttype', 'true' );
-	 load_plugin_textdomain( 'vk-google-job-posting-manager', false, basename( dirname( __FILE__ ) ) . '/languages' );
-
 }
 register_activation_hook( __FILE__, 'vgjpm_activate' );
 
@@ -47,8 +52,7 @@ if ( isset( $flag_custom_posttype ) && $flag_custom_posttype == 'true' ) {
 	require_once( dirname( __FILE__ ) . '/inc/custom-posttype-builder.php' );
 }
 
-	/**
-	 */
+
 function vgjpm_add_setting_menu() {
 	$custom_page = add_submenu_page(
 		'/options-general.php',
