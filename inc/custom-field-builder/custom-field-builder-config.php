@@ -89,10 +89,10 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder{
 				'required'    => false,
 			),
 			'vkjp_unitText'                    => array(
-				'label'       => __( 'The Cycle Period of Salary Payment', 'vk-google-job-posting-manager' ),
+				'label'       => __( 'The Cycle of Salary Payment', 'vk-google-job-posting-manager' ),
 				'type'        => 'select',
 				'options'     => array( 'HOUR' => __( 'Per hour', 'vk-google-job-posting-manager' ), 'MONTH' => __( 'Per month', 'vk-google-job-posting-manager' ), 'YEAR' => __( 'Per year', 'vk-google-job-posting-manager' ) ),
-				'description' => __( 'Please select the term.', 'vk-google-job-posting-manager' ),
+				'description' => __( 'Please select from above', 'vk-google-job-posting-manager' ),
 				'required'    => false,
 			),
 			'vkjp_currency'  => array(

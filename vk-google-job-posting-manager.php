@@ -163,7 +163,7 @@ function vgjpm_create_common_form( $common_customfields ) {
 	$form .= '<p>' . __( 'This plugin automatically create post type for Job Posting.<br>If you have already created custom post type for Job Post, please remove this check and select post type of next check boxes.', 'vk-google-job-posting-manager' ) . '</p>';
 	$form .= vgjpm_create_jobpost_posttype();
 
-	$form .= '<h2>' . __( 'Choose the post type to display job posting custom fields.', 'vk-google-job-posting-manager' ) . '</h2>';
+	$form .= '<h2>' . __( 'Choose the post type to display job posting custom fields', 'vk-google-job-posting-manager' ) . '</h2>';
 
 	$form .= vgjpm_post_type_check_list();
 
@@ -304,7 +304,7 @@ function vgjpm_create_jobpost_posttype() {
 	$checked_saved = get_option( 'vgjpm_create_jobpost_posttype' );
 	$checked       = ( isset( $checked_saved ) && $checked_saved == 'true' ) ? ' checked' : '';
 	$list         .= '<li><label>';
-	$list         .= '<input type="checkbox" name="vgjpm_create_jobpost_posttype" value="true" ' . esc_attr( $checked ) . ' />' . __( 'Create The Post Type.', 'vk-google-job-posting-manager' ) . '</label></li>';
+	$list         .= '<input type="checkbox" name="vgjpm_create_jobpost_posttype" value="true" ' . esc_attr( $checked ) . ' />' . __( 'Create The Post Type', 'vk-google-job-posting-manager' ) . '</label></li>';
 
 	$list .= '</ul>';
 
