@@ -155,7 +155,7 @@ function vgjpm_render_job_posting_table( $id, $style, $className ) {
     </tr>
     <tr>
         <td>' . __( 'Work Location', 'vk-google-job-posting-manager' ) . '</td>
-        <td>〒' . esc_html( $custom_fields['vkjp_postalCode'] ) . '<br>' . esc_html( $custom_fields['vkjp_addressCountry'] ) . esc_html( $custom_fields['vkjp_addressRegion'] ) . esc_html( $custom_fields['vkjp_addressLocality'] ) . esc_html( $custom_fields['vkjp_streetAddress'] ) . '</td>
+        <td>' . __( 'Postal code', 'vk-google-job-posting-manager' ) . ' : ' . esc_html( $custom_fields['vkjp_postalCode'] ) . '<br>' . esc_html( $custom_fields['vkjp_addressCountry'] ) . esc_html( $custom_fields['vkjp_addressRegion'] ) . esc_html( $custom_fields['vkjp_addressLocality'] ) . esc_html( $custom_fields['vkjp_streetAddress'] ) . '</td>
     </tr>
     <tr>
         <td>' . __( 'Employment Type', 'vk-google-job-posting-manager' ) . '</td>
