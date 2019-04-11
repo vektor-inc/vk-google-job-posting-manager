@@ -139,8 +139,32 @@ function vgjpm_render_job_posting_table( $id, $style, $className ) {
 	$html = '
 	<div class="vk_vk-google-job-posting-manager' . esc_attr( $className ) . '">
 	<table class="vk_vk-google-job-posting-manager_table-' . esc_attr( $style ) . '">
-    <tbody>
-    <tr>
+    <tbody>';
+
+		// // ポータルサイトなどで必要になる可能性があるので削除しない
+		// $html .= '
+		// <tr>
+		// <td>' . __( 'Hiring Organization Logo', 'vk-google-job-posting-manager' ) . '</td>
+		// <td> <img src="' . esc_attr( $custom_fields['vkjp_logo'] ) . '" alt="Company Logo" /></td>
+		// </tr>
+		// <tr>
+		// <td>' . __( 'Hiring Organization Name', 'vk-google-job-posting-manager' ) . '</td>
+		// <td> ' . esc_html( $custom_fields['vkjp_name'] ) . '</td>
+		// </tr>
+		// <tr>
+		// <td>' . __( 'Hiring Organization Website', 'vk-google-job-posting-manager' ) . '</td>
+		// <td><a href="' . esc_attr( $custom_fields['vkjp_sameAs'] ) . '">' . esc_html( $custom_fields['vkjp_sameAs'] ) . '</a>' . '</td>
+		// </tr>
+		// <tr>
+		// <td>' . __( 'Posted Date', 'vk-google-job-posting-manager' ) . '</td>
+		// <td>' . esc_html( date( 'Y-m-d', strtotime( $custom_fields['vkjp_datePosted'] ) ) ) . '</td>
+		// </tr>
+		// <tr>
+		// <td>' . __( 'Expiry Date', 'vk-google-job-posting-manager' ) . '</td>
+		// <td>' . esc_html( date( 'Y-m-d', strtotime( $custom_fields['vkjp_validThrough'] ) ) ) . '</td>
+		// </tr>';
+
+	$html .= '<tr>
         <td>' . __( 'Job Title', 'vk-google-job-posting-manager' ) . '</td>
         <td>' . esc_html( $custom_fields['vkjp_title'] ) . '</td>
     </tr>
@@ -181,10 +205,6 @@ function vgjpm_render_job_posting_table( $id, $style, $className ) {
     <tr>
         <td>' . __( 'Special Commitments', 'vk-google-job-posting-manager' ) . '</td>
         <td>' . esc_html( $custom_fields['vkjp_specialCommitments'] ) . '</td>
-    </tr>
-    <tr>
-        <td>' . __( 'Hiring Organization Name', 'vk-google-job-posting-manager' ) . '</td>
-        <td> ' . esc_html( $custom_fields['vkjp_name'] ) . '</td>
     </tr>
     </tbody>
     </table>
