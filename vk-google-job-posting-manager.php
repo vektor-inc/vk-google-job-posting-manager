@@ -181,12 +181,12 @@ function vgjpm_create_common_form( $common_customfields ) {
 }
 
 
-	/**
-	 * Common setting page form
-	 *
-	 * @param  [type] $common_customfields [description]
-	 * @return [type]                      [description]
-	 */
+/**
+ * Common setting page form
+ *
+ * @param  [type] $common_customfields [description]
+ * @return [type]                      [description]
+ */
 function vgjpm_render_form_input( $common_customfields ) {
 
 	$form = '<table class="admin-table">';
@@ -426,13 +426,22 @@ function vgjpm_get_custom_fields( $post_id ) {
 
 function vgjpm_use_common_values( $custom_fields ) {
 
-	foreach ( (array) $custom_fields as $key => $value ) {
+	$VGJPM_Custom_Field_Job_Post = new VGJPM_Custom_Field_Job_Post;
+	$default_custom_fields = $VGJPM_Custom_Field_Job_Post->custom_fields_array();
+
+	foreach ( $default_custom_fields as $key => $value ) {
 
 		$temp = get_option( 'common_' . $key, null );
 
-		if ( $custom_fields[ $key ] == '' && isset( $temp ) ) {
+		var_dump($custom_fields[ $key ]);
+
+		if ( isset($custom_fields[ $key ]) && isset( $temp ) ) {
 
 			$custom_fields[ $key ] = $temp;
+
+		} elseif ($key == 'vkjp_logo'){
+
+			$custom_fields[ $key ] = wp_get_attachment_url($custom_fields[ $key ]);
 
 		} elseif ( ! isset( $custom_fields[ $key ] ) && ! isset( $temp ) ) {
 
