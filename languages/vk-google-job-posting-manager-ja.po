@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: VK Google Job Posting Manager 0.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/vk-google-job-"
 "posting-manager\n"
-"POT-Creation-Date: 2019-04-12 01:53+0900\n"
-"PO-Revision-Date: 2019-04-12 01:58+0900\n"
+"POT-Creation-Date: 2019-04-12 02:56+0900\n"
+"PO-Revision-Date: 2019-04-12 02:56+0900\n"
 "Last-Translator: \n"
 "Language-Team: Vektor,Inc.\n"
 "Language: ja_JP\n"
@@ -377,13 +377,13 @@ msgstr ""
 
 #: dist/inc/custom-field-builder/package/custom-field-builder.php:149
 #: inc/custom-field-builder/package/custom-field-builder.php:171
-#: vk-google-job-posting-manager.php:227
+#: vk-google-job-posting-manager.php:257
 msgid "Choose Image"
 msgstr "画像を選択"
 
 #: dist/inc/custom-field-builder/package/custom-field-builder.php:151
 #: inc/custom-field-builder/package/custom-field-builder.php:175
-#: vk-google-job-posting-manager.php:231
+#: vk-google-job-posting-manager.php:261
 msgid "Delete Image"
 msgstr "イメージを削除"
 
@@ -553,16 +553,16 @@ msgid "Setting"
 msgstr "設定"
 
 #: dist/vk-google-job-posting-manager.php:149
-#: vk-google-job-posting-manager.php:152
+#: vk-google-job-posting-manager.php:182
 msgid "Job Posting Manager Settings"
-msgstr "VK Google Job Posting Managerの設定"
+msgstr "VK Google Job Posting Manager 設定"
 
 #: dist/vk-google-job-posting-manager.php:155
 msgid "Create Job-Posts Post type."
 msgstr "求人専用の投稿タイプを作成"
 
 #: dist/vk-google-job-posting-manager.php:157
-#: vk-google-job-posting-manager.php:160
+#: vk-google-job-posting-manager.php:190
 msgid ""
 "This plugin automatically create post type for Job Posting.<br>If you have "
 "already created custom post type for Job Post, please remove this check and "
@@ -577,12 +577,12 @@ msgid "Choose the post type to display job posting custom fields."
 msgstr "求人情報入力フォームを表示する投稿タイプ"
 
 #: dist/vk-google-job-posting-manager.php:164
-#: vk-google-job-posting-manager.php:167
+#: vk-google-job-posting-manager.php:197
 msgid "Common Fields"
 msgstr "共通の求人項目"
 
 #: dist/vk-google-job-posting-manager.php:166
-#: vk-google-job-posting-manager.php:169
+#: vk-google-job-posting-manager.php:199
 msgid ""
 "If a single page is filled in, the content of the single page takes "
 "precedence."
@@ -600,14 +600,13 @@ msgstr "Google求人情報 登録情報"
 msgid "Please fill in recruitment information for Google Job Posting."
 msgstr "Google求人情報登録用の内容を入力してください。"
 
-#: inc/custom-field-builder/custom-field-builder-config.php:58
-#: inc/custom-field-builder/custom-field-builder-config.php:59
-msgid "Common Settings"
-msgstr "共通設定"
-
 #: inc/custom-field-builder/custom-field-builder-config.php:59
 msgid "If you do not fill in this form that, common settings will apply."
 msgstr "このフォームに入力がない場合は共通設定の内容が反映されます。"
+
+#: inc/custom-field-builder/custom-field-builder-config.php:59
+msgid "Common Settings"
+msgstr "共通設定"
 
 #: inc/custom-field-builder/custom-field-builder-config.php:60
 msgid ""
@@ -677,15 +676,19 @@ msgstr ""
 "求人情報の下書きが更新されました。<a target=\"_blank\" href=\"%s\">求人情報の"
 "プレビュー</a>"
 
-#: vk-google-job-posting-manager.php:158
+#: vk-google-job-posting-manager.php:188
 msgid "Create Job-Posts Post type"
 msgstr "求人情報専用の投稿タイプを作成"
 
-#: vk-google-job-posting-manager.php:163
+#: vk-google-job-posting-manager.php:193
 msgid "Choose the post type to display job posting custom fields"
 msgstr "求人情報入力フォームを表示する投稿タイプ"
 
-#: vk-google-job-posting-manager.php:332
+#: vk-google-job-posting-manager.php:203
+msgid "Save Changes"
+msgstr "変更を保存"
+
+#: vk-google-job-posting-manager.php:361
 msgid "Create The Post Type"
 msgstr "投稿タイプを作成"
 

@@ -84,6 +84,36 @@ function vgjpm_get_common_customfields_config() {
 	$VGJPM_Custom_Field_Job_Post = new VGJPM_Custom_Field_Job_Post;
 	$labels                      = $VGJPM_Custom_Field_Job_Post->custom_fields_array();
 
+	// 共通設定ページで、共通になりそうな項目が上になるように並び替え
+	$common_page_field_order = array(
+		'vkjp_name',
+		'vkjp_sameAs',
+		'vkjp_logo',
+		'vkjp_postalCode',
+		'vkjp_addressCountry',
+		'vkjp_addressRegion',
+		'vkjp_addressLocality',
+		'vkjp_streetAddress',
+		'vkjp_workHours',
+		'vkjp_specialCommitments',
+		'vkjp_currency',
+		'vkjp_employmentType',
+		'vkjp_value',
+		'vkjp_minValue',
+		'vkjp_maxValue',
+		'vkjp_incentiveCompensation',
+		'vkjp_salaryRaise',
+		'vkjp_unitText',
+		'vkjp_validThrough',
+		// 'vkjp_experienceRequirements',
+	);
+	$labels_ordered = array();
+	foreach ( $common_page_field_order as $key => $value ) {
+		if ( isset( $labels[ $value ] ) ) {
+			$labels_ordered[ $value ] = $labels[ $value ];
+		}
+	}
+
 	$common_customfields = array(
 		'vkjp_value',
 		'vkjp_minValue',
@@ -108,7 +138,7 @@ function vgjpm_get_common_customfields_config() {
 		'vkjp_validThrough',
 	);
 
-	foreach ( $labels as $key => $value ) {
+	foreach ( $labels_ordered as $key => $value ) {
 		if ( in_array( $key, $common_customfields ) ) {
 
 			$new_array = array(
@@ -170,7 +200,7 @@ function vgjpm_create_common_form( $common_customfields ) {
 
 	$form .= vgjpm_render_form_input( $common_customfields );
 
-	$form .= '<input type="submit" value="Save Changes" class="button button-primary">';
+	$form .= '<input type="submit" value="' . __( 'Save Changes', 'vk-google-job-posting-manager' ) . '" class="button button-primary">';
 
 	$form .= '</form>';
 
@@ -204,11 +234,11 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 			$form .= '<input class="form-control datepicker" type="text" " name="common_' . esc_attr( $key ) . '" value="' . get_option( 'common_' . esc_attr( $key ) ) . '" size="70">';
 
-		}elseif ( $value['type'] == 'image' ) {
+		} elseif ( $value['type'] == 'image' ) {
 
 			$saved = get_option( 'common_' . esc_attr( $key ) );
 
-			if ( !empty( $saved ) ) {
+			if ( ! empty( $saved ) ) {
 				$thumb_image_url = wp_get_attachment_url( $saved );
 			} else {
 				$thumb_image_url = VGJPM_URL . 'inc/custom-field-builder/package/images/no_image.png';
@@ -218,7 +248,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 			$form .= '<img src="' . $thumb_image_url . '" id="thumb_' . esc_attr( $key ) . '" alt="" class="input_thumb" style="width:200px;height:auto;"> ';
 			// 実際に送信する値
 			$form .= '<input type="hidden" name="common_' . esc_attr( $key ) . '" id="' . esc_attr( $key ) . '" value="' . $thumb_image_url . '" style="width:60%;" />';
-//					$form .= '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . self::form_post_value( $key ) . '" style="width:60%;" />';
+			//                  $form .= '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . self::form_post_value( $key ) . '" style="width:60%;" />';
 
 			// 画像選択ボタン
 			// .media_btn がトリガーでメディアアップローダーが起動する
@@ -296,7 +326,6 @@ function vgjpm_save_data( $common_customfields ) {
 	}
 
 	foreach ( $common_customfields as $key => $value ) {
-
 
 		if ( $value['type'] == 'text' || $value['type'] == 'select' || $value['type'] == 'image' || $value['type'] == 'datepicker' ) {
 
@@ -427,13 +456,13 @@ function vgjpm_get_custom_fields( $post_id ) {
 function vgjpm_use_common_values( $custom_fields ) {
 
 	$VGJPM_Custom_Field_Job_Post = new VGJPM_Custom_Field_Job_Post;
-	$default_custom_fields = $VGJPM_Custom_Field_Job_Post->custom_fields_array();
+	$default_custom_fields       = $VGJPM_Custom_Field_Job_Post->custom_fields_array();
 
 	foreach ( $default_custom_fields as $key => $value ) {
 
 		$temp = get_option( 'common_' . $key, null );
 
-		if ( !isset($custom_fields[ $key ]) && isset( $temp ) ) {
+		if ( ! isset( $custom_fields[ $key ] ) && isset( $temp ) ) {
 
 			$custom_fields[ $key ] = $temp;
 
