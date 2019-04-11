@@ -433,18 +433,22 @@ function vgjpm_use_common_values( $custom_fields ) {
 
 		$temp = get_option( 'common_' . $key, null );
 
-
 		if ( !isset($custom_fields[ $key ]) && isset( $temp ) ) {
 
 			$custom_fields[ $key ] = $temp;
 
-		} elseif ($key == 'vkjp_logo'){
-
-			$custom_fields[ $key ] = wp_get_attachment_url($custom_fields[ $key ]);
-
 		} elseif ( ! isset( $custom_fields[ $key ] ) && ! isset( $temp ) ) {
 
 			$custom_fields[ $key ] = '';
+		}
+
+		if ( $key == 'vkjp_logo' && empty( $custom_fields[ $key ] ) && isset( $temp ) ) {
+
+			$custom_fields[ $key ] = wp_get_attachment_url( $temp );
+
+		} elseif ( $key == 'vkjp_logo' && isset( $custom_fields[ $key ] ) ) {
+
+			$custom_fields[ $key ] = wp_get_attachment_url( $custom_fields[ $key ] );
 		}
 	}
 
