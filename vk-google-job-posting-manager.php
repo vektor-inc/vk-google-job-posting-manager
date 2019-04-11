@@ -42,7 +42,7 @@ function vgjpm_activate() {
 
 	load_plugin_textdomain( 'vk-google-job-posting-manager', false, 'vk-google-job-posting-manager/languages' );
 	flush_rewrite_rules();
-	 update_option( 'vgjpm_create_jobpost_posttype', 'true' );
+	update_option( 'vgjpm_create_jobpost_posttype', 'true' );
 }
 register_activation_hook( __FILE__, 'vgjpm_activate' );
 
@@ -50,7 +50,6 @@ $flag_custom_posttype = get_option( 'vgjpm_create_jobpost_posttype' );
 if ( isset( $flag_custom_posttype ) && $flag_custom_posttype == 'true' ) {
 	require_once( dirname( __FILE__ ) . '/inc/custom-posttype-builder.php' );
 }
-
 
 function vgjpm_add_setting_menu() {
 	$custom_page = add_submenu_page(
@@ -75,11 +74,10 @@ add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'vgjpm_set_plu
 
 // Add Admin Setting Page css
 function vgjpm_admin_css() {
+	wp_enqueue_media();
 	wp_enqueue_style( 'vgjpm-admin-style', plugin_dir_url( __FILE__ ) . 'assets/css/admin.css', array(), VGJPM_VERSION, 'all' );
 }
 add_action( 'admin_enqueue_scripts', 'vgjpm_admin_css' );
-
-
 
 function vgjpm_get_common_customfields_config() {
 
@@ -140,13 +138,13 @@ function vgjpm_render_settings() {
 
 }
 
-
-	/**
-	 * Common setting page
-	 *
-	 * @param  [type] $common_customfields [description]
-	 * @return [type]                      [description]
-	 */
+/**
+ * Common setting page
+ *
+ * @param  [type] $common_customfields [description]
+ *
+ * @return [type]                      [description]
+ */
 function vgjpm_create_common_form( $common_customfields ) {
 
 	$form = '<div class="vgjpm">';
@@ -207,30 +205,30 @@ function vgjpm_render_form_input( $common_customfields ) {
 			$form .= '<input class="form-control datepicker" type="text" " name="common_' . esc_attr( $key ) . '" value="' . get_option( 'common_' . esc_attr( $key ) ) . '" size="70">';
 
 		}elseif ( $value['type'] == 'image' ) {
-//					if ( $post->$key ) {
-//						$thumb_image     = wp_get_attachment_image_src( $post->$key, 'medium', false );
-//						$thumb_image_url = $thumb_image[0];
-//						// } elseif ( isset( $_POST[ $key ] ) && $_POST[ $key ] ) {
-//						// $thumb_image     = wp_get_attachment_image_src( $image_key, 'medium', false );
-//						// $thumb_image_url = $thumb_image[0];
-//					} else {
-//						$thumb_image_url = $custom_field_builder_url . 'images/no_image.png';
-//					}
-//					// ダミー & プレビュー画像
-//					$form_html .= '<img src="' . $thumb_image_url . '" id="thumb_' . $key . '" alt="" class="input_thumb" style="width:200px;height:auto;"> ';
-//
-//					// 実際に送信する値
-//					$form_html .= '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . self::form_post_value( $key ) . '" style="width:60%;" />';
-//
-//					// 画像選択ボタン
-//					// .media_btn がトリガーでメディアアップローダーが起動する
-//					// id名から media_ を削除した id 名の input 要素に返り値が反映される。
-//					// id名が media_src_ で始まる場合はURLを返す
-//					$form_html .= '<button id="media_' . $key . '" class="cfb_media_btn btn btn-default button button-default">' . __( 'Choose Image', 'vk-google-job-posting-manager' ) . '</button> ';
-//
-//					// 削除ボタン
-//					// ボタンタグだとその場でページが再読込されてしまうのでaタグに変更
-//					$form_html .= '<a id="media_reset_' . $key . '" class="media_reset_btn btn btn-default button button-default">' . __( 'Delete Image', 'vk-google-job-posting-manager' ) . '</a>';
+
+			$saved = get_option( 'common_' . esc_attr( $key ) );
+
+			if ( !empty( $saved ) ) {
+				$thumb_image_url = wp_get_attachment_url( $saved );
+			} else {
+				$thumb_image_url = VGJPM_URL . 'inc/custom-field-builder/package/images/no_image.png';
+			}
+
+			// ダミー & プレビュー画像
+			$form .= '<img src="' . $thumb_image_url . '" id="thumb_' . esc_attr( $key ) . '" alt="" class="input_thumb" style="width:200px;height:auto;"> ';
+			// 実際に送信する値
+			$form .= '<input type="hidden" name="common_' . esc_attr( $key ) . '" id="' . esc_attr( $key ) . '" value="' . $thumb_image_url . '" style="width:60%;" />';
+//					$form .= '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . self::form_post_value( $key ) . '" style="width:60%;" />';
+
+			// 画像選択ボタン
+			// .media_btn がトリガーでメディアアップローダーが起動する
+			// id名から media_ を削除した id 名の input 要素に返り値が反映される。
+			// id名が media_src_ で始まる場合はURLを返す
+			$form .= '<button id="media_' . $key . '" class="cfb_media_btn btn btn-default button button-default">' . __( 'Choose Image', 'vk-google-job-posting-manager' ) . '</button> ';
+
+			// 削除ボタン
+			// ボタンタグだとその場でページが再読込されてしまうのでaタグに変更
+			$form .= '<a id="media_reset_' . $key . '" class="media_reset_btn btn btn-default button button-default">' . __( 'Delete Image', 'vk-google-job-posting-manager' ) . '</a>';
 
 		} elseif ( $value['type'] == 'select' ) {
 
