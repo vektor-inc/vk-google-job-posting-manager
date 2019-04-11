@@ -41,7 +41,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 	// add meta_box
 	public static function add_metabox( $key ) {
 		$id            = 'meta_box_job_posting';
-		$title         = __( 'Please enter details of your recruitment.', 'vk-google-job-posting-manager' );
+		$title         = __( 'Google Job Posting Registration Information', 'vk-google-job-posting-manager' );
 		$callback      = array( __CLASS__, 'fields_form' );
 		$screen        = $key;
 		$context       = 'advanced';
@@ -54,8 +54,11 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 		global $post;
 		$custom_fields_array = self::custom_fields_array();
 		$befor_custom_fields = '';
-		echo '<p>' . __( 'If you do not fill in this form that, common settings will apply.', 'vk-google-job-posting-manager' ) . ' [ <a href="' . admin_url() . 'options-general.php?page=vgjpm_settings" target="_blank">' . __( 'Common Settings', 'vk-google-job-posting-manager' ) . '</a> ]</p>';
-		echo '<p>' . __( 'If you want to display these items table to publish page, you use to the Job Posting Block set to content area.', 'vk-google-job-posting-manager' ) . '</p>';
+		echo '<ul>';
+		echo '<li>' . __( 'Please fill in recruitment information for Google Job Posting.', 'vk-google-job-posting-manager' ) . '</li>';
+		echo '<li>' . __( 'If you do not fill in this form that, common settings will apply.', 'vk-google-job-posting-manager' ) . ' [ <a href="' . admin_url() . 'options-general.php?page=vgjpm_settings" target="_blank">' . __( 'Common Settings', 'vk-google-job-posting-manager' ) . '</a> ]</li>';
+		echo '<li>' . __( 'If you want to display these items table to publish page, you use to the Job Posting Block set to content area.', 'vk-google-job-posting-manager' ) . '</li>';
+		echo '</ul>';
 		self::form_table( $custom_fields_array, $befor_custom_fields );
 	}
 
