@@ -141,14 +141,6 @@ function vgjpm_render_job_posting_table( $id, $style, $className ) {
 	<table class="vk_vk-google-job-posting-manager_table-' . esc_attr( $style ) . '">
     <tbody>
     <tr>
-        <td>' . __( 'Posted Date', 'vk-google-job-posting-manager' ) . '</td>
-        <td>' . esc_html( date( 'Y-m-d', strtotime( $custom_fields['vkjp_datePosted'] ) ) ) . '</td>
-    </tr>
-    <tr>
-    	<td>' . __( 'Expiry Date', 'vk-google-job-posting-manager' ) . '</td>
-    	<td>' . esc_html( date( 'Y-m-d', strtotime( $custom_fields['vkjp_validThrough'] ) ) ) . '</td>
-    </tr>
-    <tr>
         <td>' . __( 'Job Title', 'vk-google-job-posting-manager' ) . '</td>
         <td>' . esc_html( $custom_fields['vkjp_title'] ) . '</td>
     </tr>
