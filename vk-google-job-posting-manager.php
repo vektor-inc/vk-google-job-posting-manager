@@ -202,9 +202,35 @@ function vgjpm_render_form_input( $common_customfields ) {
 		if ( $value['type'] == 'text' ) {
 			$form .= '<input type="text" name="common_' . esc_attr( $key ) . '" value="' . get_option( 'common_' . esc_attr( $key ) ) . '">';
 
-		} elseif ( $value['type'] == 'date' ) {
+		} elseif ( $value['type'] == 'datepicker' ) {
 
-			$form .= '<input type="date" name="common_' . esc_attr( $key ) . '" value="' . get_option( 'common_' . esc_attr( $key ) ) . '">';
+			$form .= '<input class="form-control datepicker" type="text" " name="common_' . esc_attr( $key ) . '" value="' . get_option( 'common_' . esc_attr( $key ) ) . '" size="70">';
+
+		}elseif ( $value['type'] == 'image' ) {
+//					if ( $post->$key ) {
+//						$thumb_image     = wp_get_attachment_image_src( $post->$key, 'medium', false );
+//						$thumb_image_url = $thumb_image[0];
+//						// } elseif ( isset( $_POST[ $key ] ) && $_POST[ $key ] ) {
+//						// $thumb_image     = wp_get_attachment_image_src( $image_key, 'medium', false );
+//						// $thumb_image_url = $thumb_image[0];
+//					} else {
+//						$thumb_image_url = $custom_field_builder_url . 'images/no_image.png';
+//					}
+//					// ダミー & プレビュー画像
+//					$form_html .= '<img src="' . $thumb_image_url . '" id="thumb_' . $key . '" alt="" class="input_thumb" style="width:200px;height:auto;"> ';
+//
+//					// 実際に送信する値
+//					$form_html .= '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . self::form_post_value( $key ) . '" style="width:60%;" />';
+//
+//					// 画像選択ボタン
+//					// .media_btn がトリガーでメディアアップローダーが起動する
+//					// id名から media_ を削除した id 名の input 要素に返り値が反映される。
+//					// id名が media_src_ で始まる場合はURLを返す
+//					$form_html .= '<button id="media_' . $key . '" class="cfb_media_btn btn btn-default button button-default">' . __( 'Choose Image', 'vk-google-job-posting-manager' ) . '</button> ';
+//
+//					// 削除ボタン
+//					// ボタンタグだとその場でページが再読込されてしまうのでaタグに変更
+//					$form_html .= '<a id="media_reset_' . $key . '" class="media_reset_btn btn btn-default button button-default">' . __( 'Delete Image', 'vk-google-job-posting-manager' ) . '</a>';
 
 		} elseif ( $value['type'] == 'select' ) {
 
@@ -252,6 +278,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 	} // foreach ( $common_customfields as $key => $value ) {
 	$form .= '</table>';
+
 	return $form;
 }
 
@@ -272,7 +299,8 @@ function vgjpm_save_data( $common_customfields ) {
 
 	foreach ( $common_customfields as $key => $value ) {
 
-		if ( $value['type'] == 'text' || $value['type'] == 'select' ) {
+
+		if ( $value['type'] == 'text' || $value['type'] == 'select' || $value['type'] == 'image' || $value['type'] == 'datepicker' ) {
 
 			update_option( 'common_' . sanitize_text_field( $key ), vgjpm_sanitize_arr( $_POST[ 'common_' . $key ] ) );
 
