@@ -175,7 +175,11 @@ function vgjpm_render_job_posting_table( $id, $style, $className ) {
     <tr>
         <td>' . __( 'Base Salary', 'vk-google-job-posting-manager' ) . '</td>
 
-        <td>' . __( 'Average Value', 'vk-google-job-posting-manager' ) . '：' . esc_html( $custom_fields['vkjp_value'] ) . '(' . vgjpm_get_label( $custom_fields, 'vkjp_unitText' ) . ')' . '<br>' . esc_html( $custom_fields['vkjp_minValue'] ) . '~' . esc_html( $custom_fields['vkjp_maxValue'] ) . '(' . vgjpm_get_label( $custom_fields, 'vkjp_currency' ) . ')' . '</td>
+        <td>' . esc_html( $custom_fields['vkjp_value'] ) . '(' . vgjpm_get_label( $custom_fields, 'vkjp_unitText' ) . ')';
+
+		// $html .= '<br>' . esc_html( $custom_fields['vkjp_minValue'] ) . ' - ' . esc_html( $custom_fields['vkjp_maxValue'] ) . '(' . vgjpm_get_label( $custom_fields, 'vkjp_currency' ) . ')';
+
+		$html .= '</td>
     </tr>
     <tr>
         <td>' . __( 'Work Location', 'vk-google-job-posting-manager' ) . '</td>
