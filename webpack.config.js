@@ -20,7 +20,7 @@ module.exports = {
                                 // JSをスキャンして、potを作成/アップデート
                                 '@wordpress/babel-plugin-makepot',
                                 {
-                                    'output': `./languages/vk-google-job-posting-manager-json.pot`
+                                    'output': `./languages/vk-google-job-posting-manager.pot`
                                 }
                             ]
                         ]

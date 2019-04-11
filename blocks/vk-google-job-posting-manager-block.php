@@ -53,6 +53,13 @@ function vgjpm_block_init() {
 		filemtime( "$dir/$style_css" )
 	);
 
+	wp_set_script_translations( 'vk-google-job-posting-manager-block-editor', 'vk-google-job-posting-manager', VGJPM_DIR . '/languages/' );
+
+
+	if ( function_exists( 'wp_set_script_translations' ) ) {
+		wp_set_script_translations( 'vk-google-job-posting-manager-block-editor', 'vk-google-job-posting-manager', VGJPM_DIR . '/languages/' );
+	}
+
 	register_block_type( 'vk-google-job-posting-manager/create-table', array(
 		'editor_script'   => 'vk-google-job-posting-manager-block-editor',
 		'editor_style'    => 'vk-google-job-posting-manager-block-editor',
@@ -75,6 +82,9 @@ function vgjpm_block_init() {
 			return vgjpm_render_job_posting_table( $attributes['id'], $attributes['style'], $attributes['className'] );
 		},
 	) );
+
+
+
 }
 add_action( 'init', 'vgjpm_block_init' );
 
