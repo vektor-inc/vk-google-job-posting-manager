@@ -1,34 +1,20 @@
+
+// 記事の詳細画面
 .vk-custom-field-builder {
 	table {
 		th,td {
-			padding: 7px 5px;
-			border-bottom:1px solid #e5e5e5;
-			vertical-align: top;
+			font-size:14px;
 		}
 		th {
-			font-weight: normal;
-			text-align: left;
-			.required {
-				margin-left:5px;
-			}
+			white-space: nowrap;
 		}
-		td {
-			input[type=date],
-			input[type=text],
-			textarea,
-			select {
-				padding: 4px;
-				border-radius: 4px;
-				margin-bottom:3px;
-			}
-			input[type=text],
-			textarea {
-				width:100%;
-			}
+		.description {
+			font-size:12px;
 		}
 	}
 }
 
+// 共通設定画面 
 .vgjpm{
 	padding:1em 2em 1em 1em;
 	h2 {
