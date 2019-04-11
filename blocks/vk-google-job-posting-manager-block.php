@@ -136,10 +136,16 @@ function vgjpm_render_job_posting_table( $id, $style, $className ) {
 		$className .= ' ' . $className;
 	}
 
-	$html = '
-	<div class="vk_vk-google-job-posting-manager' . esc_attr( $className ) . '">
-	<table class="vk_vk-google-job-posting-manager_table-' . esc_attr( $style ) . '">
-    <tbody>';
+	$tags = array(
+		'outer_before'   => '<div class="vk_vk-google-job-posting-manager' . esc_attr( $className ) . '"><table class="vk_vk-google-job-posting-manager_table-' . esc_attr( $style ) . '"><tbody>',
+		'title_before'   => '<tr><th>',
+		'title_after'    => '</th>',
+		'content_before' => '<td>',
+		'content_after'  => '</td></tr>',
+		'outer_after'    => '</tbody></table></div>',
+	);
+
+	$html = $tags['outer_before'];
 
 		// // ポータルサイトなどで必要になる可能性があるので削除しない
 		// $html .= '
@@ -164,54 +170,42 @@ function vgjpm_render_job_posting_table( $id, $style, $className ) {
 		// <td>' . esc_html( date( 'Y-m-d', strtotime( $custom_fields['vkjp_validThrough'] ) ) ) . '</td>
 		// </tr>';
 
-	$html .= '<tr>
-        <td>' . __( 'Job Title', 'vk-google-job-posting-manager' ) . '</td>
-        <td>' . esc_html( $custom_fields['vkjp_title'] ) . '</td>
-    </tr>
-    <tr>
-        <td>' . __( 'Description', 'vk-google-job-posting-manager' ) . '</td>
-        <td>' . esc_html( $custom_fields['vkjp_description'] ) . '</td>
-    </tr>
-    <tr>
-        <td>' . __( 'Base Salary', 'vk-google-job-posting-manager' ) . '</td>
+	$html .= $tags['title_before'] . __( 'Job Title', 'vk-google-job-posting-manager' ) . $tags['title_after'];
+	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_title'] ) . $tags['content_after'];
 
-        <td>' . esc_html( $custom_fields['vkjp_value'] ) . '(' . vgjpm_get_label( $custom_fields, 'vkjp_unitText' ) . ')';
+	$html .= $tags['title_before'] . __( 'Description', 'vk-google-job-posting-manager' ) . $tags['title_after'];
+	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_description'] ) . $tags['content_after'];
 
-		// $html .= '<br>' . esc_html( $custom_fields['vkjp_minValue'] ) . ' - ' . esc_html( $custom_fields['vkjp_maxValue'] ) . '(' . vgjpm_get_label( $custom_fields, 'vkjp_currency' ) . ')';
+	$html .= $tags['title_before'] . __( 'Base Salary', 'vk-google-job-posting-manager' ) . $tags['title_after'];
+	$html .= $tags['content_before'];
+	$html .= esc_html( $custom_fields['vkjp_value'] ) . '(' . vgjpm_get_label( $custom_fields, 'vkjp_unitText' ) . ')';
+	// $html .= '<br>' . esc_html( $custom_fields['vkjp_minValue'] ) . ' - ' . esc_html( $custom_fields['vkjp_maxValue'] ) . '(' . vgjpm_get_label( $custom_fields, 'vkjp_currency' ) . ')';
+	$html .= $tags['content_after'];
+	//
+	$html .= $tags['title_before'] . __( 'Work Location', 'vk-google-job-posting-manager' ) . $tags['title_after'];
+	$html .= $tags['content_before'] . __( 'Postal code', 'vk-google-job-posting-manager' ) . ' : ' . esc_html( $custom_fields['vkjp_postalCode'] );
+	// $html .= esc_html( $custom_fields['vkjp_addressCountry'] );
+	$html .= '<br>' . esc_html( $custom_fields['vkjp_addressRegion'] ) . esc_html( $custom_fields['vkjp_addressLocality'] ) . esc_html( $custom_fields['vkjp_streetAddress'] ) . $tags['content_after'];
 
-		$html .= '</td>
-    </tr>
-    <tr>
-        <td>' . __( 'Work Location', 'vk-google-job-posting-manager' ) . '</td>
-        <td>' . __( 'Postal code', 'vk-google-job-posting-manager' ) . ' : ' . esc_html( $custom_fields['vkjp_postalCode'] ) . '<br>' . esc_html( $custom_fields['vkjp_addressCountry'] ) . esc_html( $custom_fields['vkjp_addressRegion'] ) . esc_html( $custom_fields['vkjp_addressLocality'] ) . esc_html( $custom_fields['vkjp_streetAddress'] ) . '</td>
-    </tr>
-    <tr>
-        <td>' . __( 'Employment Type', 'vk-google-job-posting-manager' ) . '</td>
-        <td>' . vgjpm_get_label( $custom_fields, 'vkjp_employmentType' ) . '</td>
-    </tr>
-    <tr>
-        <td>' . __( 'Incentive Compensation', 'vk-google-job-posting-manager' ) . '</td>
-        <td>' . esc_html( $custom_fields['vkjp_incentiveCompensation'] ) . '</td>
-    </tr>
-    <tr>
-        <td>' . __( 'Salary Raise', 'vk-google-job-posting-manager' ) . '</td>
-        <td>' . esc_html( $custom_fields['vkjp_salaryRaise'] ) . '</td>
-    </tr>
-    <tr>
-        <td>' . __( 'Work Hours', 'vk-google-job-posting-manager' ) . '</td>
-        <td>' . esc_html( $custom_fields['vkjp_workHours'] ) . '</td>
-    </tr>
+	$html .= $tags['title_before'] . __( 'Employment Type', 'vk-google-job-posting-manager' ) . $tags['title_after'];
+	$html .= $tags['content_before'] . vgjpm_get_label( $custom_fields, 'vkjp_employmentType' ) . $tags['content_after'];
 
-    <tr>
-        <td>' . __( 'Experience Requirements', 'vk-google-job-posting-manager' ) . '</td>
-        <td>' . esc_html( $custom_fields['vkjp_experienceRequirements'] ) . '</td>
-    </tr>
-    <tr>
-        <td>' . __( 'Special Commitments', 'vk-google-job-posting-manager' ) . '</td>
-        <td>' . esc_html( $custom_fields['vkjp_specialCommitments'] ) . '</td>
-    </tr>
-    </tbody>
-    </table>
-    </div>';
+	$html .= $tags['title_before'] . __( 'Incentive Compensation', 'vk-google-job-posting-manager' ) . $tags['title_after'];
+	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_incentiveCompensation'] ) . $tags['content_after'];
+
+	$html .= $tags['title_before'] . __( 'Salary Raise', 'vk-google-job-posting-manager' ) . $tags['title_after'];
+	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_salaryRaise'] ) . $tags['content_after'];
+
+	$html .= $tags['title_before'] . __( 'Work Hours', 'vk-google-job-posting-manager' ) . $tags['title_after'];
+	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_workHours'] ) . $tags['content_after'];
+
+	$html .= $tags['title_before'] . __( 'Experience Requirements', 'vk-google-job-posting-manager' ) . $tags['title_after'];
+	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_experienceRequirements'] ) . $tags['content_after'];
+
+	$html .= $tags['title_before'] . __( 'Special Commitments', 'vk-google-job-posting-manager' ) . $tags['title_after'];
+	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_specialCommitments'] ) . $tags['content_after'];
+
+	$html .= $tags['outer_after'];
+
 	return $html;
 }
