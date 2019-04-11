@@ -433,9 +433,8 @@ function vgjpm_use_common_values( $custom_fields ) {
 
 		$temp = get_option( 'common_' . $key, null );
 
-		var_dump($custom_fields[ $key ]);
 
-		if ( isset($custom_fields[ $key ]) && isset( $temp ) ) {
+		if ( !isset($custom_fields[ $key ]) && isset( $temp ) ) {
 
 			$custom_fields[ $key ] = $temp;
 
