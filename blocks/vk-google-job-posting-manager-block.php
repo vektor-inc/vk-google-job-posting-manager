@@ -194,15 +194,6 @@ function vgjpm_render_job_posting_table( $id, $style, $className ) {
         <td>' . __( 'Hiring Organization Name', 'vk-google-job-posting-manager' ) . '</td>
         <td> ' . esc_html( $custom_fields['vkjp_name'] ) . '</td>
     </tr>
-    <tr>
-        <td>' . __( 'Hiring Organization Website', 'vk-google-job-posting-manager' ) . '</td>
-        <td><a href="' . esc_attr( $custom_fields['vkjp_sameAs'] ) . '">' . esc_html( $custom_fields['vkjp_sameAs'] ) . '</a>' . '</td>
-    </tr>
-    <tr>
-        <td>' . __( 'Hiring Organization Logo', 'vk-google-job-posting-manager' ) . '</td>
-        <td> <img src="' . esc_attr( $custom_fields['vkjp_logo'] ) . '" alt="Company Logo" /></td>
-    </tr>
-
     </tbody>
     </table>
     </div>';
