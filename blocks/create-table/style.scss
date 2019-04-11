@@ -3,32 +3,22 @@
  *
  * Replace them with your own styles or remove the file completely.
  */
-.vk_vk-google-job-posting-manager_table-default {
 
+.vk_jobInfo_table {
 	th, td {
-		width: 50%;
 		padding: 10px;
-		border:1px solid #dedede!important;
+		font-size: 14px;
 	}
+	&-style-default{
 
-	thead th {
-		text-align: left;
 	}
-}
-
-.vk_vk-google-job-posting-manager_table-stripe {
-
-	th, td {
-		width: 50%;
-		padding: 10px;
-		border:none!important;
-	}
-
-	thead th {
-		text-align: left;
-	}
-
-	tbody tr:nth-of-type(odd) {
-		background: #e0e0e0;
+	&-style-stripe{
+		border-top:none;
+		th, td {
+			border:none;
+		}
+		tr:nth-of-type(odd) {
+			background-color: rgba(0,0,0,0.05);
+		}
 	}
 }

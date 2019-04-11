@@ -137,7 +137,7 @@ function vgjpm_render_job_posting_table( $id, $style, $className ) {
 	}
 
 	$tags = array(
-		'outer_before'   => '<div class="vk_vk-google-job-posting-manager' . esc_attr( $className ) . '"><table class="vk_vk-google-job-posting-manager_table-' . esc_attr( $style ) . '"><tbody>',
+		'outer_before'   => '<div class="vk_jobInfo' . esc_attr( $className ) . '"><table class="vk_jobInfo_table vk_jobInfo_table-style-' . esc_attr( $style ) . '"><tbody>',
 		'title_before'   => '<tr><th>',
 		'title_after'    => '</th>',
 		'content_before' => '<td>',
