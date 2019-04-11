@@ -55,35 +55,34 @@ function vgjpm_block_init() {
 
 	wp_set_script_translations( 'vk-google-job-posting-manager-block-editor', 'vk-google-job-posting-manager', VGJPM_DIR . '/languages/' );
 
-
 	if ( function_exists( 'wp_set_script_translations' ) ) {
 		wp_set_script_translations( 'vk-google-job-posting-manager-block-editor', 'vk-google-job-posting-manager', VGJPM_DIR . '/languages/' );
 	}
 
-	register_block_type( 'vk-google-job-posting-manager/create-table', array(
-		'editor_script'   => 'vk-google-job-posting-manager-block-editor',
-		'editor_style'    => 'vk-google-job-posting-manager-block-editor',
-		'style'           => 'vk-google-job-posting-manager-block',
-		'attributes'      => [
-			'id'    => [
-				'type' => 'integer',
-				'default'   => 0,
+	register_block_type(
+		'vk-google-job-posting-manager/create-table', array(
+			'editor_script'   => 'vk-google-job-posting-manager-block-editor',
+			'editor_style'    => 'vk-google-job-posting-manager-block-editor',
+			'style'           => 'vk-google-job-posting-manager-block',
+			'attributes'      => [
+				'id'        => [
+					'type'    => 'integer',
+					'default' => 0,
+				],
+				'style'     => [
+					'type'    => 'string',
+					'default' => 'default',
+				],
+				'className' => [
+					'type'    => 'string',
+					'default' => '',
+				],
 			],
-			'style' => [
-				'type' => 'string',
-				'default'   => 'default',
-			],
-			'className' => [
-				'type' => 'string',
-				'default'   => '',
-			]
-		],
-		'render_callback' => function ( $attributes ) {
-			return vgjpm_render_job_posting_table( $attributes['id'], $attributes['style'], $attributes['className'] );
-		},
-	) );
-
-
+			'render_callback' => function ( $attributes ) {
+				return vgjpm_render_job_posting_table( $attributes['id'], $attributes['style'], $attributes['className'] );
+			},
+		)
+	);
 
 }
 add_action( 'init', 'vgjpm_block_init' );
@@ -105,19 +104,17 @@ function vgjpm_get_label( $custom_fields, $custom_fileds_key ) {
 
 	$options_arr_key = $custom_fields[ $custom_fileds_key ];
 
-	if(is_array($options_arr_key)){
-
+	if ( is_array( $options_arr_key ) ) {
 
 		$temp = array();
-		for ($i=0; $i < count($options_arr_key); $i++){
+		for ( $i = 0; $i < count( $options_arr_key ); $i++ ) {
 
-			$temp[] = $options_arr[$options_arr_key[$i]] . '';
+			$temp[] = $options_arr[ $options_arr_key[ $i ] ] . '';
 		}
 
-		$labels = implode(' ,',$temp);
+		$labels = implode( ' ,', $temp );
 
-
-	}else{
+	} else {
 
 		$labels = $options_arr[ $options_arr_key ];
 	}
@@ -135,8 +132,8 @@ function vgjpm_render_job_posting_table( $id, $style, $className ) {
 	}
 	$custom_fields = vgjpm_use_common_values( $custom_fields );
 
-	if($className !== ''){
-		$className .= ' '.$className;
+	if ( $className !== '' ) {
+		$className .= ' ' . $className;
 	}
 
 	$html = '
@@ -145,11 +142,11 @@ function vgjpm_render_job_posting_table( $id, $style, $className ) {
     <tbody>
     <tr>
         <td>' . __( 'Posted Date', 'vk-google-job-posting-manager' ) . '</td>
-        <td>' . esc_html( date( 'Y-m-d', strtotime($custom_fields['vkjp_datePosted']) ) ) . '</td>
+        <td>' . esc_html( date( 'Y-m-d', strtotime( $custom_fields['vkjp_datePosted'] ) ) ) . '</td>
     </tr>
     <tr>
     	<td>' . __( 'Expiry Date', 'vk-google-job-posting-manager' ) . '</td>
-    	<td>' . esc_html( date( 'Y-m-d', strtotime($custom_fields['vkjp_validThrough']) ) ) . '</td>
+    	<td>' . esc_html( date( 'Y-m-d', strtotime( $custom_fields['vkjp_validThrough'] ) ) ) . '</td>
     </tr>
     <tr>
         <td>' . __( 'Job Title', 'vk-google-job-posting-manager' ) . '</td>
@@ -161,7 +158,7 @@ function vgjpm_render_job_posting_table( $id, $style, $className ) {
     </tr>
     <tr>
         <td>' . __( 'Base Salary', 'vk-google-job-posting-manager' ) . '</td>
-        
+
         <td>' . __( 'Average Value', 'vk-google-job-posting-manager' ) . '：' . esc_html( $custom_fields['vkjp_value'] ) . '(' . vgjpm_get_label( $custom_fields, 'vkjp_unitText' ) . ')' . '<br>' . esc_html( $custom_fields['vkjp_minValue'] ) . '~' . esc_html( $custom_fields['vkjp_maxValue'] ) . '(' . vgjpm_get_label( $custom_fields, 'vkjp_currency' ) . ')' . '</td>
     </tr>
     <tr>
@@ -184,7 +181,7 @@ function vgjpm_render_job_posting_table( $id, $style, $className ) {
         <td>' . __( 'Work Hours', 'vk-google-job-posting-manager' ) . '</td>
         <td>' . esc_html( $custom_fields['vkjp_workHours'] ) . '</td>
     </tr>
-   
+
     <tr>
         <td>' . __( 'Experience Requirements', 'vk-google-job-posting-manager' ) . '</td>
         <td>' . esc_html( $custom_fields['vkjp_experienceRequirements'] ) . '</td>
@@ -205,10 +202,9 @@ function vgjpm_render_job_posting_table( $id, $style, $className ) {
         <td>' . __( 'Hiring Organization Logo', 'vk-google-job-posting-manager' ) . '</td>
         <td> <img src="' . esc_attr( $custom_fields['vkjp_logo'] ) . '" alt="Company Logo" /></td>
     </tr>
-  
+
     </tbody>
     </table>
     </div>';
 	return $html;
 }
-
