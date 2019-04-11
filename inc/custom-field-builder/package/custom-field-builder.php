@@ -14,16 +14,22 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 		public static $version = '0.2.0';
 
+		// define( 'Bill_URL', get_template_directory_uri() );
 		public static function init() {
 			add_action( 'admin_footer', array( __CLASS__, 'print_script' ), 10, 2 );
 		}
 
 		static function admin_directory_url() {
-			global $custom_field_builder_url;
+			global $custom_field_builder_url; // configファイルで指定
 			$direcrory_url = $custom_field_builder_url;
 			return $direcrory_url;
 		}
 
+		/*
+		-------------------------------------------
+		管理画面用共通js読み込み（記述場所によっては動作しないので注意）
+		-------------------------------------------
+		*/
 		public static function print_script() {
 			wp_register_script( 'datepicker', self::admin_directory_url() . 'js/datepicker.js', array( 'jquery', 'jquery-ui-datepicker' ), self::$version, true );
 			wp_enqueue_script( 'datepicker' );
@@ -39,6 +45,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 			$value = esc_attr( get_post_meta( $post->ID, $post_field, true ) );
 			if ( isset( $_POST[ $post_field ] ) && $_POST[ $post_field ] ) {
 				if ( isset( $type ) && $type == 'textarea' ) {
+					// n2brはフォームにbrがそのまま入ってしまうので入れない
 					$value = esc_textarea( $_POST[ $post_field ] );
 				} else {
 					$value = esc_attr( $_POST[ $post_field ] );
@@ -48,10 +55,15 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 		}
 
 		public static function form_required() {
-			$required = '<span class="required">Required</span>';
+			$required = '<span class="required">必須</span>';
 			return $required;
 		}
 
+		/*
+		-------------------------------------------
+		フォームテーブル
+		-------------------------------------------
+		*/
 		public static function form_table( $custom_fields_array, $befor_items = '', $echo = true ) {
 
 			wp_nonce_field( wp_create_nonce( __FILE__ ), 'noncename__fields' );
@@ -72,7 +84,6 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				$form_html .= '</th><td>';
 
 				if ( $value['type'] == 'text' || $value['type'] == 'url' ) {
-
 					if ( isset( $value['before_text'] ) && $value['before_text'] ) {
 						$form_html .= esc_html( $value['before_text'] ) . ' ';
 					}
@@ -82,8 +93,8 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 					if ( isset( $value['after_text'] ) && $value['after_text'] ) {
 						$form_html .= ' ' . esc_html( $value['after_text'] );
 					}
-				} elseif ( $value['type'] == 'date' ) {
-					$form_html .= '<input class="form-control" type="date" id="' . $key . '" name="' . $key . '" value="' . self::form_post_value( $key ) . '" size="70">';
+				} elseif ( $value['type'] == 'datepicker' ) {
+					$form_html .= '<input class="form-control datepicker" type="text" id="' . $key . '" name="' . $key . '" value="' . self::form_post_value( $key ) . '" size="70">';
 
 				} elseif ( $value['type'] == 'textarea' ) {
 					$form_html .= '<textarea class="form-control" class="cf_textarea_wysiwyg" name="' . $key . '" cols="70" rows="3">' . self::form_post_value( $key, 'textarea' ) . '</textarea>';
@@ -106,6 +117,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 					$field_value = get_post_meta( $post->ID, $key, true );
 					$form_html  .= '<ul>';
 
+					// シリアライズして保存されてたら戻す
 					if ( $value['type'] == 'checkbox' ) {
 						if ( ! is_array( $field_value ) ) {
 							$field_value = unserialize( get_post_meta( $post->ID, $key, true ) );
@@ -114,6 +126,9 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 					foreach ( $value['options'] as $option_value => $option_label ) {
 						$selected = '';
+						// print '<pre style="text-align:left">';print_r( $option_value );print '</pre>';
+						// print '<pre style="text-align:left">';print_r($field_value);print '</pre>';
+						// チェックボックス
 						if ( $value['type'] == 'checkbox' ) {
 
 							if ( is_array( $field_value ) && in_array( $option_value, $field_value ) ) {
@@ -122,6 +137,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 							$form_html .= '<li><label><input type="checkbox" name="' . esc_attr( $key ) . '[]" id="' . esc_attr( $key ) . '" value="' . esc_attr( $option_value ) . '"' . $selected . '  /><span>' . esc_html( $option_label ) . '</span></label></li>';
 
+							// ラジオボタン
 						} elseif ( $value['type'] == 'radio' ) {
 							if ( $option_value == $field_value ) {
 								$selected = ' checked';
@@ -142,12 +158,20 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 					} else {
 								$thumb_image_url = $custom_field_builder_url . 'images/no_image.png';
 					}
+					// ダミー & プレビュー画像
 					$form_html .= '<img src="' . $thumb_image_url . '" id="thumb_' . $key . '" alt="" class="input_thumb" style="width:200px;height:auto;"> ';
 
+					// 実際に送信する値
 					$form_html .= '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . self::form_post_value( $key ) . '" style="width:60%;" />';
 
+					// 画像選択ボタン
+					// .media_btn がトリガーでメディアアップローダーが起動する
+					// id名から media_ を削除した id 名の input 要素に返り値が反映される。
+					// id名が media_src_ で始まる場合はURLを返す
 					$form_html .= '<button id="media_' . $key . '" class="cfb_media_btn btn btn-default button button-default">' . __( 'Choose Image', 'vk-google-job-posting-manager' ) . '</button> ';
 
+					// 削除ボタン
+					// ボタンタグだとその場でページが再読込されてしまうのでaタグに変更
 					$form_html .= '<a id="media_reset_' . $key . '" class="media_reset_btn btn btn-default button button-default">' . __( 'Delete Image', 'vk-google-job-posting-manager' ) . '</a>';
 
 				} elseif ( $value['type'] == 'file' ) {
@@ -174,17 +198,24 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 		} // public static function form_table( $custom_fields_array, $befor_items, $echo = true ){
 
-
+		/*
+		-------------------------------------------
+		入力された値の保存
+		-------------------------------------------
+		*/
 		public static function save_cf_value( $custom_fields_array ) {
 
 			global $post;
 
+			// 設定したnonce を取得（CSRF対策）
 			$noncename__fields = isset( $_POST['noncename__fields'] ) ? $_POST['noncename__fields'] : null;
 
+			// nonce を確認し、値が書き換えられていれば、何もしない（CSRF対策）
 			if ( ! wp_verify_nonce( $noncename__fields, wp_create_nonce( __FILE__ ) ) ) {
 				return;
 			}
 
+			// 自動保存ルーチンかどうかチェック。そうだった場合は何もしない（記事の自動保存処理として呼び出された場合の対策）
 			if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 				return $post_id; }
 
@@ -192,32 +223,15 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 				$field_value = ( isset( $_POST[ $key ] ) ) ? $_POST[ $key ] : '';
 
-				$parent_key = $value['parent'];
-				$new_array  = array();
-
-				if ( ! empty( $parent_key ) ) {
-
-					$save_key = 'vkjp_' . $parent_key;
-					$key      = str_replace( 'vkjp_', '', $key );
-
-					$pre_value         = get_post_meta( $post->ID, $save_key, false );
-					$pre_value[ $key ] = $field_value;
-
-					update_post_meta( $post->ID, $save_key, $pre_value );
-
-				} else {
-
-					if ( get_post_meta( $post->ID, $key ) == '' ) {
-
-						add_post_meta( $post->ID, $key, $field_value, false );
-
-					} elseif ( $field_value != get_post_meta( $post->ID, $key, false ) ) {
-
-						update_post_meta( $post->ID, $key, $field_value );
-
-					} elseif ( $field_value == '' ) {
-						delete_post_meta( $post->ID, $key, get_post_meta( $post->ID, $key, false ) );
-					}
+				// データが空だったら入れる
+				if ( get_post_meta( $post->ID, $key ) == '' ) {
+					add_post_meta( $post->ID, $key, $field_value, true );
+					// 今入ってる値と違ってたらアップデートする
+				} elseif ( $field_value != get_post_meta( $post->ID, $key, true ) ) {
+					update_post_meta( $post->ID, $key, $field_value );
+					// 入力がなかったら消す
+				} elseif ( $field_value == '' ) {
+					delete_post_meta( $post->ID, $key, get_post_meta( $post->ID, $key, true ) );
 				}
 			} // foreach ($custom_fields_all_array as $key => $value) {
 		}

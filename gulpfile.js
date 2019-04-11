@@ -6,6 +6,7 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     autoprefixer = require('gulp-autoprefixer'),
     cleanCss = require('gulp-clean-css'),
+		replace = require('gulp-replace'),
 		runSequence = require('run-sequence');
 
 gulp.task('sass', function () {
@@ -48,6 +49,14 @@ gulp.task('js', function () {
 });
 
 
+// replace_text_domain ////////////////////////////////////////////////
+gulp.task('replace_text_domain', function () {
+		gulp.src(['./inc/custom-field-builder/package/*'])
+				.pipe(replace('custom_field_builder_textdomain', 'vk-google-job-posting-manager'))
+				.pipe(gulp.dest('./inc/custom-field-builder/package/'));
+});
+
+
 // watch
 gulp.task('watch', function () {
     gulp.watch('./blocks/create-table/*.js', ['js']);
@@ -56,7 +65,7 @@ gulp.task('watch', function () {
 });
 
 // Build
-gulp.task('build', ['js', 'sass']);
+gulp.task('build', ['js', 'sass', 'replace_text_domain']);
 
 // Default Tasks
 gulp.task('default', ['watch']);

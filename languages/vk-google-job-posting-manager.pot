@@ -1,0 +1,24 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=utf-8\n"
+"X-Generator: babel-plugin-makepot\n"
+
+#: blocks/create-table/index.js:12
+msgid "Job Posting"
+msgstr ""
+
+#: blocks/create-table/index.js:35
+msgid "Please enter the post ID which you want to display"
+msgstr ""
+
+#: blocks/create-table/index.js:44
+msgid "Table Style"
+msgstr ""
+
+#: blocks/create-table/index.js:50
+msgid "Default"
+msgstr ""
+
+#: blocks/create-table/index.js:54
+msgid "Stripe"
+msgstr ""
