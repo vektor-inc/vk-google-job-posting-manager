@@ -55,7 +55,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 		}
 
 		public static function form_required() {
-			$required = '<span class="required">必須</span>';
+			$required = '<span class="required">' . __( 'Required', 'vk-google-job-posting-manager' ) . '</span>';
 			return $required;
 		}
 
