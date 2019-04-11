@@ -54,6 +54,8 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 		global $post;
 		$custom_fields_array = self::custom_fields_array();
 		$befor_custom_fields = '';
+		echo '<p>' . __( 'If you do not fill in this form that, common settings will apply.', 'vk-google-job-posting-manager' ) . ' [ <a href="' . admin_url() . 'options-general.php?page=vgjpm_settings" target="_blank">' . __( 'Common Settings', 'vk-google-job-posting-manager' ) . '</a> ]</p>';
+		echo '<p>' . __( 'If you want to display these items table to publish page, you use to the Job Posting Block set to content area.', 'vk-google-job-posting-manager' ) . '</p>';
 		self::form_table( $custom_fields_array, $befor_custom_fields );
 	}
 
@@ -98,7 +100,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 					'MONTH' => __( 'Per month', 'vk-google-job-posting-manager' ),
 					'YEAR'  => __( 'Per year', 'vk-google-job-posting-manager' ),
 				),
-				'description' => __( 'Please select from above', 'vk-google-job-posting-manager' ),
+				'description' => '',
 				'required'    => false,
 			),
 			'vkjp_currency'               => array(
@@ -108,7 +110,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 					'YEN' => __( 'YEN', 'vk-google-job-posting-manager' ),
 					'USD' => __( 'USD', 'vk-google-job-posting-manager' ),
 				),
-				'description' => __( 'Please select the currency', 'vk-google-job-posting-manager' ),
+				'description' => '',
 				'required'    => false,
 			),
 			'vkjp_incentiveCompensation'  => array(
@@ -154,7 +156,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 					'PER_DIEM'   => __( 'PER DIEM', 'vk-google-job-posting-manager' ),
 					'OTHER'      => __( 'OTHER', 'vk-google-job-posting-manager' ),
 				),
-				'description' => __( 'Please enter the description of salary raise.', 'vk-google-job-posting-manager' ),
+				'description' => '',
 				'required'    => false,
 			),
 			'vkjp_name'                   => array(
@@ -172,7 +174,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 			'vkjp_logo'                   => array(
 				'label'       => __( 'Hiring Organization Logo', 'vk-google-job-posting-manager' ),
 				'type'        => 'image',
-				'description' => __( 'Example : https://www.vektor-inc.co.jp/logo.png', 'vk-google-job-posting-manager' ),
+				'description' => '',
 				'required'    => false,
 			),
 			'vkjp_postalCode'             => array(
