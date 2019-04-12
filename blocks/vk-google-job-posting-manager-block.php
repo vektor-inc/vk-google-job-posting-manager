@@ -75,7 +75,7 @@ function vgjpm_block_init() {
 				],
 				'post_id' => [
 					'type'    => 'number',
-					'default' => null,
+					'default' => 0,
 				],
 			],
 			'render_callback' => function ( $attributes ) {
