@@ -64,6 +64,11 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 
 	public static function custom_fields_array() {
 
+		$currency_options = array(
+			'YEN' => __( 'YEN', 'vk-google-job-posting-manager' ),
+			'USD' => __( 'USD', 'vk-google-job-posting-manager' ),
+		);
+
 		$custom_fields_array = array(
 			'vkjp_title'                  => array(
 				'label'       => __( 'Job Title', 'vk-google-job-posting-manager' ),
@@ -109,10 +114,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 			'vkjp_currency'               => array(
 				'label'       => __( 'Currency', 'vk-google-job-posting-manager' ),
 				'type'        => 'select',
-				'options'     => array(
-					'YEN' => __( 'YEN', 'vk-google-job-posting-manager' ),
-					'USD' => __( 'USD', 'vk-google-job-posting-manager' ),
-				),
+				'options'     => apply_filters( 'vkjp_currency_options', $currency_options ),
 				'description' => '',
 				'required'    => false,
 			),
