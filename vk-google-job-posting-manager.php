@@ -98,6 +98,7 @@ function vgjpm_get_common_customfields_config() {
 		'vkjp_specialCommitments',
 		'vkjp_currency',
 		'vkjp_employmentType',
+		'vkjp_jobLocationType',
 		'vkjp_value',
 		'vkjp_minValue',
 		'vkjp_maxValue',
@@ -125,6 +126,7 @@ function vgjpm_get_common_customfields_config() {
 		'vkjp_salaryRaise',
 		'vkjp_workHours',
 		'vkjp_employmentType',
+		'vkjp_jobLocationType',
 		'vkjp_experienceRequirements',
 		'vkjp_specialCommitments',
 		'vkjp_name',
@@ -479,6 +481,14 @@ function vgjpm_use_common_values( $custom_fields ) {
 
 			$custom_fields[ $key ] = wp_get_attachment_url( $custom_fields[ $key ] );
 		}
+
+		if ( ( $key == 'vkjp_jobLocationType' || $key == 'vkjp_employmentType' ) && ! empty( $custom_fields[ $key ] ) ) {
+
+			$custom_fields[ $key ] = implode( '", "', $custom_fields[ $key ] );
+
+		} else {
+			$custom_fields[ $key ] = '';
+		}
 	}
 
 	return $custom_fields;
@@ -500,7 +510,7 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
   "description" : "' . esc_attr( $custom_fields['vkjp_description'] ) . '",
   "datePosted" : "' . esc_attr( $custom_fields['vkjp_datePosted'] ) . '",
   "validThrough" : "' . esc_attr( $custom_fields['vkjp_validThrough'] ) . '",
-  "employmentType" : ["' . implode( '", "', $custom_fields['vkjp_employmentType'] ) . '"],
+  "employmentType" : ["' . $custom_fields['vkjp_employmentType'] . '"],
   "specialCommitments" : "' . esc_attr( $custom_fields['vkjp_specialCommitments'] ) . '",
   "experienceRequirements" : "' . esc_attr( $custom_fields['vkjp_experienceRequirements'] ) . '",
   "workHours" : "' . esc_attr( $custom_fields['vkjp_workHours'] ) . '",
@@ -522,7 +532,8 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
     "addressCountry": "' . esc_attr( $custom_fields['vkjp_addressCountry'] ) . '"
     }
   },
- "baseSalary": {
+  "jobLocationType": "' . $custom_fields['vkjp_jobLocationType'] . '",
+  "baseSalary": {
     "@type": "MonetaryAmount",
     "currency": "' . esc_attr( $custom_fields['vkjp_currency'] ) . '",
     "value": {

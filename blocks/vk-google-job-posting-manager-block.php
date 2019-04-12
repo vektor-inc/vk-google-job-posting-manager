@@ -191,6 +191,9 @@ function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
 	$html .= $tags['title_before'] . __( 'Employment Type', 'vk-google-job-posting-manager' ) . $tags['title_after'];
 	$html .= $tags['content_before'] . vgjpm_get_label( $custom_fields, 'vkjp_employmentType' ) . $tags['content_after'];
 
+	$html .= $tags['title_before'] . __( 'JobLocation Type', 'vk-google-job-posting-manager' ) . $tags['title_after'];
+	$html .= $tags['content_before'] . vgjpm_get_label( $custom_fields, 'vkjp_jobLocationType' ) . $tags['content_after'];
+
 	$html .= $tags['title_before'] . __( 'Incentive Compensation', 'vk-google-job-posting-manager' ) . $tags['title_after'];
 	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_incentiveCompensation'] ) . $tags['content_after'];
 
