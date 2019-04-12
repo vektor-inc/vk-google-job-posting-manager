@@ -14,6 +14,7 @@ registerBlockType('vk-google-job-posting-manager/create-table', {
 		attributes: {
 			post_id: {
 				type: 'number',
+				default: 0,
 			},
 			style: {
 				type: 'string',
