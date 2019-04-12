@@ -65,10 +65,6 @@ function vgjpm_block_init() {
 			'editor_style'    => 'vk-google-job-posting-manager-block-editor',
 			'style'           => 'vk-google-job-posting-manager-block',
 			'attributes'      => [
-				'id'        => [
-					'type'    => 'integer',
-					'default' => 0,
-				],
 				'style'     => [
 					'type'    => 'string',
 					'default' => 'default',
@@ -77,9 +73,12 @@ function vgjpm_block_init() {
 					'type'    => 'string',
 					'default' => '',
 				],
+				'post_id' => [
+					'type'    => 'number',
+				],
 			],
 			'render_callback' => function ( $attributes ) {
-				return vgjpm_render_job_posting_table( $attributes['id'], $attributes['style'], $attributes['className'] );
+				return vgjpm_render_job_posting_table( $attributes['post_id'],$attributes['style'], $attributes['className'] );
 			},
 		)
 	);
@@ -123,13 +122,15 @@ function vgjpm_get_label( $custom_fields, $custom_fileds_key ) {
 
 }
 
-function vgjpm_render_job_posting_table( $id, $style, $className ) {
+function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
 
-	$custom_fields = vgjpm_get_custom_fields( $id );
+	$custom_fields = vgjpm_get_custom_fields( $post_id );
 
 	if ( ! isset( $custom_fields['vkjp_title'] ) ) {
-		return;
+
+		return '<div>' . __( 'Preview can be enabled after save or publish the content.', 'vk-google-job-posting-manager' ).'</div>' ;
 	}
+
 	$custom_fields = vgjpm_use_common_values( $custom_fields );
 
 	if ( $className !== '' ) {

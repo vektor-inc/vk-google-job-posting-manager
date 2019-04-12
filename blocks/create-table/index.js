@@ -3,7 +3,7 @@ import React from "react";
 
 const {__} = wp.i18n;
 const { registerBlockType } = wp.blocks;
-const {RangeControl, ServerSideRender, PanelBody, SelectControl} = wp.components;
+const {ServerSideRender, PanelBody, SelectControl} = wp.components;
 const {Fragment} = wp.element;
 const {InspectorControls} = wp.editor;
 
@@ -12,9 +12,8 @@ registerBlockType('vk-google-job-posting-manager/create-table', {
 		title: __( 'Job Posting', 'vk-google-job-posting-manager' ),
 		category: 'widgets',
 		attributes: {
-			id: {
+			post_id: {
 				type: 'number',
-				default: 0
 			},
 			style: {
 				type: 'string',
@@ -24,22 +23,15 @@ registerBlockType('vk-google-job-posting-manager/create-table', {
 
 		edit({attributes, setAttributes, className}) {
 			const {
-				id,
 				style
 			} = attributes;
+
+			//Get postID from dom.
+			attributes['post_id'] = jQuery('#post_ID').val();
 
 			return (<Fragment>
 				<InspectorControls>
 					<PanelBody>
-						<RangeControl
-							help={__('Please enter the post ID which you want to display', 'vk-google-job-posting-manager')}
-							value={id}
-							onChange={(value) => {
-								setAttributes({id: value});
-							}}
-							min={0}
-							step={1}
-						/>
 						<SelectControl
 							label={__('Table Style', 'vk-google-job-posting-manager')}
 							value={style}
