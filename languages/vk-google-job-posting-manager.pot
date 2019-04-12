@@ -1,24 +1,568 @@
+#, fuzzy
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=utf-8\n"
-"X-Generator: babel-plugin-makepot\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: VK Google Job Posting Manager\n"
+"POT-Creation-Date: 2019-04-12 15:02+0900\n"
+"PO-Revision-Date: 2019-04-12 15:02+0900\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.1\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
+"X-Poedit-WPHeader: vk-google-job-posting-manager.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: blocks/create-table/index.js:12
-msgid "Job Posting"
+#: blocks/vk-google-job-posting-manager-block.php:131
+msgid "Preview can be enabled after save or publish the content."
 msgstr ""
 
-#: blocks/create-table/index.js:35
-msgid "Please enter the post ID which you want to display"
+#: blocks/vk-google-job-posting-manager-block.php:174
+#: inc/custom-field-builder/custom-field-builder-config.php:69
+msgid "Job Title"
 msgstr ""
 
-#: blocks/create-table/index.js:44
-msgid "Table Style"
+#: blocks/vk-google-job-posting-manager-block.php:177
+#: inc/custom-field-builder/custom-field-builder-config.php:75
+msgid "Description"
 msgstr ""
 
-#: blocks/create-table/index.js:50
-msgid "Default"
+#: blocks/vk-google-job-posting-manager-block.php:180
+#: inc/custom-field-builder/custom-field-builder-config.php:81
+msgid "Base Salary"
 msgstr ""
 
-#: blocks/create-table/index.js:54
-msgid "Stripe"
+#: blocks/vk-google-job-posting-manager-block.php:186
+msgid "Work Location"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:187
+msgid "Postal code"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:191
+#: inc/custom-field-builder/custom-field-builder-config.php:150
+msgid "Employment Type"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:194
+#: inc/custom-field-builder/custom-field-builder-config.php:120
+msgid "Incentive Compensation"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:197
+#: inc/custom-field-builder/custom-field-builder-config.php:126
+msgid "Salary Raise"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:200
+#: inc/custom-field-builder/custom-field-builder-config.php:132
+msgid "Work Hours"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:203
+#: inc/custom-field-builder/custom-field-builder-config.php:138
+msgid "Experience Requirements"
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:206
+#: inc/custom-field-builder/custom-field-builder-config.php:144
+msgid "Special Commitments"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:44
+msgid "Google Job Posting Registration Information"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:58
+msgid "Please fill in recruitment information for Google Job Posting."
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:59
+msgid "If you do not fill in this form that, common settings will apply."
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:59
+msgid "Common Settings"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:60
+msgid ""
+"If you want to display these items table to publish page, you use to the Job "
+"Posting Block set to content area."
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:71
+msgid ""
+"Example: Software Engineer, Barista. Please enter only the name of the job. "
+"Please do not include the job code, address, date, salary, company name."
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:77
+msgid "Please enter specific description of the job."
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:83
+msgid "Please enter the base salary in integer. Ex：250000"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:87
+msgid "Minimum Value of Salary"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:89
+msgid "Please enter the minimum value of the salary. Ex：150000"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:93
+msgid "Max Value of Salary"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:95
+msgid "Please enter the max value of the salary. Ex：250000"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:99
+msgid "The Cycle of Salary Payment"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:102
+msgid "Per hour"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:103
+msgid "Per month"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:104
+msgid "Per year"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:110
+msgid "Currency"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:113
+msgid "YEN"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:114
+msgid "USD"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:122
+msgid "Please enter the description of incentive compensation."
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:128
+msgid "Please enter the description of salary raise."
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:134
+msgid "Please enter the description of work hours."
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:140
+msgid ""
+"Please enter the description of experience requirements. If you have the one."
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:146
+msgid "Please enter the description of special commitments"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:153
+msgid "FULL TIME"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:154
+msgid "PART TIME"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:155
+msgid "CONTRACTOR"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:156
+msgid "TEMPORARY"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:157
+msgid "INTERN"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:158
+msgid "VOLUNTEER"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:159
+msgid "PER DIEM"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:160
+msgid "OTHER"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:166
+msgid "Hiring Organization Name"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:168
+msgid "Example : Vektor,Inc. Do not include address of organization"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:172
+msgid "Hiring Organization Website"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:174
+msgid "Example : https://www.vektor-inc.co.jp/"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:178
+msgid "Hiring Organization Logo"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:184
+msgid "Postal Code of ork Location"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:186
+msgid "Example : 94043. Do not include hyphens. "
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:190
+msgid "Country of Work Location"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:192
+msgid "Please enter country code. Example : US"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:196
+msgid "Address Region of Work Location"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:198
+msgid "Example : CA"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:202
+msgid "Address Locality of Work Location"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:204
+msgid "Example : Mountain View"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:208
+msgid "Street Address of Work Location"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:210
+msgid "Example : 1600 Amphitheatre Pkwy"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:214
+msgid "Expiry Date"
+msgstr ""
+
+#: inc/custom-field-builder/custom-field-builder-config.php:216
+msgid ""
+"Please enter expiry date. If you are not sure about expiry date, please "
+"leave it blank."
+msgstr ""
+
+#: inc/custom-field-builder/package/custom-field-builder.php:58
+msgid "Required"
+msgstr ""
+
+#: inc/custom-field-builder/package/custom-field-builder.php:171
+#: vk-google-job-posting-manager.php:257
+msgid "Choose Image"
+msgstr ""
+
+#: inc/custom-field-builder/package/custom-field-builder.php:175
+#: vk-google-job-posting-manager.php:261
+msgid "Delete Image"
+msgstr ""
+
+#: inc/custom-field-builder/package/custom-field-builder.php:179
+msgid "Select file"
+msgstr ""
+
+#: inc/custom-field-builder/package/custom-field-builder.php:181
+msgid "View file"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:6 inc/custom-posttype-builder.php:7
+#: inc/custom-posttype-builder.php:30
+msgid "Job posts"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:8
+msgid "All Job posts"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:9
+msgid "Job posts Archives"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:10
+msgid "Job posts Attributes"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:11
+msgid "Insert into job posts"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:12
+msgid "Uploaded to this job posts"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:13
+msgctxt "job-posts"
+msgid "Featured Image"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:14
+msgctxt "job-posts"
+msgid "Set featured image"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:15
+msgctxt "job-posts"
+msgid "Remove featured image"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:16
+msgctxt "job-posts"
+msgid "Use as featured image"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:17
+msgid "Filter job posts list"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:18
+msgid "Job posts list navigation"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:19
+msgid "Job posts list"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:20
+msgid "New Job posts"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:21
+msgid "Add New"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:22
+msgid "Add New Job posts"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:23
+msgid "Edit Job posts"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:24 inc/custom-posttype-builder.php:25
+msgid "View Job posts"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:26
+msgid "Search job posts"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:27
+msgid "No job posts found"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:28
+msgid "No job posts found in trash"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:29
+msgid "Parent Job posts:"
+msgstr ""
+
+#. translators: %s: post permalink
+#: inc/custom-posttype-builder.php:71
+#, php-format
+msgid "Job posts updated <a target=\"_blank\" href=\"%s\">View job posts</a>"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:72
+msgid "Custom field updated"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:73
+msgid "Custom field deleted"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:74
+msgid "Job posts updated"
+msgstr ""
+
+#. translators: %s: date and time of the revision
+#: inc/custom-posttype-builder.php:76
+#, php-format
+msgid "Job posts restored to revision from %s"
+msgstr ""
+
+#. translators: %s: post permalink
+#: inc/custom-posttype-builder.php:78
+#, php-format
+msgid "Job posts published <a href=\"%s\">View job posts</a>"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:79
+msgid "Job posts saved"
+msgstr ""
+
+#. translators: %s: post permalink
+#: inc/custom-posttype-builder.php:81
+#, php-format
+msgid ""
+"Job posts submitted <a target=\"_blank\" href=\"%s\">Preview job posts</a>"
+msgstr ""
+
+#. translators: 1: Publish box date format, see https://secure.php.net/date 2: Post permalink
+#: inc/custom-posttype-builder.php:83
+#, php-format
+msgid ""
+"Job posts scheduled for: <strong>%1$s</strong>. <a target=\"_blank\" href="
+"\"%2$s\">Preview job posts</a>"
+msgstr ""
+
+#: inc/custom-posttype-builder.php:84
+msgid "M j, Y @ G:i"
+msgstr ""
+
+#. translators: %s: post permalink
+#: inc/custom-posttype-builder.php:86
+#, php-format
+msgid ""
+"Job posts draft updated <a target=\"_blank\" href=\"%s\">Preview job posts</"
+"a>"
+msgstr ""
+
+#: node_modules/grunt-wp-i18n/test/fixtures/basic-theme/exclude/file.php:3
+#: node_modules/grunt-wp-i18n/test/fixtures/plugin-include/plugin-include.php:6
+msgid "Exclude"
+msgstr ""
+
+#: node_modules/grunt-wp-i18n/test/fixtures/plugin-include/include/file.php:2
+msgid "Include"
+msgstr ""
+
+#: node_modules/grunt-wp-i18n/test/fixtures/text-domains/add-domain.php:2
+#: node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:2
+#: node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:3
+#: node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:4
+#: node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-domains.php:2
+#: node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-domains.php:3
+msgid "String"
+msgstr ""
+
+#: node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:6
+#: node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:7
+#: node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:8
+msgctxt "a string"
+msgid "String"
+msgstr ""
+
+#: node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:9
+#: node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:10
+#: node_modules/grunt-wp-i18n/test/fixtures/text-domains/update-all-domains.php:11
+#, php-format
+msgid "1 Star"
+msgid_plural "%s Stars"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: A single line translators comment.
+#: node_modules/grunt-wp-i18n/test/fixtures/translator-comments/translator-comments.php:7
+msgid "A"
+msgstr ""
+
+#. translators: A
+#. multiline
+#. translators
+#. comment.
+#.
+#: node_modules/grunt-wp-i18n/test/fixtures/translator-comments/translator-comments.php:15
+msgid "B"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+#: vk-google-job-posting-manager.php:57 vk-google-job-posting-manager.php:58
+msgid "VK Google Job Posting Manager"
+msgstr ""
+
+#: vk-google-job-posting-manager.php:69
+msgid "Setting"
+msgstr ""
+
+#: vk-google-job-posting-manager.php:182
+msgid "Job Posting Manager Settings"
+msgstr ""
+
+#: vk-google-job-posting-manager.php:188
+msgid "Create Job-Posts Post type"
+msgstr ""
+
+#: vk-google-job-posting-manager.php:190
+msgid ""
+"This plugin automatically create post type for Job Posting.<br>If you have "
+"already created custom post type for Job Post, please remove this check and "
+"select post type of next check boxes."
+msgstr ""
+
+#: vk-google-job-posting-manager.php:193
+msgid "Choose the post type to display job posting custom fields"
+msgstr ""
+
+#: vk-google-job-posting-manager.php:197
+msgid "Common Fields"
+msgstr ""
+
+#: vk-google-job-posting-manager.php:199
+msgid ""
+"If a single page is filled in, the content of the single page takes "
+"precedence."
+msgstr ""
+
+#: vk-google-job-posting-manager.php:203
+msgid "Save Changes"
+msgstr ""
+
+#: vk-google-job-posting-manager.php:361
+msgid "Create The Post Type"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/vektor-inc/vk-google-job-posting-manager"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "This is the plugin for Google Job posting"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Vektor,Inc"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://www.vektor-inc.co.jp"
 msgstr ""
