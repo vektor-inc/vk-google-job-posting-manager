@@ -5,15 +5,15 @@ msgstr ""
 "Project-Id-Version: VK Google Job Posting Manager 0.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/vk-google-job-"
 "posting-manager\n"
-"POT-Creation-Date: 2019-04-12 11:49+0900\n"
-"PO-Revision-Date: 2019-04-12 11:50+0900\n"
+"POT-Creation-Date: 2019-04-12 15:23+0900\n"
+"PO-Revision-Date: 2019-04-12 15:24+0900\n"
 "Last-Translator: \n"
 "Language-Team: Vektor,Inc.\n"
 "Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.1.1\n"
 "X-Domain: vk-google-job-posting-manager\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -26,94 +26,98 @@ msgstr ""
 msgid "Job Posting"
 msgstr "求人情報"
 
-#: blocks/create-table/index.js:35 dist/blocks/create-table/index.js:35
-msgid "Please enter the post ID which you want to display"
-msgstr "表示したい投稿ID を入力してください"
-
-#: blocks/create-table/index.js:44 dist/blocks/create-table/index.js:44
+#: blocks/create-table/index.js:36 dist/blocks/create-table/index.js:44
 msgid "Table Style"
 msgstr "テーブルのスタイル"
 
-#: blocks/create-table/index.js:50 dist/blocks/create-table/index.js:50
+#: blocks/create-table/index.js:42 dist/blocks/create-table/index.js:50
 msgid "Default"
 msgstr "デフォルト"
 
-#: blocks/create-table/index.js:54 dist/blocks/create-table/index.js:54
+#: blocks/create-table/index.js:46 dist/blocks/create-table/index.js:54
 msgid "Stripe"
 msgstr "ストライプ"
 
-#: blocks/vk-google-job-posting-manager-block.php:173
+#: blocks/vk-google-job-posting-manager-block.php:131
+msgid "Preview can be enabled after save or publish the content."
+msgstr ""
+
+#: blocks/vk-google-job-posting-manager-block.php:174
 #: dist/blocks/vk-google-job-posting-manager-block.php:173
 #: dist/inc/custom-field-builder/custom-field-builder-config.php:69
 #: inc/custom-field-builder/custom-field-builder-config.php:74
 msgid "Job Title"
 msgstr "職種"
 
-#: blocks/vk-google-job-posting-manager-block.php:176
+#: blocks/vk-google-job-posting-manager-block.php:177
 #: dist/blocks/vk-google-job-posting-manager-block.php:176
 #: dist/inc/custom-field-builder/custom-field-builder-config.php:75
 #: inc/custom-field-builder/custom-field-builder-config.php:80
 msgid "Description"
 msgstr "詳細"
 
-#: blocks/vk-google-job-posting-manager-block.php:179
+#: blocks/vk-google-job-posting-manager-block.php:180
 #: dist/blocks/vk-google-job-posting-manager-block.php:179
 #: dist/inc/custom-field-builder/custom-field-builder-config.php:81
 #: inc/custom-field-builder/custom-field-builder-config.php:86
 msgid "Base Salary"
 msgstr "基本給"
 
-#: blocks/vk-google-job-posting-manager-block.php:185
+#: blocks/vk-google-job-posting-manager-block.php:186
 #: dist/blocks/vk-google-job-posting-manager-block.php:185
 msgid "Work Location"
 msgstr "勤務地"
 
-#: blocks/vk-google-job-posting-manager-block.php:186
+#: blocks/vk-google-job-posting-manager-block.php:187
 #: dist/blocks/vk-google-job-posting-manager-block.php:186
 msgid "Postal code"
 msgstr "郵便番号"
 
-#: blocks/vk-google-job-posting-manager-block.php:190
+#: blocks/vk-google-job-posting-manager-block.php:191
 #: dist/blocks/vk-google-job-posting-manager-block.php:190
 #: dist/inc/custom-field-builder/custom-field-builder-config.php:150
 #: inc/custom-field-builder/custom-field-builder-config.php:152
 msgid "Employment Type"
 msgstr "雇用形態"
 
-#: blocks/vk-google-job-posting-manager-block.php:193
+#: blocks/vk-google-job-posting-manager-block.php:194
 #: dist/blocks/vk-google-job-posting-manager-block.php:193
 #: dist/inc/custom-field-builder/custom-field-builder-config.php:120
 #: inc/custom-field-builder/custom-field-builder-config.php:122
 msgid "Incentive Compensation"
 msgstr "賞与"
 
-#: blocks/vk-google-job-posting-manager-block.php:196
+#: blocks/vk-google-job-posting-manager-block.php:197
 #: dist/blocks/vk-google-job-posting-manager-block.php:196
 #: dist/inc/custom-field-builder/custom-field-builder-config.php:126
 #: inc/custom-field-builder/custom-field-builder-config.php:128
 msgid "Salary Raise"
 msgstr "昇給"
 
-#: blocks/vk-google-job-posting-manager-block.php:199
+#: blocks/vk-google-job-posting-manager-block.php:200
 #: dist/blocks/vk-google-job-posting-manager-block.php:199
 #: dist/inc/custom-field-builder/custom-field-builder-config.php:132
 #: inc/custom-field-builder/custom-field-builder-config.php:134
 msgid "Work Hours"
 msgstr "勤務時間"
 
-#: blocks/vk-google-job-posting-manager-block.php:202
+#: blocks/vk-google-job-posting-manager-block.php:203
 #: dist/blocks/vk-google-job-posting-manager-block.php:202
 #: dist/inc/custom-field-builder/custom-field-builder-config.php:138
 #: inc/custom-field-builder/custom-field-builder-config.php:140
 msgid "Experience Requirements"
 msgstr "必要経験・スキル"
 
-#: blocks/vk-google-job-posting-manager-block.php:205
+#: blocks/vk-google-job-posting-manager-block.php:206
 #: dist/blocks/vk-google-job-posting-manager-block.php:205
 #: dist/inc/custom-field-builder/custom-field-builder-config.php:144
 #: inc/custom-field-builder/custom-field-builder-config.php:146
 msgid "Special Commitments"
 msgstr "福利厚生"
+
+#: dist/blocks/create-table/index.js:35
+msgid "Please enter the post ID which you want to display"
+msgstr "表示したい投稿ID を入力してください"
 
 #: dist/inc/custom-field-builder/custom-field-builder-config.php:44
 #: inc/custom-field-builder/custom-field-builder-config.php:44
@@ -687,10 +691,6 @@ msgstr ""
 
 #~ msgid "Create The Post Type."
 #~ msgstr "投稿タイプを作成"
-
-#: blocks/vk-google-job-posting-manager-block.php:131
-msgid "Preview can be enabled after save or publish the content."
-msgstr "保存もしくは公開後にプレビューを使用できます。"
 
 #~ msgid "Please select from above"
 #~ msgstr "上から選択してください"
