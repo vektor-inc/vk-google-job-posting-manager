@@ -191,7 +191,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 			'vkjp_addressCountry'         => array(
 				'label'       => __( 'Country of Work Location', 'vk-google-job-posting-manager' ),
 				'type'        => 'text',
-				'description' => __( 'Please enter country code. Example : US', 'vk-google-job-posting-manager' ),
+				'description' => __( 'Example : US [ <a href="https://en.wikipedia.org/wiki/ISO_3166-1" target="_blank">Country code (Alpha-2)</a> ]', 'vk-google-job-posting-manager' ),
 				'required'    => false,
 			),
 			'vkjp_addressRegion'          => array(
