@@ -7,18 +7,14 @@ msgstr ""
 msgid "Job Posting"
 msgstr ""
 
-#: blocks/create-table/index.js:35
-msgid "Please enter the post ID which you want to display"
-msgstr ""
-
-#: blocks/create-table/index.js:44
+#: blocks/create-table/index.js:36
 msgid "Table Style"
 msgstr ""
 
-#: blocks/create-table/index.js:50
+#: blocks/create-table/index.js:42
 msgid "Default"
 msgstr ""
 
-#: blocks/create-table/index.js:54
+#: blocks/create-table/index.js:46
 msgid "Stripe"
 msgstr ""
