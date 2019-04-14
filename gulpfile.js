@@ -83,6 +83,7 @@ gulp.task('copy_dist', function() {
 							'./assets/**',
 							'./blocks/**',
 							'./inc/**',
+							'./languages/**',
 							"!./.distignore",
 							"!./.gitignore",
 							"!./Gruntfile.js",
