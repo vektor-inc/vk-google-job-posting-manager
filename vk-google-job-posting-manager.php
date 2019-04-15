@@ -485,18 +485,24 @@ function vgjpm_image_filter_id_to_url( $custom_fields, $key, $common_attachment_
 	if ( $key == 'vkjp_logo' ) {
 
 		//If attachment exists return attachment's url, else return false.
-		$each_post_attachment_url = wp_get_attachment_url( $custom_fields[ $key ] );
-		$common_attachment_url = wp_get_attachment_url( $common_attachment_id );
+//		var_dump($custom_fields[ $key ]);
 
-		if ( $each_post_attachment_url ) {
+		if ( isset( $custom_fields[ $key ] ) && isset( $common_attachment_id ) ) {
 
-			$custom_fields[ $key ] = $each_post_attachment_url;
+			$each_post_attachment_url = wp_get_attachment_url( $custom_fields[ $key ] );
+			$common_attachment_url    = wp_get_attachment_url( $common_attachment_id );
 
 
-		} elseif ( $common_attachment_url ) {
+			if ( $each_post_attachment_url ) {
 
-			$custom_fields[ $key ] = $common_attachment_url;
+				$custom_fields[ $key ] = $each_post_attachment_url;
 
+
+			} elseif ( $common_attachment_url ) {
+
+				$custom_fields[ $key ] = $common_attachment_url;
+
+			}
 		}
 	}
 
