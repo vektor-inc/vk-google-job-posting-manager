@@ -1,0 +1,5 @@
+{
+    "require": {
+        "alcohol/iso4217": "^3.1"
+    }
+}
