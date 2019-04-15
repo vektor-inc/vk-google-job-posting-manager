@@ -35,7 +35,7 @@ registerBlockType('vk-google-job-posting-manager/create-table', {
 					<PanelBody>
 						<BaseControl
 							label={__('Table Style', 'vk-google-job-posting-manager')}
-							help={__('Preview works when the article is saved', 'vk-google-job-posting-manager')}
+							help={__('The preview will work after publish or save action.', 'vk-google-job-posting-manager')}
 						>
 						<SelectControl
 							value={style}
