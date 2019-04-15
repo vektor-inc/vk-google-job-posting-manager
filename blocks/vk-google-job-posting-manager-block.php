@@ -90,20 +90,24 @@ add_action( 'init', 'vgjpm_block_init' );
 /**
  *
  * @param $custom_fields
- * @param $custom_fileds_key
+ * @param $custom_fields_key
  *
  * @return array
  */
 
-function vgjpm_get_label( $custom_fields, $custom_fileds_key ) {
+function vgjpm_get_label( $custom_fields, $custom_fields_key ) {
 
+	//Get config array
 	$Job_Posting_Custom_Fields = new VGJPM_Custom_Field_Job_Post;
 	$config                    = $Job_Posting_Custom_Fields->custom_fields_array();
 
-	$options_arr = $config[ $custom_fileds_key ]['options'];
+	//Get saved value
+	$options_arr_key = $custom_fields[ $custom_fields_key ];
 
-	$options_arr_key = $custom_fields[ $custom_fileds_key ];
+	//Get array with options
+	$options_arr = $config[ $custom_fields_key ]['options'];
 
+	//If value is array, change it to string
 	if ( is_array( $options_arr_key ) ) {
 
 		$temp = array();

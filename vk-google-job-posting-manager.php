@@ -353,7 +353,6 @@ function vgjpm_save_data( $common_customfields ) {
 	}
 }
 
-
 function vgjpm_create_jobpost_posttype() {
 
 	$list          = '<ul>';
@@ -464,30 +463,40 @@ function vgjpm_use_common_values( $custom_fields ) {
 
 		$temp = get_option( 'common_' . $key, null );
 
+		$custom_fields = vgjpm_image_filter_id_to_url( $custom_fields, $key, $temp );
+
+
 		if ( ! isset( $custom_fields[ $key ] ) && isset( $temp ) ) {
 
 			$custom_fields[ $key ] = $temp;
+
 
 		} elseif ( ! isset( $custom_fields[ $key ] ) && ! isset( $temp ) ) {
 
 			$custom_fields[ $key ] = '';
 		}
+	}
 
-		if ( $key == 'vkjp_logo' && empty( $custom_fields[ $key ] ) && isset( $temp ) ) {
+	return $custom_fields;
+}
 
-			$custom_fields[ $key ] = wp_get_attachment_url( $temp );
+function vgjpm_image_filter_id_to_url( $custom_fields, $key, $common_attachment_id ) {
 
-		} elseif ( $key == 'vkjp_logo' && isset( $custom_fields[ $key ] ) ) {
+	if ( $key == 'vkjp_logo' ) {
 
-			$custom_fields[ $key ] = wp_get_attachment_url( $custom_fields[ $key ] );
-		}
+		//If attachment exists return attachment's url, else return false.
+		$each_post_attachment_url = wp_get_attachment_url( $custom_fields[ $key ] );
+		$common_attachment_url = wp_get_attachment_url( $common_attachment_id );
 
-		if ( ( $key == 'vkjp_jobLocationType' || $key == 'vkjp_employmentType' ) && ! empty( $custom_fields[ $key ] ) ) {
+		if ( $each_post_attachment_url ) {
 
-			$custom_fields[ $key ] = implode( '", "', $custom_fields[ $key ] );
+			$custom_fields[ $key ] = $each_post_attachment_url;
 
-		} else {
-			$custom_fields[ $key ] = '';
+
+		} elseif ( $common_attachment_url ) {
+
+			$custom_fields[ $key ] = $common_attachment_url;
+
 		}
 	}
 
