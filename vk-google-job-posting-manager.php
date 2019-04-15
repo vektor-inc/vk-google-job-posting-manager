@@ -351,7 +351,6 @@ function vgjpm_save_data( $common_customfields ) {
 	}
 }
 
-
 function vgjpm_create_jobpost_posttype() {
 
 	$list          = '<ul>';
@@ -453,7 +452,7 @@ function vgjpm_get_custom_fields( $post_id ) {
 	return $custom_fields;
 }
 
-function vgjpm_use_common_values( $custom_fields ) {
+function vgjpm_use_common_values( $custom_fields, $output_type ) {
 
 	$VGJPM_Custom_Field_Job_Post = new VGJPM_Custom_Field_Job_Post;
 	$default_custom_fields       = $VGJPM_Custom_Field_Job_Post->custom_fields_array();
@@ -462,22 +461,66 @@ function vgjpm_use_common_values( $custom_fields ) {
 
 		$temp = get_option( 'common_' . $key, null );
 
+		$custom_fields = vgjpm_image_filter_id_to_url( $custom_fields, $key, $temp );
+
+
 		if ( ! isset( $custom_fields[ $key ] ) && isset( $temp ) ) {
 
 			$custom_fields[ $key ] = $temp;
+
 
 		} elseif ( ! isset( $custom_fields[ $key ] ) && ! isset( $temp ) ) {
 
 			$custom_fields[ $key ] = '';
 		}
+	}
 
-		if ( $key == 'vkjp_logo' && empty( $custom_fields[ $key ] ) && isset( $temp ) ) {
+	if ( $output_type == 'json' ) {
+		//Array to string.
+		$custom_fields = vgjpm_array_to_string( $custom_fields );
 
-			$custom_fields[ $key ] = wp_get_attachment_url( $temp );
+	} elseif ( $output_type == 'block' ) {
 
-		} elseif ( $key == 'vkjp_logo' && isset( $custom_fields[ $key ] ) ) {
+	}
 
-			$custom_fields[ $key ] = wp_get_attachment_url( $custom_fields[ $key ] );
+	return $custom_fields;
+}
+
+function vgjpm_array_to_string( $custom_fields ) {
+
+	foreach ( $custom_fields as $key => $value ) {
+
+		if ( is_array( $value ) ) {
+
+			$custom_fields[ $key ] = implode( '" ,"', $value );
+
+		}
+	}
+
+	return $custom_fields;
+}
+
+function vgjpm_image_filter_id_to_url( $custom_fields, $key, $common_attachment_id ) {
+
+	if ( $key == 'vkjp_logo' ) {
+
+		if ( isset( $custom_fields[ $key ] ) && isset( $common_attachment_id ) ) {
+
+			//If attachment exists return attachment's url, else return false.
+			$each_post_attachment_url = wp_get_attachment_url( $custom_fields[ $key ] );
+			$common_attachment_url    = wp_get_attachment_url( $common_attachment_id );
+
+
+			if ( $each_post_attachment_url ) {
+
+				$custom_fields[ $key ] = $each_post_attachment_url;
+
+
+			} elseif ( $common_attachment_url ) {
+
+				$custom_fields[ $key ] = $common_attachment_url;
+
+			}
 		}
 	}
 
@@ -491,7 +534,7 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 		return;
 	}
 
-	$custom_fields = vgjpm_use_common_values( $custom_fields );
+	$custom_fields = vgjpm_use_common_values( $custom_fields, 'json' );
 
 	$JSON = '<script type="application/ld+json"> {
   "@context" : "https://schema.org/",
@@ -500,7 +543,7 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
   "description" : "' . esc_attr( $custom_fields['vkjp_description'] ) . '",
   "datePosted" : "' . esc_attr( $custom_fields['vkjp_datePosted'] ) . '",
   "validThrough" : "' . esc_attr( $custom_fields['vkjp_validThrough'] ) . '",
-  "employmentType" : ["' . implode( '", "', $custom_fields['vkjp_employmentType'] ) . '"],
+  "employmentType" : ["' . $custom_fields['vkjp_employmentType'] . '"],
   "specialCommitments" : "' . esc_attr( $custom_fields['vkjp_specialCommitments'] ) . '",
   "experienceRequirements" : "' . esc_attr( $custom_fields['vkjp_experienceRequirements'] ) . '",
   "workHours" : "' . esc_attr( $custom_fields['vkjp_workHours'] ) . '",
@@ -522,7 +565,8 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
     "addressCountry": "' . esc_attr( $custom_fields['vkjp_addressCountry'] ) . '"
     }
   },
- "baseSalary": {
+  "jobLocationType": "' . $custom_fields['vkjp_jobLocationType'] . '",
+  "baseSalary": {
     "@type": "MonetaryAmount",
     "currency": "' . esc_attr( $custom_fields['vkjp_currency'] ) . '",
     "value": {

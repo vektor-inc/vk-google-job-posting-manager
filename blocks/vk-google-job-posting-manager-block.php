@@ -90,37 +90,38 @@ add_action( 'init', 'vgjpm_block_init' );
 /**
  *
  * @param $custom_fields
- * @param $custom_fileds_key
+ * @param $custom_fields_key
  *
- * @return array
+ * @return string
  */
 
-function vgjpm_get_label( $custom_fields, $custom_fileds_key ) {
+function vgjpm_get_label_of_array( $custom_fields, $custom_fields_key ) {
 
-	$Job_Posting_Custom_Fields = new VGJPM_Custom_Field_Job_Post;
-	$config                    = $Job_Posting_Custom_Fields->custom_fields_array();
+	$VGJPM_Custom_Field_Job_Post = new VGJPM_Custom_Field_Job_Post;
+	$default_custom_fields       = $VGJPM_Custom_Field_Job_Post->custom_fields_array();
 
-	$options_arr = $config[ $custom_fileds_key ]['options'];
+	$labels = $default_custom_fields[ $custom_fields_key ]['options'];
+	$values_to_get_label = $custom_fields[ $custom_fields_key ];
 
-	$options_arr_key = $custom_fields[ $custom_fileds_key ];
+	$return_labels = array();
 
-	if ( is_array( $options_arr_key ) ) {
+	if ( is_array($values_to_get_label) ) {
 
-		$temp = array();
-		for ( $i = 0; $i < count( $options_arr_key ); $i++ ) {
+		foreach ($values_to_get_label as $key => $value){
 
-			$temp[] = $options_arr[ $options_arr_key[ $i ] ] . '';
+			if (array_key_exists($value, $labels)) {
+
+
+				$return_labels[] = $labels[$value];
+
+
+			}
+
 		}
 
-		$labels = implode( ' ,', $temp );
-
-	} else {
-
-		$labels = $options_arr[ $options_arr_key ];
 	}
 
-	return $labels;
-
+	return implode( ',', $return_labels );
 }
 
 function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
@@ -132,7 +133,7 @@ function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
 		return '<div>' . __( 'Preview can be enabled after save or publish the content.', 'vk-google-job-posting-manager' ).'</div>' ;
 	}
 
-	$custom_fields = vgjpm_use_common_values( $custom_fields );
+	$custom_fields = vgjpm_use_common_values( $custom_fields, 'block' );
 
 	if ( $className !== '' ) {
 		$className .= ' ' . $className;
@@ -180,8 +181,8 @@ function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
 
 	$html .= $tags['title_before'] . __( 'Base Salary', 'vk-google-job-posting-manager' ) . $tags['title_after'];
 	$html .= $tags['content_before'];
-	$html .= esc_html( $custom_fields['vkjp_value'] ) . '(' . vgjpm_get_label( $custom_fields, 'vkjp_unitText' ) . ')';
-	// $html .= '<br>' . esc_html( $custom_fields['vkjp_minValue'] ) . ' - ' . esc_html( $custom_fields['vkjp_maxValue'] ) . '(' . vgjpm_get_label( $custom_fields, 'vkjp_currency' ) . ')';
+	$html .= esc_html( $custom_fields['vkjp_value'] ) . '(' . vgjpm_get_label_of_array( $custom_fields, 'vkjp_unitText' ) . ')';
+	// $html .= '<br>' . esc_html( $custom_fields['vkjp_minValue'] ) . ' - ' . esc_html( $custom_fields['vkjp_maxValue'] ) . '(' . vgjpm_get_label_of_array( $custom_fields, 'vkjp_currency' ) . ')';
 	$html .= $tags['content_after'];
 	//
 	$html .= $tags['title_before'] . __( 'Work Location', 'vk-google-job-posting-manager' ) . $tags['title_after'];
@@ -190,7 +191,10 @@ function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
 	$html .= '<br>' . esc_html( $custom_fields['vkjp_addressRegion'] ) . esc_html( $custom_fields['vkjp_addressLocality'] ) . esc_html( $custom_fields['vkjp_streetAddress'] ) . $tags['content_after'];
 
 	$html .= $tags['title_before'] . __( 'Employment Type', 'vk-google-job-posting-manager' ) . $tags['title_after'];
-	$html .= $tags['content_before'] . vgjpm_get_label( $custom_fields, 'vkjp_employmentType' ) . $tags['content_after'];
+	$html .= $tags['content_before'] . vgjpm_get_label_of_array( $custom_fields, 'vkjp_employmentType' ) . $tags['content_after'];
+
+	$html .= $tags['title_before'] . __( 'JobLocation Type', 'vk-google-job-posting-manager' ) . $tags['title_after'];
+	$html .= $tags['content_before'] . vgjpm_get_label_of_array( $custom_fields, 'vkjp_jobLocationType' ) . $tags['content_after'];
 
 	$html .= $tags['title_before'] . __( 'Incentive Compensation', 'vk-google-job-posting-manager' ) . $tags['title_after'];
 	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_incentiveCompensation'] ) . $tags['content_after'];
