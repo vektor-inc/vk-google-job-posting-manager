@@ -2,6 +2,9 @@
 /*-------------------------------------------*/
 /*  Load modules
 /*-------------------------------------------*/
+// autoloadを読み込む
+require dirname( dirname( dirname( __FILE__ ) ) ) . '/vendor/autoload.php';
+
 if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 	require_once( dirname( __FILE__ ) . '/package/custom-field-builder.php' );
 }
@@ -64,10 +67,19 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 
 	public static function custom_fields_array() {
 
-		$currency_options = array(
-			'YEN' => __( 'YEN', 'vk-google-job-posting-manager' ),
-			'USD' => __( 'USD', 'vk-google-job-posting-manager' ),
-		);
+		$iso4217          = new Alcohol\ISO4217();
+		$currency_list    = $iso4217->getAll();
+		$currency_options = array();
+
+		foreach ( $currency_list as $key => $value ) {
+
+			$name   = $currency_list[ $key ]['name'];
+			$alpha3 = $currency_list[ $key ]['alpha3'];
+
+			$currency_options[ $alpha3 ] = __( $name, 'vk-google-job-posting-manager' );
+
+		}
+
 
 		$custom_fields_array = array(
 			'vkjp_title'                  => array(
