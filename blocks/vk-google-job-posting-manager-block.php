@@ -104,8 +104,11 @@ function vgjpm_get_label( $custom_fields, $custom_fields_key ) {
 	//Get saved value
 	$options_arr_key = $custom_fields[ $custom_fields_key ];
 
+	var_dump($options_arr_key);
+
 	//Get array with options
 	$options_arr = $config[ $custom_fields_key ]['options'];
+
 
 	//If value is array, change it to string
 	if ( is_array( $options_arr_key ) ) {
@@ -137,6 +140,9 @@ function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
 	}
 
 	$custom_fields = vgjpm_use_common_values( $custom_fields );
+
+
+	var_dump($custom_fields);
 
 	if ( $className !== '' ) {
 		$className .= ' ' . $className;
