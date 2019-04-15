@@ -153,7 +153,6 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 				'type'        => 'checkbox',
 				'options'     => array(
 					'FULL_TIME'  => __( 'FULL TIME', 'vk-google-job-posting-manager' ),
-					'FULL_TIME'  => __( 'FULL TIME', 'vk-google-job-posting-manager' ),
 					'PART_TIME'  => __( 'PART TIME', 'vk-google-job-posting-manager' ),
 					'CONTRACTOR' => __( 'CONTRACTOR', 'vk-google-job-posting-manager' ),
 					'TEMPORARY'  => __( 'TEMPORARY', 'vk-google-job-posting-manager' ),

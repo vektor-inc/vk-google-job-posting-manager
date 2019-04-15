@@ -98,7 +98,6 @@ function vgjpm_get_common_customfields_config() {
 		'vkjp_specialCommitments',
 		'vkjp_currency',
 		'vkjp_employmentType',
-		'vkjp_jobLocationType',
 		'vkjp_value',
 		'vkjp_minValue',
 		'vkjp_maxValue',
@@ -126,7 +125,6 @@ function vgjpm_get_common_customfields_config() {
 		'vkjp_salaryRaise',
 		'vkjp_workHours',
 		'vkjp_employmentType',
-		'vkjp_jobLocationType',
 		'vkjp_experienceRequirements',
 		'vkjp_specialCommitments',
 		'vkjp_name',
@@ -454,7 +452,7 @@ function vgjpm_get_custom_fields( $post_id ) {
 	return $custom_fields;
 }
 
-function vgjpm_use_common_values( $custom_fields ) {
+function vgjpm_use_common_values( $custom_fields, $output_type ) {
 
 	$VGJPM_Custom_Field_Job_Post = new VGJPM_Custom_Field_Job_Post;
 	$default_custom_fields       = $VGJPM_Custom_Field_Job_Post->custom_fields_array();
@@ -477,8 +475,13 @@ function vgjpm_use_common_values( $custom_fields ) {
 		}
 	}
 
-	//Array to string.
-	$custom_fields = vgjpm_array_to_string( $custom_fields );
+	if ( $output_type == 'json' ) {
+		//Array to string.
+		$custom_fields = vgjpm_array_to_string( $custom_fields );
+
+	} elseif ( $output_type == 'block' ) {
+
+	}
 
 	return $custom_fields;
 }
@@ -489,7 +492,7 @@ function vgjpm_array_to_string( $custom_fields ) {
 
 		if ( is_array( $value ) ) {
 
-			$custom_fields[ $key ] = implode( ' ,', $value );
+			$custom_fields[ $key ] = implode( '" ,"', $value );
 
 		}
 	}
@@ -531,7 +534,7 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 		return;
 	}
 
-	$custom_fields = vgjpm_use_common_values( $custom_fields );
+	$custom_fields = vgjpm_use_common_values( $custom_fields, 'json' );
 
 	$JSON = '<script type="application/ld+json"> {
   "@context" : "https://schema.org/",
