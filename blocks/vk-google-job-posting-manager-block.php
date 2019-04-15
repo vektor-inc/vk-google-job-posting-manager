@@ -73,13 +73,13 @@ function vgjpm_block_init() {
 					'type'    => 'string',
 					'default' => '',
 				],
-				'post_id' => [
+				'post_id'   => [
 					'type'    => 'number',
 					'default' => 0,
 				],
 			],
 			'render_callback' => function ( $attributes ) {
-				return vgjpm_render_job_posting_table( $attributes['post_id'],$attributes['style'], $attributes['className'] );
+				return vgjpm_render_job_posting_table( $attributes['post_id'], $attributes['style'], $attributes['className'] );
 			},
 		)
 	);
@@ -100,25 +100,21 @@ function vgjpm_get_label_of_array( $custom_fields, $custom_fields_key ) {
 	$VGJPM_Custom_Field_Job_Post = new VGJPM_Custom_Field_Job_Post;
 	$default_custom_fields       = $VGJPM_Custom_Field_Job_Post->custom_fields_array();
 
-	$labels = $default_custom_fields[ $custom_fields_key ]['options'];
+	$labels              = $default_custom_fields[ $custom_fields_key ]['options'];
 	$values_to_get_label = $custom_fields[ $custom_fields_key ];
 
 	$return_labels = array();
 
-	if ( is_array($values_to_get_label) ) {
+	if ( is_array( $values_to_get_label ) ) {
 
-		foreach ($values_to_get_label as $key => $value){
+		foreach ( $values_to_get_label as $key => $value ) {
 
-			if (array_key_exists($value, $labels)) {
+			if ( array_key_exists( $value, $labels ) ) {
 
-
-				$return_labels[] = $labels[$value];
-
+				$return_labels[] = $labels[ $value ];
 
 			}
-
 		}
-
 	}
 
 	return implode( ',', $return_labels );
@@ -130,7 +126,7 @@ function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
 
 	if ( ! isset( $custom_fields['vkjp_title'] ) ) {
 
-		return '<div>' . __( 'Preview can be enabled after save or publish the content.', 'vk-google-job-posting-manager' ).'</div>' ;
+		return '<div>' . __( 'Preview can be enabled after save or publish the content.', 'vk-google-job-posting-manager' ) . '</div>';
 	}
 
 	$custom_fields = vgjpm_use_common_values( $custom_fields, 'block' );
@@ -190,11 +186,13 @@ function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
 	// $html .= esc_html( $custom_fields['vkjp_addressCountry'] );
 	$html .= '<br>' . esc_html( $custom_fields['vkjp_addressRegion'] ) . esc_html( $custom_fields['vkjp_addressLocality'] ) . esc_html( $custom_fields['vkjp_streetAddress'] ) . $tags['content_after'];
 
+	if ( vgjpm_get_label_of_array( $custom_fields, 'vkjp_jobLocationType' ) ) {
+		$html .= $tags['title_before'] . __( 'JobLocation Type', 'vk-google-job-posting-manager' ) . $tags['title_after'];
+		$html .= $tags['content_before'] . vgjpm_get_label_of_array( $custom_fields, 'vkjp_jobLocationType' ) . $tags['content_after'];
+	}
+
 	$html .= $tags['title_before'] . __( 'Employment Type', 'vk-google-job-posting-manager' ) . $tags['title_after'];
 	$html .= $tags['content_before'] . vgjpm_get_label_of_array( $custom_fields, 'vkjp_employmentType' ) . $tags['content_after'];
-
-	$html .= $tags['title_before'] . __( 'JobLocation Type', 'vk-google-job-posting-manager' ) . $tags['title_after'];
-	$html .= $tags['content_before'] . vgjpm_get_label_of_array( $custom_fields, 'vkjp_jobLocationType' ) . $tags['content_after'];
 
 	$html .= $tags['title_before'] . __( 'Incentive Compensation', 'vk-google-job-posting-manager' ) . $tags['title_after'];
 	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_incentiveCompensation'] ) . $tags['content_after'];

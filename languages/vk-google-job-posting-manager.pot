@@ -11,10 +11,14 @@ msgstr ""
 msgid "Table Style"
 msgstr ""
 
-#: blocks/create-table/index.js:43
+#: blocks/create-table/index.js:38
+msgid "The preview will work after publish or save action."
+msgstr ""
+
+#: blocks/create-table/index.js:46
 msgid "Default"
 msgstr ""
 
-#: blocks/create-table/index.js:47
+#: blocks/create-table/index.js:50
 msgid "Stripe"
 msgstr ""
