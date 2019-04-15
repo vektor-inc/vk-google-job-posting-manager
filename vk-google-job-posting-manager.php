@@ -301,6 +301,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 			}
 		}
+		$form .= wp_kses_post( $value['description'] );
 		$form .= '</td>';
 		$form .= '</tr>';
 
@@ -463,11 +464,9 @@ function vgjpm_use_common_values( $custom_fields, $output_type ) {
 
 		$custom_fields = vgjpm_image_filter_id_to_url( $custom_fields, $key, $temp );
 
-
 		if ( ! isset( $custom_fields[ $key ] ) && isset( $temp ) ) {
 
 			$custom_fields[ $key ] = $temp;
-
 
 		} elseif ( ! isset( $custom_fields[ $key ] ) && ! isset( $temp ) ) {
 
@@ -510,11 +509,9 @@ function vgjpm_image_filter_id_to_url( $custom_fields, $key, $common_attachment_
 			$each_post_attachment_url = wp_get_attachment_url( $custom_fields[ $key ] );
 			$common_attachment_url    = wp_get_attachment_url( $common_attachment_id );
 
-
 			if ( $each_post_attachment_url ) {
 
 				$custom_fields[ $key ] = $each_post_attachment_url;
-
 
 			} elseif ( $common_attachment_url ) {
 
