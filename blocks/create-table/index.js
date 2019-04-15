@@ -3,7 +3,7 @@ import React from "react";
 
 const {__} = wp.i18n;
 const { registerBlockType } = wp.blocks;
-const {ServerSideRender, PanelBody, SelectControl} = wp.components;
+const {ServerSideRender, PanelBody, SelectControl,BaseControl} = wp.components;
 const {Fragment} = wp.element;
 const {InspectorControls} = wp.editor;
 
@@ -33,8 +33,11 @@ registerBlockType('vk-google-job-posting-manager/create-table', {
 			return (<Fragment>
 				<InspectorControls>
 					<PanelBody>
-						<SelectControl
+						<BaseControl
 							label={__('Table Style', 'vk-google-job-posting-manager')}
+							help={__('The preview will work after publish or save action.', 'vk-google-job-posting-manager')}
+						>
+						<SelectControl
 							value={style}
 							onChange={(value) => setAttributes({style: value})}
 							options={[
@@ -48,6 +51,7 @@ registerBlockType('vk-google-job-posting-manager/create-table', {
 								}
 							]}
 						/>
+						</BaseControl>
 					</PanelBody>
 				</InspectorControls>
 				<div>
