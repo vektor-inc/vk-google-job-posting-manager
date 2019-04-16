@@ -595,27 +595,52 @@ function vgjpm_sanitize_arr( $target_arr ) {
 	}
 }
 
+
+//currencyと,before,afterを指定するとそれに合わせたstringを返す。
+
 $args = array(
-	'currency' => 'JPY'
-	'figure' => 250000,
+	'currency' => 'JPY',
+	'figure'   => '',
 	'before'   => false,
 	'after'    => true,
 );
 
+function vgjpm_format_currency( $args ) {
 
-function vgjpm_amount( $args ) {
 	$currency_data = array(
 		'JPY' => array(
-			'before' => '¥',
-			'after'  => '円',
+			'before' => __( '¥', 'vk-google-job-posting-manager' ),
+			'after'  => __( '円', 'vk-google-job-posting-manager' ),
 		),
 	);
-	$currency_data = apply_filters( 'vgjpm_amount_currency_data', $return );
+//	$currency_data = apply_filters( 'vgjpm_amount_currency_data', $return );
 
 	if ( in_array( $args['currency'], $currency_data ) ) {
-		$return =
+
+		$target_currency = $currency_data[ $args['currency'] ];
+
+
+		if ( in_array( $args['before'], $currency_data ) ) {
+
+			$before = $target_currency['before'];
+
+		} else {
+			$before = '';
+		}
+
+		if ( in_array( $args['after'], $currency_data ) ) {
+
+			$after = $target_currency['after'];
+
+		} else {
+			$after = '';
+		}
+
+		$return = $before . $args['figure'] . $after;
+
 	} else {
-		$return = $args['figure'] . ' ' . $args['currency'];
+		$return = $args['figure'] . '(' . $args['currency'] . ')';
 	}
-	return apply_filters( 'vgjpm_amount', $return );
+
+	return apply_filters( 'vgjpm_format_currency', $return );
 }
