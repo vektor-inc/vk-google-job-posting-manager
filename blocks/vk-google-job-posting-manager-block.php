@@ -87,42 +87,41 @@ function vgjpm_block_init() {
 }
 add_action( 'init', 'vgjpm_block_init' );
 
+
 /**
+ * @param $args | array( 'FULL_TIME', 'PART_TIME', );
  *
- * @param $custom_fields
- * @param $custom_fields_key
- *
- * @return string
+ * @return string | 'FULL TIME, PART TIME'
  */
+function vgjpm_get_label_of_array( $args ) {
 
-function vgjpm_get_label_of_array( $custom_fields, $custom_fields_key ) {
+	$labels = vgjpm_get_labels( $args );
 
-	$VGJPM_Custom_Field_Job_Post = new VGJPM_Custom_Field_Job_Post;
-	$default_custom_fields       = $VGJPM_Custom_Field_Job_Post->custom_fields_array();
+	return implode( ', ', $labels );
 
-	$labels              = $default_custom_fields[ $custom_fields_key ]['options'];
-	$values_to_get_label = $custom_fields[ $custom_fields_key ];
-
-	$return_labels = array();
-
-	if ( is_array( $values_to_get_label ) ) {
-
-		foreach ( $values_to_get_label as $key => $value ) {
-
-			if ( array_key_exists( $value, $labels ) ) {
-
-				$return_labels[] = $labels[ $value ];
-
-			}
-		}
-
-		return implode( ',', $return_labels );
-
-	} else {
-
-		return $labels[ $values_to_get_label ];
-	}
 }
+
+/**
+ * @param $args | array( 'TELECOMMUTE' );
+ *
+ * @return array | array( 'Remote Work' );
+ */
+function vgjpm_get_labels( $args ) {
+
+	$VGJPM_CFJP = new VGJPM_Custom_Field_Job_Post;
+	$default    = $VGJPM_CFJP->custom_fields_array();
+	$return     = array();
+
+	foreach ( $args as $key => $value ) {
+
+		$searched = array_column( $default, 'options' );
+		$searched = array_column( $searched, $value );
+		$return   = array_merge( $return, $searched );
+	}
+
+	return $return;
+}
+
 
 // $args = array(
 // 'currency' => 'JPY',
@@ -160,7 +159,7 @@ function vgjpm_filter_currency( $args ) {
 			$after = '';
 		}
 
-		$return = $before . number_format( $args['figure'] ) . $after;
+		$return = $before . number_format( intval( $args['figure'] ) ) . $after;
 
 	} else {
 

@@ -501,6 +501,7 @@ function vgjpm_array_to_string( $custom_fields ) {
 
 function vgjpm_image_filter_id_to_url( $custom_fields, $key, $common_attachment_id ) {
 
+
 	if ( $key == 'vkjp_logo' ) {
 
 		if ( isset( $custom_fields[ $key ] ) ) {
@@ -511,24 +512,20 @@ function vgjpm_image_filter_id_to_url( $custom_fields, $key, $common_attachment_
 
 				$custom_fields[ $key ] = $each_post_attachment_url;
 
-				return $custom_fields;
-
 			}
-		}
+		} elseif ( isset( $common_attachment_id ) ) {
 
-	} elseif ( isset( $common_attachment_id ) ) {
+			$common_attachment_url = wp_get_attachment_url( $common_attachment_id );
 
-		$common_attachment_url = wp_get_attachment_url( $common_attachment_id );
-
-		if ( $common_attachment_url ) {
+			if ( $common_attachment_url ) {
 
 				$custom_fields[ $key ] = $common_attachment_url;
 
-			return $custom_fields;
-
-
+			}
 		}
 	}
+
+	return $custom_fields;
 }
 
 
