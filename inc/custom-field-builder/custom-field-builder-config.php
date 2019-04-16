@@ -1,7 +1,10 @@
 <?php
-/*-------------------------------------------*/
-/*  Load modules
-/*-------------------------------------------*/
+/*
+-------------------------------------------*/
+/*
+  Load modules
+/*
+-------------------------------------------*/
 // autoloadを読み込む
 require dirname( dirname( dirname( __FILE__ ) ) ) . '/vendor/autoload.php';
 
@@ -149,13 +152,13 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 			),
 			'vkjp_experienceRequirements' => array(
 				'label'       => __( 'Experience Requirements', 'vk-google-job-posting-manager' ),
-				'type'        => 'text',
+				'type'        => 'textarea',
 				'description' => __( 'Please enter the description of experience requirements. If you have the one.', 'vk-google-job-posting-manager' ),
 				'required'    => false,
 			),
 			'vkjp_specialCommitments'     => array(
 				'label'       => __( 'Special Commitments', 'vk-google-job-posting-manager' ),
-				'type'        => 'text',
+				'type'        => 'textarea',
 				'description' => __( 'Please enter the description of special commitments', 'vk-google-job-posting-manager' ),
 				'required'    => false,
 			),

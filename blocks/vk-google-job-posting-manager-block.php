@@ -273,10 +273,10 @@ function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
 	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_workHours'] ) . $tags['content_after'];
 
 	$html .= $tags['title_before'] . __( 'Experience Requirements', 'vk-google-job-posting-manager' ) . $tags['title_after'];
-	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_experienceRequirements'] ) . $tags['content_after'];
+	$html .= $tags['content_before'] . nl2br( esc_textarea( $custom_fields['vkjp_experienceRequirements'] ) ) . $tags['content_after'];
 
 	$html .= $tags['title_before'] . __( 'Special Commitments', 'vk-google-job-posting-manager' ) . $tags['title_after'];
-	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_specialCommitments'] ) . $tags['content_after'];
+	$html .= $tags['content_before'] . nl2br( esc_textarea( $custom_fields['vkjp_specialCommitments'] ) ) . $tags['content_after'];
 
 	$html .= $tags['outer_after'];
 
