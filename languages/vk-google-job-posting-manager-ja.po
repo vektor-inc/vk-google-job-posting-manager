@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: VK Google Job Posting Manager 0.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/vk-google-job-"
 "posting-manager\n"
-"POT-Creation-Date: 2019-04-16 03:35+0900\n"
-"PO-Revision-Date: 2019-04-16 03:48+0900\n"
+"POT-Creation-Date: 2019-04-16 10:21+0900\n"
+"PO-Revision-Date: 2019-04-16 10:21+0900\n"
 "Last-Translator: \n"
 "Language-Team: Vektor,Inc.\n"
 "Language: ja_JP\n"
@@ -42,63 +42,63 @@ msgstr "デフォルト"
 msgid "Stripe"
 msgstr "ストライプ"
 
-#: blocks/vk-google-job-posting-manager-block.php:133
+#: blocks/vk-google-job-posting-manager-block.php:129
 msgid "Preview can be enabled after save or publish the content."
 msgstr "プレビューは記事が公開あるいは保存されるまで反映されません。"
 
-#: blocks/vk-google-job-posting-manager-block.php:176
+#: blocks/vk-google-job-posting-manager-block.php:172
 #: inc/custom-field-builder/custom-field-builder-config.php:85
 msgid "Job Title"
 msgstr "職種"
 
-#: blocks/vk-google-job-posting-manager-block.php:179
+#: blocks/vk-google-job-posting-manager-block.php:175
 #: inc/custom-field-builder/custom-field-builder-config.php:91
 msgid "Description"
 msgstr "詳細"
 
-#: blocks/vk-google-job-posting-manager-block.php:182
+#: blocks/vk-google-job-posting-manager-block.php:178
 #: inc/custom-field-builder/custom-field-builder-config.php:97
 msgid "Base Salary"
 msgstr "基本給"
 
-#: blocks/vk-google-job-posting-manager-block.php:188
+#: blocks/vk-google-job-posting-manager-block.php:184
 msgid "Work Location"
 msgstr "勤務地"
 
-#: blocks/vk-google-job-posting-manager-block.php:189
+#: blocks/vk-google-job-posting-manager-block.php:185
 msgid "Postal code"
 msgstr "郵便番号"
 
-#: blocks/vk-google-job-posting-manager-block.php:193
+#: blocks/vk-google-job-posting-manager-block.php:190
+msgid "JobLocation Type"
+msgstr "勤務地形態"
+
+#: blocks/vk-google-job-posting-manager-block.php:194
 #: inc/custom-field-builder/custom-field-builder-config.php:163
 msgid "Employment Type"
 msgstr "雇用形態"
 
-#: blocks/vk-google-job-posting-manager-block.php:196
-msgid "JobLocation Type"
-msgstr "勤務地形態"
-
-#: blocks/vk-google-job-posting-manager-block.php:199
+#: blocks/vk-google-job-posting-manager-block.php:197
 #: inc/custom-field-builder/custom-field-builder-config.php:133
 msgid "Incentive Compensation"
 msgstr "賞与"
 
-#: blocks/vk-google-job-posting-manager-block.php:202
+#: blocks/vk-google-job-posting-manager-block.php:200
 #: inc/custom-field-builder/custom-field-builder-config.php:139
 msgid "Salary Raise"
 msgstr "昇給"
 
-#: blocks/vk-google-job-posting-manager-block.php:205
+#: blocks/vk-google-job-posting-manager-block.php:203
 #: inc/custom-field-builder/custom-field-builder-config.php:145
 msgid "Work Hours"
 msgstr "勤務時間"
 
-#: blocks/vk-google-job-posting-manager-block.php:208
+#: blocks/vk-google-job-posting-manager-block.php:206
 #: inc/custom-field-builder/custom-field-builder-config.php:151
 msgid "Experience Requirements"
 msgstr "必要経験・スキル"
 
-#: blocks/vk-google-job-posting-manager-block.php:211
+#: blocks/vk-google-job-posting-manager-block.php:209
 #: inc/custom-field-builder/custom-field-builder-config.php:157
 msgid "Special Commitments"
 msgstr "福利厚生"
@@ -245,8 +245,8 @@ msgid "Remote Work "
 msgstr "リモートワーク"
 
 #: inc/custom-field-builder/custom-field-builder-config.php:184
-msgid "Please check it, only if you allow employees full remote work"
-msgstr "フルリモートワークの場合はチェックを入れてください"
+msgid "Please check it, only if you allow employees full remote work."
+msgstr "フルリモートワークの場合はチェックを入れてください。"
 
 #: inc/custom-field-builder/custom-field-builder-config.php:188
 msgid "Hiring Organization Name"
@@ -526,7 +526,7 @@ msgstr ""
 msgid "Save Changes"
 msgstr "変更を保存"
 
-#: vk-google-job-posting-manager.php:360
+#: vk-google-job-posting-manager.php:361
 msgid "Create The Post Type"
 msgstr "投稿タイプを作成"
 
