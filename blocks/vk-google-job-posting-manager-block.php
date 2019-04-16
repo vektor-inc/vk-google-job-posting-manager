@@ -160,7 +160,7 @@ function vgjpm_filter_currency( $args ) {
 			$after = '';
 		}
 
-		$return = $before . $args['figure'] . $after;
+		$return = $before . number_format( $args['figure'] ) . $after;
 
 	} else {
 
