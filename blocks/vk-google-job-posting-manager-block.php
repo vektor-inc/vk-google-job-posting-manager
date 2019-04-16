@@ -248,8 +248,7 @@ function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
 		'after'    => true,
 	);
 
-	$html .= esc_html( vgjpm_filter_currency( $args_min ) ) . ' - ' . esc_html( vgjpm_filter_currency( $args_max ) ) . ' (' . $custom_fields['vkjp_unitText'] . ')';
-//	$html     .= esc_html( vgjpm_filter_currency( $args_min ) ) . ' - ' . esc_html( vgjpm_filter_currency( $args_max ) ) . ' (' . vgjpm_get_label_of_array( $custom_fields['vkjp_unitText'] ) . ')';
+	$html .= esc_html( vgjpm_filter_currency( $args_min ) ) . ' - ' . esc_html( vgjpm_filter_currency( $args_max ) ) . ' (' . vgjpm_get_label_of_array( array( $custom_fields['vkjp_unitText'] ) ) . ')';
 	$html .= $tags['content_after'];
 
 	$html .= $tags['title_before'] . __( 'Work Location', 'vk-google-job-posting-manager' ) . $tags['title_after'];
