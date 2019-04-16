@@ -182,7 +182,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 				'label'       => __( 'Remote Work', 'vk-google-job-posting-manager' ),
 				'type'        => 'checkbox',
 				'options'     => array(
-					'TELECOMMUTE' => __( 'Remote Work ', 'vk-google-job-posting-manager' ),
+					'TELECOMMUTE' => __( 'Remote Work', 'vk-google-job-posting-manager' ),
 				),
 				'description' => __( 'Please check it, only if you allow employees full remote work.', 'vk-google-job-posting-manager' ),
 				'required'    => false,
