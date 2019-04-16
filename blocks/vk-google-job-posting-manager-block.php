@@ -124,6 +124,52 @@ function vgjpm_get_label_of_array( $custom_fields, $custom_fields_key ) {
 	}
 }
 
+//$args = array(
+//	'currency' => 'JPY',
+//	'figure'   => '',
+//	'before'   => false,
+//	'after'    => true,
+//);
+function vgjpm_filter_currency( $args ) {
+
+	$currency_data = array(
+		'JPY' => array(
+			'before' => __( '¥', 'vk-google-job-posting-manager' ),
+			'after'  => __( '円', 'vk-google-job-posting-manager' ),
+		),
+	);
+	$currency_data = apply_filters( 'vgjpm_filter_currency_currency_data', $currency_data );
+
+	if ( key_exists( $args['currency'], $currency_data ) ) {
+
+		$target_currency = $currency_data[ $args['currency'] ];
+
+		if ( $args['before'] ) {
+
+			$before = $target_currency['before'];
+
+		} else {
+			$before = '';
+		}
+
+		if ( $args['after'] ) {
+
+			$after = $target_currency['after'];
+
+		} else {
+			$after = '';
+		}
+
+		$return = $before . $args['figure'] . $after;
+
+	} else {
+
+		$return = $args['figure'] . '(' . $args['currency'] . ')';
+	}
+
+	return apply_filters( 'vgjpm_filter_currency', $return );
+}
+
 function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
 
 	$custom_fields = vgjpm_get_custom_fields( $post_id );
@@ -182,7 +228,13 @@ function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
 	$html .= $tags['title_before'] . __( 'Base Salary', 'vk-google-job-posting-manager' ) . $tags['title_after'];
 	$html .= $tags['content_before'];
 
-	$html .= esc_html( $custom_fields['vkjp_value'] ) . '(' . vgjpm_get_label_of_array( $custom_fields, 'vkjp_unitText' ) . ')';
+	$args = array(
+		'currency' => 'JPY',
+		'figure'   => esc_html( $custom_fields['vkjp_value'] ),
+		'before'   => true,
+		'after'    => true,
+	);
+	$html .= esc_html( vgjpm_filter_currency( $args ) ) . '(' . vgjpm_get_label_of_array( $custom_fields, 'vkjp_unitText' ) . ')';
 	// $html .= '<br>' . esc_html( $custom_fields['vkjp_minValue'] ) . ' - ' . esc_html( $custom_fields['vkjp_maxValue'] ) . '(' . vgjpm_get_label_of_array( $custom_fields, 'vkjp_currency' ) . ')';
 	$html .= $tags['content_after'];
 	//
