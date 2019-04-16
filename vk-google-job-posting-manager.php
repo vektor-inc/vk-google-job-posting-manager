@@ -160,11 +160,11 @@ function vgjpm_get_common_customfields_config() {
 
 function vgjpm_render_settings() {
 
-	$common_customfields = vgjpm_get_common_customfields_config();
+	$common_custom_fields = vgjpm_get_common_customfields_config();
 
-	vgjpm_save_data( $common_customfields );
+	vgjpm_save_data( $common_custom_fields );
 
-	echo vgjpm_create_common_form( $common_customfields );
+	echo vgjpm_create_common_form( $common_custom_fields );
 
 }
 
@@ -503,25 +503,32 @@ function vgjpm_image_filter_id_to_url( $custom_fields, $key, $common_attachment_
 
 	if ( $key == 'vkjp_logo' ) {
 
-		if ( isset( $custom_fields[ $key ] ) && isset( $common_attachment_id ) ) {
+		if ( isset( $custom_fields[ $key ] ) ) {
 
-			//If attachment exists return attachment's url, else return false.
 			$each_post_attachment_url = wp_get_attachment_url( $custom_fields[ $key ] );
-			$common_attachment_url    = wp_get_attachment_url( $common_attachment_id );
 
 			if ( $each_post_attachment_url ) {
 
 				$custom_fields[ $key ] = $each_post_attachment_url;
 
-			} elseif ( $common_attachment_url ) {
-
-				$custom_fields[ $key ] = $common_attachment_url;
+				return $custom_fields;
 
 			}
 		}
-	}
 
-	return $custom_fields;
+	} elseif ( isset( $common_attachment_id ) ) {
+
+		$common_attachment_url = wp_get_attachment_url( $common_attachment_id );
+
+		if ( $common_attachment_url ) {
+
+				$custom_fields[ $key ] = $common_attachment_url;
+
+			return $custom_fields;
+
+
+		}
+	}
 }
 
 
