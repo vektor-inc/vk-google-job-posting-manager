@@ -605,7 +605,7 @@ $args = array(
 	'after'    => true,
 );
 
-function vgjpm_format_currency( $args ) {
+function vgjpm_filter_currency( $args ) {
 
 	$currency_data = array(
 		'JPY' => array(
@@ -642,5 +642,5 @@ function vgjpm_format_currency( $args ) {
 		$return = $args['figure'] . '(' . $args['currency'] . ')';
 	}
 
-	return apply_filters( 'vgjpm_format_currency', $return );
+	return apply_filters( 'vgjpm_filter_currency', $return );
 }

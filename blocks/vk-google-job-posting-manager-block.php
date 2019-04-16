@@ -115,9 +115,13 @@ function vgjpm_get_label_of_array( $custom_fields, $custom_fields_key ) {
 
 			}
 		}
-	}
 
-	return implode( ',', $return_labels );
+		return implode( ',', $return_labels );
+
+	} else {
+
+		return $labels[ $values_to_get_label ];
+	}
 }
 
 function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
@@ -177,6 +181,7 @@ function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
 
 	$html .= $tags['title_before'] . __( 'Base Salary', 'vk-google-job-posting-manager' ) . $tags['title_after'];
 	$html .= $tags['content_before'];
+
 	$html .= esc_html( $custom_fields['vkjp_value'] ) . '(' . vgjpm_get_label_of_array( $custom_fields, 'vkjp_unitText' ) . ')';
 	// $html .= '<br>' . esc_html( $custom_fields['vkjp_minValue'] ) . ' - ' . esc_html( $custom_fields['vkjp_maxValue'] ) . '(' . vgjpm_get_label_of_array( $custom_fields, 'vkjp_currency' ) . ')';
 	$html .= $tags['content_after'];
