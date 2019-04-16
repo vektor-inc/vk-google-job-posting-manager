@@ -594,3 +594,28 @@ function vgjpm_sanitize_arr( $target_arr ) {
 		return sanitize_text_field( $target_arr );
 	}
 }
+
+$args = array(
+	'currency' => 'JPY'
+	'figure' => 250000,
+	'before'   => false,
+	'after'    => true,
+);
+
+
+function vgjpm_amount( $args ) {
+	$currency_data = array(
+		'JPY' => array(
+			'before' => '¥',
+			'after'  => '円',
+		),
+	);
+	$currency_data = apply_filters( 'vgjpm_amount_currency_data', $return );
+
+	if ( in_array( $args['currency'], $currency_data ) ) {
+		$return =
+	} else {
+		$return = $args['figure'] . ' ' . $args['currency'];
+	}
+	return apply_filters( 'vgjpm_amount', $return );
+}
