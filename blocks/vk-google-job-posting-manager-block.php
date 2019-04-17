@@ -259,15 +259,19 @@ function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
 	$html .= esc_html( vgjpm_filter_currency( $args_min ) ) . ' - ' . esc_html( vgjpm_filter_currency( $args_max ) ) . ' (' . vgjpm_get_label_of_array( array( $custom_fields['vkjp_unitText'] ) ) . ')';
 	$html .= $tags['content_after'];
 
-	$html .= $tags['title_before'] . __( 'Work Location', 'vk-google-job-posting-manager' ) . $tags['title_after'];
-	$html .= $tags['content_before'] . __( 'Postal code', 'vk-google-job-posting-manager' ) . ' : ' . esc_html( $custom_fields['vkjp_postalCode'] );
-	// $html .= esc_html( $custom_fields['vkjp_addressCountry'] );
-	$html .= '<br>' . esc_html( $custom_fields['vkjp_addressRegion'] ) . esc_html( $custom_fields['vkjp_addressLocality'] ) . esc_html( $custom_fields['vkjp_streetAddress'] ) . $tags['content_after'];
+	$html .= $tags['title_before'];
+	$html .= __( 'Work Location', 'vk-google-job-posting-manager' );
+	$html .= $tags['title_after'];
 
+	$html .= $tags['content_before'];
 	if ( vgjpm_get_label_of_array( $custom_fields['vkjp_jobLocationType'] ) ) {
-		$html .= $tags['title_before'] . __( 'JobLocation Type', 'vk-google-job-posting-manager' ) . $tags['title_after'];
-		$html .= $tags['content_before'] . vgjpm_get_label_of_array( $custom_fields['vkjp_jobLocationType'] ) . $tags['content_after'];
+		$html .= vgjpm_get_label_of_array( $custom_fields['vkjp_jobLocationType'] );
+	} else {
+		$html .= __( 'Postal code', 'vk-google-job-posting-manager' ) . ' : ' . esc_html( $custom_fields['vkjp_postalCode'] );
+		// $html .= esc_html( $custom_fields['vkjp_addressCountry'] );
+		$html .= '<br>' . esc_html( $custom_fields['vkjp_addressRegion'] ) . esc_html( $custom_fields['vkjp_addressLocality'] ) . esc_html( $custom_fields['vkjp_streetAddress'] );
 	}
+	$html .= $tags['content_after'];
 
 	$html .= $tags['title_before'] . __( 'Employment Type', 'vk-google-job-posting-manager' ) . $tags['title_after'];
 	$html .= $tags['content_before'] . vgjpm_get_label_of_array( $custom_fields['vkjp_employmentType'] ) . $tags['content_after'];
