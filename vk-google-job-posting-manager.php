@@ -248,8 +248,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 			$form .= '<img src="' . $thumb_image_url . '" id="thumb_' . esc_attr( $key ) . '" alt="" class="input_thumb" style="width:200px;height:auto;"> ';
 			// 実際に送信する値
 			$form .= '<input type="hidden" name="common_' . esc_attr( $key ) . '" id="' . esc_attr( $key ) . '" value="' . $thumb_image_url . '" style="width:60%;" />';
-			//                  $form .= '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . self::form_post_value( $key ) . '" style="width:60%;" />';
-
+			// $form .= '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . self::form_post_value( $key ) . '" style="width:60%;" />';
 			// 画像選択ボタン
 			// .media_btn がトリガーでメディアアップローダーが起動する
 			// id名から media_ を削除した id 名の input 要素に返り値が反映される。
@@ -475,7 +474,7 @@ function vgjpm_use_common_values( $custom_fields, $output_type ) {
 	}
 
 	if ( $output_type == 'json' ) {
-		//Array to string.
+		// Array to string.
 		$custom_fields = vgjpm_array_to_string( $custom_fields );
 
 	} elseif ( $output_type == 'block' ) {
@@ -500,7 +499,6 @@ function vgjpm_array_to_string( $custom_fields ) {
 }
 
 function vgjpm_image_filter_id_to_url( $custom_fields, $key, $common_attachment_id ) {
-
 
 	if ( $key == 'vkjp_logo' ) {
 
