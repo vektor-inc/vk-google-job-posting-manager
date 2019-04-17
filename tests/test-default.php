@@ -15,11 +15,11 @@ require_once dirname( dirname( __FILE__ ) ) . '/inc/custom-field-builder/package
 class DefaultTest extends WP_UnitTestCase {
 
 	/**
-	 *
+	 * Test to get array of label correspond to data.
 	 */
 	function test_01() {
 
-		$custom_fields = array(
+		$input = array(
 			array(
 				'FULL_TIME',
 				'PART_TIME',
@@ -46,7 +46,7 @@ class DefaultTest extends WP_UnitTestCase {
 		foreach ( $output as $key => $value ) {
 
 			$expected = $output[ $key ];
-			$actual   = vgjpm_get_labels( $custom_fields[ $key ] );
+			$actual   = vgjpm_get_labels( $input[ $key ] );
 
 			$this->assertSame( $expected, $actual );
 
@@ -54,11 +54,23 @@ class DefaultTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 *
+	 * Test to return false, when argument is empty.
+	 */
+	function test_01_2() {
+
+		$input = '';
+		$expected = false;
+		$actual   = vgjpm_get_labels( $input );
+
+		$this->assertSame( $expected, $actual );
+	}
+
+	/**
+	 * Test to get string of concat label.
 	 */
 	function test_02() {
 
-		$custom_fields = array(
+		$input = array(
 			array(
 				'FULL_TIME',
 				'PART_TIME',
@@ -77,7 +89,7 @@ class DefaultTest extends WP_UnitTestCase {
 			),
 		);
 
-		foreach ( $custom_fields as $key => $value ) {
+		foreach ( $input as $key => $value ) {
 
 			$expected = $output[ $key ][0];
 			$actual   = vgjpm_get_label_of_array( $value );
@@ -87,4 +99,15 @@ class DefaultTest extends WP_UnitTestCase {
 		}
 	}
 
+	/**
+	 * Test to return false, when argument is empty.
+	 */
+	function test_02_2() {
+
+		$input = '';
+		$expected = false;
+		$actual   = vgjpm_get_label_of_array( $input );
+
+		$this->assertSame( $expected, $actual );
+	}
 }

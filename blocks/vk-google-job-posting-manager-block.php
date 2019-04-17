@@ -95,6 +95,10 @@ add_action( 'init', 'vgjpm_block_init' );
  */
 function vgjpm_get_label_of_array( $args ) {
 
+	if ( ! is_array( $args ) ) {
+		return false;
+	}
+
 	$labels = vgjpm_get_labels( $args );
 
 	return implode( ', ', $labels );
@@ -107,6 +111,10 @@ function vgjpm_get_label_of_array( $args ) {
  * @return array | array( 'Remote Work' );
  */
 function vgjpm_get_labels( $args ) {
+
+	if ( ! is_array( $args ) ) {
+		return false;
+	}
 
 	$VGJPM_CFJP = new VGJPM_Custom_Field_Job_Post;
 	$default    = $VGJPM_CFJP->custom_fields_array();
