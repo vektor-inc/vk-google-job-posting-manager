@@ -230,6 +230,10 @@ function vgjpm_render_form_input( $common_customfields ) {
 		if ( $value['type'] == 'text' ) {
 			$form .= '<input type="text" name="common_' . esc_attr( $key ) . '" value="' . get_option( 'common_' . esc_attr( $key ) ) . '">';
 
+		} elseif ( $value['type'] == 'textarea' ) {
+
+			$form .= '<textarea class="form-control" class="cf_textarea_wysiwyg" name="' . $key . '" cols="70" rows="3">' . get_option( 'common_' . esc_attr( $key ) ) . '</textarea>';
+
 		} elseif ( $value['type'] == 'datepicker' ) {
 
 			$form .= '<input class="form-control datepicker" type="text" " name="common_' . esc_attr( $key ) . '" value="' . get_option( 'common_' . esc_attr( $key ) ) . '" size="70">';
@@ -300,7 +304,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 			}
 		}
-		$form .= wp_kses_post( $value['description'] );
+		$form .= '<div>' . wp_kses_post( $value['description'] ) . '</div>';
 		$form .= '</td>';
 		$form .= '</tr>';
 
