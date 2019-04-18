@@ -7,7 +7,7 @@
  * Author URI:      https://www.vektor-inc.co.jp
  * Text Domain:     vk-google-job-posting-manager
  * Domain Path:     /languages
- * Version:         0.5.1
+ * Version:         0.5.2
  *
  * @package         Vk_Google_Job_Posting_Manager
  */
@@ -17,7 +17,7 @@
   Setting & load file
  /*-------------------------------------------*/
 $prefix = 'common_';
-$data = get_file_data(
+$data   = get_file_data(
 	__FILE__, array(
 		'version'    => 'Version',
 		'textdomain' => 'Text Domain',
@@ -230,7 +230,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 		$form .= '<td>';
 
 		if ( $value['type'] == 'text' ) {
-			$form .= '<input type="text" name="'.$prefix . esc_attr( $key ) . '" value="' . get_option( $prefix . esc_attr( $key ) ) . '">';
+			$form .= '<input type="text" name="' . $prefix . esc_attr( $key ) . '" value="' . get_option( $prefix . esc_attr( $key ) ) . '">';
 
 		} elseif ( $value['type'] == 'textarea' ) {
 
@@ -238,7 +238,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 		} elseif ( $value['type'] == 'datepicker' ) {
 
-			$form .= '<input class="form-control datepicker" type="text" " name="'.$prefix . esc_attr( $key ) . '" value="' . get_option( $prefix . esc_attr( $key ) ) . '" size="70">';
+			$form .= '<input class="form-control datepicker" type="text" " name="' . $prefix . esc_attr( $key ) . '" value="' . get_option( $prefix . esc_attr( $key ) ) . '" size="70">';
 
 		} elseif ( $value['type'] == 'image' ) {
 
@@ -253,7 +253,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 			// ダミー & プレビュー画像
 			$form .= '<img src="' . $thumb_image_url . '" id="thumb_' . esc_attr( $key ) . '" alt="" class="input_thumb" style="width:200px;height:auto;"> ';
 			// 実際に送信する値
-			$form .= '<input type="hidden" name="'.$prefix . esc_attr( $key ) . '" id="' . esc_attr( $key ) . '" value="' . $thumb_image_url . '" style="width:60%;" />';
+			$form .= '<input type="hidden" name="' . $prefix . esc_attr( $key ) . '" id="' . esc_attr( $key ) . '" value="' . $thumb_image_url . '" style="width:60%;" />';
 			// $form .= '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . self::form_post_value( $key ) . '" style="width:60%;" />';
 			// 画像選択ボタン
 			// .media_btn がトリガーでメディアアップローダーが起動する
@@ -267,7 +267,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 		} elseif ( $value['type'] == 'select' ) {
 
-			$form .= '<select name="'.$prefix . esc_attr( $key ) . '"  >';
+			$form .= '<select name="' . $prefix . esc_attr( $key ) . '"  >';
 
 			foreach ( $value['options'] as $option_value => $option_label ) {
 
@@ -299,7 +299,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 					} else {
 						$selected = '';
 					}
-					$form .= '<li style="list-style: none"><label><input type="checkbox" name="'.$prefix . esc_attr( $key ) . '[]" value="' . esc_attr( $option_value ) . '" ' . esc_attr( $selected ) . '  /><span>' . esc_html( $option_label ) . '</span></label></li>';
+					$form .= '<li style="list-style: none"><label><input type="checkbox" name="' . $prefix . esc_attr( $key ) . '[]" value="' . esc_attr( $option_value ) . '" ' . esc_attr( $selected ) . '  /><span>' . esc_html( $option_label ) . '</span></label></li>';
 
 				}
 				$form .= '</ul>';
