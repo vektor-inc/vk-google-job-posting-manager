@@ -16,7 +16,7 @@
  /*
   Setting & load file
  /*-------------------------------------------*/
-
+$prefix = 'common_';
 $data = get_file_data(
 	__FILE__, array(
 		'version'    => 'Version',
@@ -219,6 +219,8 @@ function vgjpm_create_common_form( $common_customfields ) {
  */
 function vgjpm_render_form_input( $common_customfields ) {
 
+	global $prefix;
+
 	$form = '<table class="admin-table">';
 
 	foreach ( $common_customfields as $key => $value ) {
@@ -228,19 +230,19 @@ function vgjpm_render_form_input( $common_customfields ) {
 		$form .= '<td>';
 
 		if ( $value['type'] == 'text' ) {
-			$form .= '<input type="text" name="common_' . esc_attr( $key ) . '" value="' . get_option( 'common_' . esc_attr( $key ) ) . '">';
+			$form .= '<input type="text" name="'.$prefix . esc_attr( $key ) . '" value="' . get_option( $prefix . esc_attr( $key ) ) . '">';
 
 		} elseif ( $value['type'] == 'textarea' ) {
 
-			$form .= '<textarea class="form-control" class="cf_textarea_wysiwyg" name="' . $key . '" cols="70" rows="3">' . get_option( 'common_' . esc_attr( $key ) ) . '</textarea>';
+			$form .= '<textarea class="form-control" class="cf_textarea_wysiwyg" name="' . $prefix . esc_attr( $key ) . '" cols="70" rows="3">' . esc_html( get_option( $prefix . esc_attr( $key ) ) ) . '</textarea>';
 
 		} elseif ( $value['type'] == 'datepicker' ) {
 
-			$form .= '<input class="form-control datepicker" type="text" " name="common_' . esc_attr( $key ) . '" value="' . get_option( 'common_' . esc_attr( $key ) ) . '" size="70">';
+			$form .= '<input class="form-control datepicker" type="text" " name="'.$prefix . esc_attr( $key ) . '" value="' . get_option( $prefix . esc_attr( $key ) ) . '" size="70">';
 
 		} elseif ( $value['type'] == 'image' ) {
 
-			$saved = get_option( 'common_' . esc_attr( $key ) );
+			$saved = get_option( $prefix . esc_attr( $key ) );
 
 			if ( ! empty( $saved ) ) {
 				$thumb_image_url = wp_get_attachment_url( $saved );
@@ -251,7 +253,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 			// ダミー & プレビュー画像
 			$form .= '<img src="' . $thumb_image_url . '" id="thumb_' . esc_attr( $key ) . '" alt="" class="input_thumb" style="width:200px;height:auto;"> ';
 			// 実際に送信する値
-			$form .= '<input type="hidden" name="common_' . esc_attr( $key ) . '" id="' . esc_attr( $key ) . '" value="' . $thumb_image_url . '" style="width:60%;" />';
+			$form .= '<input type="hidden" name="'.$prefix . esc_attr( $key ) . '" id="' . esc_attr( $key ) . '" value="' . $thumb_image_url . '" style="width:60%;" />';
 			// $form .= '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . self::form_post_value( $key ) . '" style="width:60%;" />';
 			// 画像選択ボタン
 			// .media_btn がトリガーでメディアアップローダーが起動する
@@ -265,11 +267,11 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 		} elseif ( $value['type'] == 'select' ) {
 
-			$form .= '<select name="common_' . esc_attr( $key ) . '"  >';
+			$form .= '<select name="'.$prefix . esc_attr( $key ) . '"  >';
 
 			foreach ( $value['options'] as $option_value => $option_label ) {
 
-				$saved = get_option( 'common_' . esc_attr( $key ) );
+				$saved = get_option( $prefix . esc_attr( $key ) );
 
 				if ( $saved == $option_value ) {
 					$selected = ' selected="selected"';
@@ -286,7 +288,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 			$form .= '<ul>';
 
-			$saved = get_option( 'common_' . esc_attr( $key ) );
+			$saved = get_option( $prefix . esc_attr( $key ) );
 
 			if ( $value['type'] == 'checkbox' ) {
 
@@ -297,7 +299,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 					} else {
 						$selected = '';
 					}
-					$form .= '<li style="list-style: none"><label><input type="checkbox" name="common_' . esc_attr( $key ) . '[]" value="' . esc_attr( $option_value ) . '" ' . esc_attr( $selected ) . '  /><span>' . esc_html( $option_label ) . '</span></label></li>';
+					$form .= '<li style="list-style: none"><label><input type="checkbox" name="'.$prefix . esc_attr( $key ) . '[]" value="' . esc_attr( $option_value ) . '" ' . esc_attr( $selected ) . '  /><span>' . esc_html( $option_label ) . '</span></label></li>';
 
 				}
 				$form .= '</ul>';
@@ -317,6 +319,8 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 function vgjpm_save_data( $common_customfields ) {
 
+	global $prefix;
+
 	// nonce
 	if ( ! isset( $_POST['vgjpm_nonce'] ) ) {
 		return;
@@ -333,11 +337,15 @@ function vgjpm_save_data( $common_customfields ) {
 
 		if ( $value['type'] == 'text' || $value['type'] == 'select' || $value['type'] == 'image' || $value['type'] == 'datepicker' ) {
 
-			update_option( 'common_' . sanitize_text_field( $key ), vgjpm_sanitize_arr( $_POST[ 'common_' . $key ] ) );
+			update_option( $prefix . sanitize_text_field( $key ), vgjpm_sanitize_arr( $_POST[ $prefix . $key ] ) );
+
+		} elseif ( $value['type'] == 'textarea' ) {
+
+			update_option( $prefix . sanitize_text_field( $key ), sanitize_textarea_field( $_POST[ $prefix . $key ] ) );
 
 		} elseif ( $value['type'] == 'checkbox' ) {
 
-			$checkbox_key = 'common_' . sanitize_text_field( $key );
+			$checkbox_key = $prefix . sanitize_text_field( $key );
 
 			if ( isset( $_POST[ $checkbox_key ] ) && is_array( $_POST[ $checkbox_key ] ) ) {
 
@@ -458,12 +466,14 @@ function vgjpm_get_custom_fields( $post_id ) {
 
 function vgjpm_use_common_values( $custom_fields, $output_type ) {
 
+	global $prefix;
+
 	$VGJPM_Custom_Field_Job_Post = new VGJPM_Custom_Field_Job_Post;
 	$default_custom_fields       = $VGJPM_Custom_Field_Job_Post->custom_fields_array();
 
 	foreach ( $default_custom_fields as $key => $value ) {
 
-		$temp = get_option( 'common_' . $key, null );
+		$temp = get_option( $prefix . $key, null );
 
 		$custom_fields = vgjpm_image_filter_id_to_url( $custom_fields, $key, $temp );
 
