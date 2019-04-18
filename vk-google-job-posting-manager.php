@@ -234,7 +234,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 		} elseif ( $value['type'] == 'textarea' ) {
 
-			$form .= '<textarea class="form-control" class="cf_textarea_wysiwyg" name="'.$prefix . esc_attr( $key ) . '" cols="70" rows="3">' . get_option( $prefix . esc_attr( $key ) ) . '</textarea>';
+			$form .= '<textarea class="form-control" class="cf_textarea_wysiwyg" name="' . $prefix . esc_attr( $key ) . '" cols="70" rows="3">' . esc_html( get_option( $prefix . esc_attr( $key ) ) ) . '</textarea>';
 
 		} elseif ( $value['type'] == 'datepicker' ) {
 
@@ -335,9 +335,13 @@ function vgjpm_save_data( $common_customfields ) {
 
 	foreach ( $common_customfields as $key => $value ) {
 
-		if ( $value['type'] == 'text' || $value['type'] == 'select' || $value['type'] == 'image' || $value['type'] == 'datepicker' || $value['type'] == 'textarea' ) {
+		if ( $value['type'] == 'text' || $value['type'] == 'select' || $value['type'] == 'image' || $value['type'] == 'datepicker' ) {
 
 			update_option( $prefix . sanitize_text_field( $key ), vgjpm_sanitize_arr( $_POST[ $prefix . $key ] ) );
+
+		} elseif ( $value['type'] == 'textarea' ) {
+
+			update_option( $prefix . sanitize_text_field( $key ), sanitize_textarea_field( $_POST[ $prefix . $key ] ) );
 
 		} elseif ( $value['type'] == 'checkbox' ) {
 
