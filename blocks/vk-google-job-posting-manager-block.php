@@ -233,7 +233,7 @@ function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
 	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_title'] ) . $tags['content_after'];
 
 	$html .= $tags['title_before'] . __( 'Description', 'vk-google-job-posting-manager' ) . $tags['title_after'];
-	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_description'] ) . $tags['content_after'];
+	$html .= $tags['content_before'] . nl2br( esc_textarea( $custom_fields['vkjp_description'] ) ) . $tags['content_after'];
 
 	$html .= $tags['title_before'] . __( 'Estimated salary', 'vk-google-job-posting-manager' ) . $tags['title_after'];
 	$html .= $tags['content_before'];
