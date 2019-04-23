@@ -79,7 +79,7 @@ function vgjpm_block_init() {
 				],
 			],
 			'render_callback' => function ( $attributes ) {
-				return vgjpm_render_job_posting_table( $attributes['post_id'], $attributes['style'], $attributes['className'] );
+				return vgjpm_render_job_posting_info( $attributes['post_id'], $attributes['style'], $attributes['className'] );
 			},
 		)
 	);
@@ -178,7 +178,7 @@ function vgjpm_filter_currency( $args ) {
 	return apply_filters( 'vgjpm_filter_currency', $return );
 }
 
-function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
+function vgjpm_render_job_posting_info( $post_id, $style, $className ) {
 
 	$custom_fields = vgjpm_get_custom_fields( $post_id );
 
