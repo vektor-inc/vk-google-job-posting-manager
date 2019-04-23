@@ -190,21 +190,22 @@ function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
 	$custom_fields = vgjpm_use_common_values( $custom_fields, 'block' );
 
 	if ( $className !== '' ) {
-		$className .= ' ' . $className;
+		$className = ' ' . $className;
 	}
 
 	$tags = array(
-		'outer_before'   => '<div class="vk_jobInfo' . esc_attr( $className ) . '"><table class="vk_jobInfo_table vk_jobInfo_table-style-' . esc_attr( $style ) . '"><tbody>',
+		'outer_before'   => '<table class="vk_jobInfo_table"><tbody>',
 		'title_before'   => '<tr><th>',
 		'title_after'    => '</th>',
 		'content_before' => '<td>',
 		'content_after'  => '</td></tr>',
-		'outer_after'    => '</tbody></table></div>',
+		'outer_after'    => '</tbody></table>',
 	);
 
-	$tags = apply_filters( 'jobInfo_tags', $tags );
+	$tags = apply_filters( 'vgjpm_jobInfo_tags', $tags );
 
-	$html = $tags['outer_before'];
+	$html  = '<div class="vk_jobInfo vk_jobInfo-type-' . esc_attr( $style ) . esc_attr( $className ) . '">';
+	$html .= $tags['outer_before'];
 
 		// // ポータルサイトなどで必要になる可能性があるので削除しない
 		// $html .= '
@@ -292,6 +293,7 @@ function vgjpm_render_job_posting_table( $post_id, $style, $className ) {
 	$html .= $tags['content_before'] . nl2br( esc_textarea( $custom_fields['vkjp_specialCommitments'] ) ) . $tags['content_after'];
 
 	$html .= $tags['outer_after'];
+	$html .= '</div>';
 
-	return $html;
+	return apply_filters( 'vgjpm_render_job_posting_info', $html );
 }
