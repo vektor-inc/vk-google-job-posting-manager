@@ -137,15 +137,19 @@ function vgjpm_get_labels( $args ) {
 // 'before'   => false,
 // 'after'    => true,
 // );
-function vgjpm_filter_currency( $args ) {
+function vgjpm_salary_and_currency( $args ) {
 
 	$currency_data = array(
 		'JPY' => array(
-			'before' => __( '¥', 'vk-google-job-posting-manager' ),
-			'after'  => __( '円', 'vk-google-job-posting-manager' ),
+			'before' => '¥',
+			'after'  => __( 'YEN', 'vk-google-job-posting-manager' ),
+		),
+		'USD' => array(
+			'before' => '$',
+			'after'  => __( 'USD', 'vk-google-job-posting-manager' ),
 		),
 	);
-	$currency_data = apply_filters( 'vgjpm_filter_currency_currency_data', $currency_data );
+	$currency_data = apply_filters( 'vgjpm_salary_and_currency_currency_data', $currency_data );
 
 	if ( key_exists( $args['currency'], $currency_data ) ) {
 
@@ -153,7 +157,7 @@ function vgjpm_filter_currency( $args ) {
 
 		if ( $args['before'] ) {
 
-			$before = $target_currency['before'];
+			$before = $target_currency['before'] . ' ';
 
 		} else {
 			$before = '';
@@ -161,7 +165,7 @@ function vgjpm_filter_currency( $args ) {
 
 		if ( $args['after'] ) {
 
-			$after = $target_currency['after'];
+			$after = ' ' . $target_currency['after'];
 
 		} else {
 			$after = '';
@@ -170,11 +174,12 @@ function vgjpm_filter_currency( $args ) {
 		$return = $before . number_format( intval( $args['figure'] ) ) . $after;
 
 	} else {
+		// 通貨記号のリストにない場合
+		$return = $args['figure'] . ' (' . $args['currency'] . ')';
 
-		$return = $args['figure'] . '(' . $args['currency'] . ')';
 	}
 
-	return apply_filters( 'vgjpm_filter_currency', $return );
+	return apply_filters( 'vgjpm_salary_and_currency', $return );
 }
 
 function vgjpm_render_job_posting_info( $post_id, $style, $className ) {
@@ -238,11 +243,14 @@ function vgjpm_render_job_posting_info( $post_id, $style, $className ) {
 	$html .= $tags['content_before'];
 
 	// $args     = array(
-	// 'currency' => 'JPY',
+	// 'currency' => $custom_fields['vkjp_currency'],
 	// 'figure'   => esc_html( $custom_fields['vkjp_value'] ),
 	// 'before'   => false,
 	// 'after'    => true,
 	// );
+	//
+	// before after がハードコーディングされていて、通貨によって変更したりできないが、
+	// 必要な場合は vgjpm_salary_and_currency のフックで対応してもらう
 	$args_min = array(
 		'currency' => $custom_fields['vkjp_currency'],
 		'figure'   => esc_html( $custom_fields['vkjp_minValue'] ),
@@ -256,7 +264,7 @@ function vgjpm_render_job_posting_info( $post_id, $style, $className ) {
 		'after'    => true,
 	);
 
-	$html .= esc_html( vgjpm_filter_currency( $args_min ) ) . ' - ' . esc_html( vgjpm_filter_currency( $args_max ) ) . ' (' . vgjpm_get_label_of_array( array( $custom_fields['vkjp_unitText'] ) ) . ')';
+	$html .= esc_html( vgjpm_salary_and_currency( $args_min ) ) . ' - ' . esc_html( vgjpm_salary_and_currency( $args_max ) ) . ' (' . vgjpm_get_label_of_array( array( $custom_fields['vkjp_unitText'] ) ) . ')';
 	$html .= $tags['content_after'];
 
 	$html .= $tags['title_before'];
