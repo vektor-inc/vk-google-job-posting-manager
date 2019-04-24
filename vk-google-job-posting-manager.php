@@ -447,8 +447,12 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
     "postalCode": "' . esc_attr( $custom_fields['vkjp_postalCode'] ) . '",
     "addressCountry": "' . esc_attr( $custom_fields['vkjp_addressCountry'] ) . '"
     }
-  },
-  "jobLocationType": "' . $custom_fields['vkjp_jobLocationType'] . '",
+  },';
+	if ( $custom_fields['vkjp_jobLocationType'] ) {
+		$JSON .= '
+  "jobLocationType": "' . esc_attr( $custom_fields['vkjp_jobLocationType'] ) . '",';
+	}
+	$JSON .= '
   "baseSalary": {
     "@type": "MonetaryAmount",
     "currency": "' . esc_attr( $custom_fields['vkjp_currency'] ) . '",
