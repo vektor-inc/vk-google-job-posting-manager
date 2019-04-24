@@ -151,7 +151,11 @@ function vgjpm_salary_and_currency( $args ) {
 	);
 	$currency_data = apply_filters( 'vgjpm_salary_and_currency_currency_data', $currency_data );
 
-	if ( key_exists( $args['currency'], $currency_data ) ) {
+	if ( empty( $args['figure'] ) && $args['empty_expression'] == 'no_display' ) {
+
+			$return = '';
+
+	} elseif ( key_exists( $args['currency'], $currency_data ) ) {
 
 		$target_currency = $currency_data[ $args['currency'] ];
 
@@ -252,16 +256,18 @@ function vgjpm_render_job_posting_info( $post_id, $style, $className ) {
 	// before after がハードコーディングされていて、通貨によって変更したりできないが、
 	// 必要な場合は vgjpm_salary_and_currency のフックで対応してもらう
 	$args_min = array(
-		'currency' => $custom_fields['vkjp_currency'],
-		'figure'   => esc_html( $custom_fields['vkjp_minValue'] ),
-		'before'   => false,
-		'after'    => true,
+		'currency'         => $custom_fields['vkjp_currency'],
+		'figure'           => esc_html( $custom_fields['vkjp_minValue'] ),
+		'before'           => false,
+		'after'            => true,
+		'empty_expression' => 'no_display', // or 'nunber'
 	);
 	$args_max = array(
-		'currency' => $custom_fields['vkjp_currency'],
-		'figure'   => esc_html( $custom_fields['vkjp_maxValue'] ),
-		'before'   => false,
-		'after'    => true,
+		'currency'         => $custom_fields['vkjp_currency'],
+		'figure'           => esc_html( $custom_fields['vkjp_maxValue'] ),
+		'before'           => false,
+		'after'            => true,
+		'empty_expression' => 'no_display', // or 'nunber'
 	);
 
 	$html .= esc_html( vgjpm_salary_and_currency( $args_min ) ) . ' - ' . esc_html( vgjpm_salary_and_currency( $args_max ) ) . ' (' . vgjpm_get_label_of_array( array( $custom_fields['vkjp_unitText'] ) ) . ')';
