@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: VK Google Job Posting Manager 0.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/vk-google-job-"
 "posting-manager\n"
-"POT-Creation-Date: 2019-04-24 13:10+0900\n"
-"PO-Revision-Date: 2019-04-24 13:10+0900\n"
+"POT-Creation-Date: 2019-04-24 13:15+0900\n"
+"PO-Revision-Date: 2019-04-24 13:15+0900\n"
 "Last-Translator: \n"
 "Language-Team: Vektor,Inc.\n"
 "Language: ja_JP\n"
@@ -68,44 +68,44 @@ msgstr "詳細"
 msgid "Estimated salary"
 msgstr "想定給与"
 
-#: blocks/vk-google-job-posting-manager-block.php:273
+#: blocks/vk-google-job-posting-manager-block.php:274
 msgid " - "
 msgstr " 〜 "
 
-#: blocks/vk-google-job-posting-manager-block.php:280
+#: blocks/vk-google-job-posting-manager-block.php:282
 msgid "Work Location"
 msgstr "勤務地"
 
-#: blocks/vk-google-job-posting-manager-block.php:287
-msgid "Postal code"
-msgstr "郵便番号"
+#: blocks/vk-google-job-posting-manager-block.php:289
+msgid "Postal code : "
+msgstr "〒"
 
-#: blocks/vk-google-job-posting-manager-block.php:293
+#: blocks/vk-google-job-posting-manager-block.php:295
 #: inc/custom-field-builder/custom-field-builder-config.php:166
 msgid "Employment Type"
 msgstr "雇用形態"
 
-#: blocks/vk-google-job-posting-manager-block.php:296
+#: blocks/vk-google-job-posting-manager-block.php:298
 #: inc/custom-field-builder/custom-field-builder-config.php:136
 msgid "Incentive Compensation"
 msgstr "賞与"
 
-#: blocks/vk-google-job-posting-manager-block.php:299
+#: blocks/vk-google-job-posting-manager-block.php:301
 #: inc/custom-field-builder/custom-field-builder-config.php:142
 msgid "Salary Raise"
 msgstr "昇給"
 
-#: blocks/vk-google-job-posting-manager-block.php:302
+#: blocks/vk-google-job-posting-manager-block.php:304
 #: inc/custom-field-builder/custom-field-builder-config.php:148
 msgid "Work Hours"
 msgstr "勤務時間"
 
-#: blocks/vk-google-job-posting-manager-block.php:305
+#: blocks/vk-google-job-posting-manager-block.php:307
 #: inc/custom-field-builder/custom-field-builder-config.php:154
 msgid "Experience Requirements"
 msgstr "必要経験・スキル"
 
-#: blocks/vk-google-job-posting-manager-block.php:308
+#: blocks/vk-google-job-posting-manager-block.php:310
 #: inc/custom-field-builder/custom-field-builder-config.php:160
 msgid "Special Commitments"
 msgstr "福利厚生"

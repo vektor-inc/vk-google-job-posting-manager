@@ -260,21 +260,23 @@ function vgjpm_render_job_posting_info( $post_id, $style, $className ) {
 		'figure'           => esc_html( $custom_fields['vkjp_minValue'] ),
 		'before'           => false,
 		'after'            => true,
-		'empty_expression' => 'no_display', // or 'nunber'
+		'empty_expression' => 'no_display',
 	);
 	$args_max = array(
 		'currency'         => $custom_fields['vkjp_currency'],
 		'figure'           => esc_html( $custom_fields['vkjp_maxValue'] ),
 		'before'           => false,
 		'after'            => true,
-		'empty_expression' => 'no_display', // or 'nunber'
+		'empty_expression' => 'no_display',
 	);
 
+	// salaly amount min to max separator
 	$separater = __( ' - ', 'vk-google-job-posting-manager' );
 	$separater = apply_filters( 'vgjpm_salary_separater', $separater );
-	$html     .= vgjpm_get_label_of_array( array( $custom_fields['vkjp_unitText'] ) );
-	$html     .= vgjpm_salary_and_currency( $args_min ) . $separater . vgjpm_salary_and_currency( $args_max );
-	$html     .= $tags['content_after'];
+
+	$html .= vgjpm_get_label_of_array( array( $custom_fields['vkjp_unitText'] ) );
+	$html .= vgjpm_salary_and_currency( $args_min ) . $separater . vgjpm_salary_and_currency( $args_max );
+	$html .= $tags['content_after'];
 
 	$html .= $tags['title_before'];
 	$html .= __( 'Work Location', 'vk-google-job-posting-manager' );
@@ -284,7 +286,7 @@ function vgjpm_render_job_posting_info( $post_id, $style, $className ) {
 	if ( vgjpm_get_label_of_array( $custom_fields['vkjp_jobLocationType'] ) ) {
 		$html .= vgjpm_get_label_of_array( $custom_fields['vkjp_jobLocationType'] );
 	} else {
-		$html .= __( 'Postal code', 'vk-google-job-posting-manager' ) . ' : ' . esc_html( $custom_fields['vkjp_postalCode'] );
+		$html .= __( 'Postal code : ', 'vk-google-job-posting-manager' ) . esc_html( $custom_fields['vkjp_postalCode'] );
 		// $html .= esc_html( $custom_fields['vkjp_addressCountry'] );
 		$html .= '<br>' . esc_html( $custom_fields['vkjp_addressRegion'] ) . esc_html( $custom_fields['vkjp_addressLocality'] ) . esc_html( $custom_fields['vkjp_streetAddress'] );
 	}
