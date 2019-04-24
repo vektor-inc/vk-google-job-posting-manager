@@ -244,13 +244,13 @@ function vgjpm_render_job_posting_info( $post_id, $style, $className ) {
 	// 'after'    => true,
 	// );
 	$args_min = array(
-		'currency' => 'JPY',
+		'currency' => $custom_fields['vkjp_currency'],
 		'figure'   => esc_html( $custom_fields['vkjp_minValue'] ),
 		'before'   => false,
 		'after'    => true,
 	);
 	$args_max = array(
-		'currency' => 'JPY',
+		'currency' => $custom_fields['vkjp_currency'],
 		'figure'   => esc_html( $custom_fields['vkjp_maxValue'] ),
 		'before'   => false,
 		'after'    => true,
