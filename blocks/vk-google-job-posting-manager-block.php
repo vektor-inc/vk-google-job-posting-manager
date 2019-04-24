@@ -134,7 +134,6 @@ function vgjpm_get_labels( $args ) {
 // $args = array(
 // 'currency' => 'JPY',
 // 'figure'   => '',
-// 'figure'   => '',
 // 'before'   => false,
 // 'after'    => true,
 // );
