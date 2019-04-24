@@ -5,8 +5,8 @@ msgstr ""
 "Project-Id-Version: VK Google Job Posting Manager 0.2.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/vk-google-job-"
 "posting-manager\n"
-"POT-Creation-Date: 2019-04-24 10:53+0900\n"
-"PO-Revision-Date: 2019-04-24 10:53+0900\n"
+"POT-Creation-Date: 2019-04-24 13:10+0900\n"
+"PO-Revision-Date: 2019-04-24 13:10+0900\n"
 "Last-Translator: \n"
 "Language-Team: Vektor,Inc.\n"
 "Language: ja_JP\n"
@@ -50,58 +50,62 @@ msgstr "円"
 msgid "USD"
 msgstr "ドル"
 
-#: blocks/vk-google-job-posting-manager-block.php:191
+#: blocks/vk-google-job-posting-manager-block.php:195
 msgid "Preview can be enabled after save or publish the content."
 msgstr "プレビューは記事が公開あるいは保存されるまで反映されません。"
 
-#: blocks/vk-google-job-posting-manager-block.php:236
+#: blocks/vk-google-job-posting-manager-block.php:240
 #: inc/custom-field-builder/custom-field-builder-config.php:88
 msgid "Job Title"
 msgstr "職種"
 
-#: blocks/vk-google-job-posting-manager-block.php:239
+#: blocks/vk-google-job-posting-manager-block.php:243
 #: inc/custom-field-builder/custom-field-builder-config.php:94
 msgid "Description"
 msgstr "詳細"
 
-#: blocks/vk-google-job-posting-manager-block.php:242
+#: blocks/vk-google-job-posting-manager-block.php:246
 msgid "Estimated salary"
 msgstr "想定給与"
 
-#: blocks/vk-google-job-posting-manager-block.php:268
+#: blocks/vk-google-job-posting-manager-block.php:273
+msgid " - "
+msgstr " 〜 "
+
+#: blocks/vk-google-job-posting-manager-block.php:280
 msgid "Work Location"
 msgstr "勤務地"
 
-#: blocks/vk-google-job-posting-manager-block.php:275
+#: blocks/vk-google-job-posting-manager-block.php:287
 msgid "Postal code"
 msgstr "郵便番号"
 
-#: blocks/vk-google-job-posting-manager-block.php:281
+#: blocks/vk-google-job-posting-manager-block.php:293
 #: inc/custom-field-builder/custom-field-builder-config.php:166
 msgid "Employment Type"
 msgstr "雇用形態"
 
-#: blocks/vk-google-job-posting-manager-block.php:284
+#: blocks/vk-google-job-posting-manager-block.php:296
 #: inc/custom-field-builder/custom-field-builder-config.php:136
 msgid "Incentive Compensation"
 msgstr "賞与"
 
-#: blocks/vk-google-job-posting-manager-block.php:287
+#: blocks/vk-google-job-posting-manager-block.php:299
 #: inc/custom-field-builder/custom-field-builder-config.php:142
 msgid "Salary Raise"
 msgstr "昇給"
 
-#: blocks/vk-google-job-posting-manager-block.php:290
+#: blocks/vk-google-job-posting-manager-block.php:302
 #: inc/custom-field-builder/custom-field-builder-config.php:148
 msgid "Work Hours"
 msgstr "勤務時間"
 
-#: blocks/vk-google-job-posting-manager-block.php:293
+#: blocks/vk-google-job-posting-manager-block.php:305
 #: inc/custom-field-builder/custom-field-builder-config.php:154
 msgid "Experience Requirements"
 msgstr "必要経験・スキル"
 
-#: blocks/vk-google-job-posting-manager-block.php:296
+#: blocks/vk-google-job-posting-manager-block.php:308
 #: inc/custom-field-builder/custom-field-builder-config.php:160
 msgid "Special Commitments"
 msgstr "福利厚生"
@@ -534,6 +538,11 @@ msgstr ""
 msgid "Save Changes"
 msgstr "変更を保存"
 
+#, fuzzy
+#~| msgid "https://github.com/vektor-inc/vk-google-job-posting-manager"
+#~ msgid " - vk-google-job-posting-manager"
+#~ msgstr "https://github.com/vektor-inc/vk-google-job-posting-manager"
+
 #~ msgid "¥"
 #~ msgstr "¥"
 
@@ -634,9 +643,6 @@ msgstr "変更を保存"
 
 #~ msgid "Please select from above"
 #~ msgstr "上から選択してください"
-
-#~ msgid "https://github.com/vektor-inc/vk-google-job-posting-manager"
-#~ msgstr "https://github.com/vektor-inc/vk-google-job-posting-manager"
 
 #~ msgid "Vektor,Inc"
 #~ msgstr "株式会社ベクトル"

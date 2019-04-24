@@ -161,7 +161,7 @@ function vgjpm_salary_and_currency( $args ) {
 
 		if ( $args['before'] ) {
 
-			$before = $target_currency['before'] . ' ';
+			$before = $target_currency['before'];
 
 		} else {
 			$before = '';
@@ -169,17 +169,17 @@ function vgjpm_salary_and_currency( $args ) {
 
 		if ( $args['after'] ) {
 
-			$after = ' ' . $target_currency['after'];
+			$after = '<span class="vk_jobInfo_amount_before">' . $target_currency['after'] . '</span>';
 
 		} else {
 			$after = '';
 		}
 
-		$return = $before . number_format( intval( $args['figure'] ) ) . $after;
+		$return = $before . '<span class="vk_jobInfo_amount_figure">' . number_format( intval( $args['figure'] ) ) . '</span>' . $after;
 
 	} else {
 		// 通貨記号のリストにない場合
-		$return = $args['figure'] . ' (' . $args['currency'] . ')';
+		$return = '<span class="vk_jobInfo_amount_after">' . $args['figure'] . '</span>' . ' (' . $args['currency'] . ')';
 
 	}
 
@@ -270,8 +270,11 @@ function vgjpm_render_job_posting_info( $post_id, $style, $className ) {
 		'empty_expression' => 'no_display', // or 'nunber'
 	);
 
-	$html .= esc_html( vgjpm_salary_and_currency( $args_min ) ) . ' - ' . esc_html( vgjpm_salary_and_currency( $args_max ) ) . ' (' . vgjpm_get_label_of_array( array( $custom_fields['vkjp_unitText'] ) ) . ')';
-	$html .= $tags['content_after'];
+	$separater = __( ' - ', 'vk-google-job-posting-manager' );
+	$separater = apply_filters( 'vgjpm_salary_separater', $separater );
+	$html     .= vgjpm_get_label_of_array( array( $custom_fields['vkjp_unitText'] ) );
+	$html     .= vgjpm_salary_and_currency( $args_min ) . $separater . vgjpm_salary_and_currency( $args_max );
+	$html     .= $tags['content_after'];
 
 	$html .= $tags['title_before'];
 	$html .= __( 'Work Location', 'vk-google-job-posting-manager' );
