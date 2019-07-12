@@ -295,21 +295,6 @@ function vgjpm_render_job_posting_info( $post_id, $style, $className ) {
 	$html .= $tags['title_before'] . __( 'Employment Type', 'vk-google-job-posting-manager' ) . $tags['title_after'];
 	$html .= $tags['content_before'] . vgjpm_get_label_of_array( $custom_fields['vkjp_employmentType'] ) . $tags['content_after'];
 
-	$html .= $tags['title_before'] . __( 'Incentive Compensation', 'vk-google-job-posting-manager' ) . $tags['title_after'];
-	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_incentiveCompensation'] ) . $tags['content_after'];
-
-	$html .= $tags['title_before'] . __( 'Salary Raise', 'vk-google-job-posting-manager' ) . $tags['title_after'];
-	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_salaryRaise'] ) . $tags['content_after'];
-
-	$html .= $tags['title_before'] . __( 'Work Hours', 'vk-google-job-posting-manager' ) . $tags['title_after'];
-	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_workHours'] ) . $tags['content_after'];
-
-	$html .= $tags['title_before'] . __( 'Experience Requirements', 'vk-google-job-posting-manager' ) . $tags['title_after'];
-	$html .= $tags['content_before'] . nl2br( esc_textarea( $custom_fields['vkjp_experienceRequirements'] ) ) . $tags['content_after'];
-
-	$html .= $tags['title_before'] . __( 'Special Commitments', 'vk-google-job-posting-manager' ) . $tags['title_after'];
-	$html .= $tags['content_before'] . nl2br( esc_textarea( $custom_fields['vkjp_specialCommitments'] ) ) . $tags['content_after'];
-
 	$html .= $tags['outer_after'];
 	$html .= '</div>';
 

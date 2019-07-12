@@ -427,10 +427,6 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
   "datePosted" : "' . esc_attr( $custom_fields['vkjp_datePosted'] ) . '",
   "validThrough" : "' . esc_attr( $custom_fields['vkjp_validThrough'] ) . '",
   "employmentType" : ["' . $custom_fields['vkjp_employmentType'] . '"],
-  "specialCommitments" : "' . esc_attr( $custom_fields['vkjp_specialCommitments'] ) . '",
-  "experienceRequirements" : "' . esc_attr( $custom_fields['vkjp_experienceRequirements'] ) . '",
-  "workHours" : "' . esc_attr( $custom_fields['vkjp_workHours'] ) . '",
-  "incentiveCompensation" : "' . esc_attr( $custom_fields['vkjp_incentiveCompensation'] ) . '",
   "hiringOrganization" : {
     "@type" : "Organization",
     "name" : "' . esc_attr( $custom_fields['vkjp_name'] ) . '",
