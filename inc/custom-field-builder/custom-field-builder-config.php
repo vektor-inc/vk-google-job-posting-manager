@@ -132,36 +132,6 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 				'description' => __( 'Example : Japanese Yen', 'vk-google-job-posting-manager' ),
 				'required'    => false,
 			),
-			'vkjp_incentiveCompensation'  => array(
-				'label'       => __( 'Incentive Compensation', 'vk-google-job-posting-manager' ),
-				'type'        => 'text',
-				'description' => __( 'Please enter the description of incentive compensation.', 'vk-google-job-posting-manager' ),
-				'required'    => false,
-			),
-			'vkjp_salaryRaise'            => array(
-				'label'       => __( 'Salary Raise', 'vk-google-job-posting-manager' ),
-				'type'        => 'text',
-				'description' => __( 'Please enter the description of salary raise.', 'vk-google-job-posting-manager' ),
-				'required'    => false,
-			),
-			'vkjp_workHours'              => array(
-				'label'       => __( 'Work Hours', 'vk-google-job-posting-manager' ),
-				'type'        => 'text',
-				'description' => __( 'Please enter the description of work hours.', 'vk-google-job-posting-manager' ),
-				'required'    => false,
-			),
-			'vkjp_experienceRequirements' => array(
-				'label'       => __( 'Experience Requirements', 'vk-google-job-posting-manager' ),
-				'type'        => 'textarea',
-				'description' => __( 'Please enter the description of experience requirements. If you have the one.', 'vk-google-job-posting-manager' ),
-				'required'    => false,
-			),
-			'vkjp_specialCommitments'     => array(
-				'label'       => __( 'Special Commitments', 'vk-google-job-posting-manager' ),
-				'type'        => 'textarea',
-				'description' => __( 'Please enter the description of special commitments', 'vk-google-job-posting-manager' ),
-				'required'    => false,
-			),
 			'vkjp_employmentType'         => array(
 				'label'       => __( 'Employment Type', 'vk-google-job-posting-manager' ),
 				'type'        => 'checkbox',
