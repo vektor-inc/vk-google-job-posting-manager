@@ -96,12 +96,6 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 				'description' => __( 'Please enter specific description of the job.', 'vk-google-job-posting-manager' ),
 				'required'    => true,
 			),
-			'vkjp_value'                  => array(
-				'label'       => __( 'Base Salary', 'vk-google-job-posting-manager' ),
-				'type'        => 'text',
-				'description' => __( 'Please enter the base salary in integer. Ex：250000', 'vk-google-job-posting-manager' ),
-				'required'    => false,
-			),
 			'vkjp_minValue'               => array(
 				'label'       => __( 'Minimum Value of Salary', 'vk-google-job-posting-manager' ),
 				'type'        => 'text',

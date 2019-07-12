@@ -454,7 +454,6 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
     "currency": "' . esc_attr( $custom_fields['vkjp_currency'] ) . '",
     "value": {
       "@type": "QuantitativeValue",
-      "value": ' . esc_attr( $custom_fields['vkjp_value'] ) . ',
       "minValue": ' . esc_attr( $custom_fields['vkjp_minValue'] ) . ',
       "maxValue": ' . esc_attr( $custom_fields['vkjp_maxValue'] ) . ',
       "unitText": "' . esc_attr( $custom_fields['vkjp_unitText'] ) . '"
