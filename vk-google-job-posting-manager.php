@@ -422,6 +422,11 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 		$custom_fields['vkjp_validThrough'] = date( 'Y-m-d', strtotime( $custom_fields['vkjp_validThrough'] ) );
 	}
 
+	if ( isset($custom_fields['vkjp_employmentType']) ) {
+		$temp = [];
+		var_dump($custom_fields['vkjp_employmentType']);
+	}
+
 	$JSON = '<script type="application/ld+json"> {
   "@context" : "https://schema.org/",
   "@type" : "JobPosting",
