@@ -424,6 +424,19 @@ function vgjpm_esc_script($html) {
 	return $return;
 }
 
+/**
+ * Remove newline character.
+ *
+ * @param $html
+ *
+ * @return mixed
+ */
+function vgjpm_esc_newline( $html ) {
+
+	$return = str_replace(array("\r\n","\n","\r"), '', $html);
+	return $return;
+}
+
 function vgjpm_generate_jsonLD( $custom_fields ) {
 
 	if ( ! isset( $custom_fields['vkjp_title'] ) ) {
@@ -446,7 +459,7 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
   "@context" : "https://schema.org/",
   "@type" : "JobPosting",
   "title" : "' . esc_attr( $custom_fields['vkjp_title'] ) . '",
-  "description" : "' . vgjpm_esc_script($custom_fields['vkjp_description']) . '",
+  "description" : "' . vgjpm_esc_newline( vgjpm_esc_script( $custom_fields['vkjp_description'] ) ) . '",
   "datePosted" : "' . esc_attr( $custom_fields['vkjp_datePosted'] ) . '",
   "validThrough" : "' . esc_attr( $custom_fields['vkjp_validThrough'] ) . '",
   "employmentType" : ' . $custom_fields['vkjp_employmentType'] . ',
