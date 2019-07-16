@@ -415,6 +415,7 @@ add_action( 'wp_print_footer_scripts', 'vgjpm_print_jsonLD_in_footer' );
  */
 function vgjpm_send_sitemap_to_google( $post_id ) {
 
+	//postmeta(vkjp_title)が空の時リターン。（値が存在しても、初めてtitleに値入力した時は弾かれる）
 	$result = get_post_meta( $post_id, 'vkjp_title', true );
 	if ( empty( $result ) ) {
 		return false;
