@@ -400,11 +400,7 @@ function vgjpm_save_check_list() {
 function vgjpm_print_jsonLD_in_footer() {
 
 	$post_id = get_the_ID();
-
 	$custom_fields = vgjpm_get_custom_fields( $post_id );
-	vgjpm_send_sitemap_to_google();
-
-
 	echo vgjpm_generate_jsonLD( $custom_fields );
 
 }
@@ -415,15 +411,15 @@ add_action( 'wp_print_footer_scripts', 'vgjpm_print_jsonLD_in_footer' );
  */
 function vgjpm_send_sitemap_to_google() {
 
-	$google_url  = "http://www.google.com/ping?sitemap=" .
-	               $sitemap_url = home_url() . "/sitemap.xml";
+	$google_url  = "http://www.google.com/ping?sitemap=";
+	$sitemap_url = home_url() . "/sitemap.xml";
 	$status_code = wp_remote_retrieve_response_code( wp_remote_get( $sitemap_url ) );
 
 	if ( $status_code === 200 ) {
-		$result = wp_remote_retrieve_response_code( wp_remote_get( $google_url . $sitemap_url ));
-		var_dump($result);
+		wp_remote_get( $google_url . $sitemap_url );
 	}
 }
+add_action( 'save_post', 'vgjpm_send_sitemap_to_google', 10, 3 );
 
 /**
  * Escape Javascript. Remove <script></script> from target html.
