@@ -420,7 +420,8 @@ function vgjpm_send_sitemap_to_google() {
 	$status_code = wp_remote_retrieve_response_code( wp_remote_get( $sitemap_url ) );
 
 	if ( $status_code === 200 ) {
-		wp_remote_get( $google_url . $sitemap_url );
+		$result = wp_remote_retrieve_response_code( wp_remote_get( $google_url . $sitemap_url ));
+		var_dump($result);
 	}
 }
 
