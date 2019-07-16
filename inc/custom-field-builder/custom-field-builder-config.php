@@ -93,7 +93,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 			'vkjp_description'            => array(
 				'label'       => __( 'Description', 'vk-google-job-posting-manager' ),
 				'type'        => 'textarea',
-				'description' => __( 'Please enter specific description of the job by HTML. You can use the templates from  <a href="https://docs.google.com/spreadsheets/d/1bboynhUakHJdHkjQG0X9nhGUjxd4h5-qYOR1TMOCdcE/edit?usp=sharing" target="_blank">here</a>.', 'vk-google-job-posting-manager' ),
+				'description' => __( 'Please enter specific description of the job by HTML. You can use the templates from  <a href="https://www.vektor-inc.co.jp/service/products/wordpress-plugins/vk-google-jog-posting-manager/#vk-google-job-template" target="_blank">here</a>.', 'vk-google-job-posting-manager' ),
 				'required'    => true,
 			),
 			'vkjp_minValue'               => array(
