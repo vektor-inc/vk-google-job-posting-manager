@@ -87,7 +87,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 			'vkjp_title'                  => array(
 				'label'       => __( 'Job Title', 'vk-google-job-posting-manager' ),
 				'type'        => 'text',
-				'description' => __( 'Example: Software Engineer, Barista. Please enter only the name of the job. Please do not include the job code, address, date, salary, company name.', 'vk-google-job-posting-manager' ),
+				'description' => __( 'Please enter ONLY the name of the job. Please DO NOT include the job description, extra catch copy. ○ : Software Engineer/Barista. × : Software Engineer in awesome startup ', 'vk-google-job-posting-manager' ),
 				'required'    => true,
 			),
 			'vkjp_description'            => array(
