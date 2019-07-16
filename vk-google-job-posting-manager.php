@@ -422,9 +422,10 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 		$custom_fields['vkjp_validThrough'] = date( 'Y-m-d', strtotime( $custom_fields['vkjp_validThrough'] ) );
 	}
 
-	if ( isset($custom_fields['vkjp_employmentType']) ) {
-		$temp = [];
-		var_dump($custom_fields['vkjp_employmentType']);
+	if ( isset( $custom_fields['vkjp_employmentType'] ) && strpos( $custom_fields['vkjp_employmentType'], ',' ) === false ) {
+		$custom_fields['vkjp_employmentType'] = '"' . $custom_fields['vkjp_employmentType'] . '"';
+	} else {
+		$custom_fields['vkjp_employmentType'] = '["' . $custom_fields['vkjp_employmentType'] . '"]';
 	}
 
 	$JSON = '<script type="application/ld+json"> {
@@ -434,7 +435,7 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
   "description" : "' . esc_attr( $custom_fields['vkjp_description'] ) . '",
   "datePosted" : "' . esc_attr( $custom_fields['vkjp_datePosted'] ) . '",
   "validThrough" : "' . esc_attr( $custom_fields['vkjp_validThrough'] ) . '",
-  "employmentType" : ["' . $custom_fields['vkjp_employmentType'] . '"],
+  "employmentType" : ' . $custom_fields['vkjp_employmentType'] . ',
   "hiringOrganization" : {
     "@type" : "Organization",
     "name" : "' . esc_attr( $custom_fields['vkjp_name'] ) . '",
