@@ -410,6 +410,20 @@ function vgjpm_print_jsonLD_in_footer() {
 }
 add_action( 'wp_print_footer_scripts', 'vgjpm_print_jsonLD_in_footer' );
 
+
+/**
+ * Escape Javascript. Remove <script></script> from target html.
+ * @param $html
+ *
+ * @return mixed
+ */
+function vgjpm_esc_script($html) {
+
+	$needles = array("<script>", "</script>", "script");
+	$return = str_replace($needles, "", $html);
+	return $return;
+}
+
 function vgjpm_generate_jsonLD( $custom_fields ) {
 
 	if ( ! isset( $custom_fields['vkjp_title'] ) ) {
@@ -432,7 +446,7 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
   "@context" : "https://schema.org/",
   "@type" : "JobPosting",
   "title" : "' . esc_attr( $custom_fields['vkjp_title'] ) . '",
-  "description" : "' . esc_attr( $custom_fields['vkjp_description'] ) . '",
+  "description" : "' . vgjpm_esc_script($custom_fields['vkjp_description']) . '",
   "datePosted" : "' . esc_attr( $custom_fields['vkjp_datePosted'] ) . '",
   "validThrough" : "' . esc_attr( $custom_fields['vkjp_validThrough'] ) . '",
   "employmentType" : ' . $custom_fields['vkjp_employmentType'] . ',
