@@ -87,7 +87,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 			'vkjp_title'                  => array(
 				'label'       => __( 'Job Title', 'vk-google-job-posting-manager' ),
 				'type'        => 'text',
-				'description' => __( 'Please enter ONLY the name of the job. Please DO NOT include the job description, extra catch copy, etc. <br> ○ : Software Engineer / Barista. <br> × : Software Engineer in awesome startup / Barista who  ', 'vk-google-job-posting-manager' ),
+				'description' => __( 'Please enter ONLY the name of the job. Please DO NOT include the job description, extra catch copy, etc. <br> ○ : Software Engineer / Barista. </br> × : Software Engineer in awesome startup / Barista who brews tasty coffee. </br></br>Also, please avoid to use special characters like "!", "?", etc.', 'vk-google-job-posting-manager' ),
 				'required'    => true,
 			),
 			'vkjp_description'            => array(
@@ -170,7 +170,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 				'required'    => false,
 			),
 			'vkjp_postalCode'             => array(
-				'label'       => __( 'Postal Code of ork Location', 'vk-google-job-posting-manager' ),
+				'label'       => __( 'Postal Code of work Location', 'vk-google-job-posting-manager' ),
 				'type'        => 'text',
 				'description' => __( 'Example : 94043. Do not include hyphens. ', 'vk-google-job-posting-manager' ),
 				'required'    => false,
