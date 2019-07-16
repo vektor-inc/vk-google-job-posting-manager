@@ -406,10 +406,19 @@ function vgjpm_print_jsonLD_in_footer() {
 }
 add_action( 'wp_print_footer_scripts', 'vgjpm_print_jsonLD_in_footer' );
 
+
 /**
  * Send sitemap.xml to google when it's existed.
+ * @param $post_id
+ *
+ * @return bool
  */
-function vgjpm_send_sitemap_to_google() {
+function vgjpm_send_sitemap_to_google( $post_id ) {
+
+	$result = get_post_meta( $post_id, 'vkjp_title', true );
+	if ( empty( $result ) ) {
+		return false;
+	}
 
 	$google_url  = "http://www.google.com/ping?sitemap=";
 	$sitemap_url = home_url() . "/sitemap.xml";
@@ -419,7 +428,8 @@ function vgjpm_send_sitemap_to_google() {
 		wp_remote_get( $google_url . $sitemap_url );
 	}
 }
-add_action( 'save_post', 'vgjpm_send_sitemap_to_google', 10, 0 );
+
+add_action( 'wp_insert_post', 'vgjpm_send_sitemap_to_google', 10, 1 );
 
 /**
  * Escape Javascript. Remove <script></script> from target html.
