@@ -419,7 +419,7 @@ function vgjpm_send_sitemap_to_google() {
 		wp_remote_get( $google_url . $sitemap_url );
 	}
 }
-add_action( 'save_post', 'vgjpm_send_sitemap_to_google', 10, 3 );
+add_action( 'save_post', 'vgjpm_send_sitemap_to_google', 10, 0 );
 
 /**
  * Escape Javascript. Remove <script></script> from target html.
