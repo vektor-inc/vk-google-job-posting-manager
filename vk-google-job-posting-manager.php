@@ -402,12 +402,27 @@ function vgjpm_print_jsonLD_in_footer() {
 	$post_id = get_the_ID();
 
 	$custom_fields = vgjpm_get_custom_fields( $post_id );
+	vgjpm_send_sitemap_to_google();
+
 
 	echo vgjpm_generate_jsonLD( $custom_fields );
 
 }
 add_action( 'wp_print_footer_scripts', 'vgjpm_print_jsonLD_in_footer' );
 
+/**
+ * Send sitemap.xml to google when it's existed.
+ */
+function vgjpm_send_sitemap_to_google() {
+
+	$google_url  = "http://www.google.com/ping?sitemap=" .
+	               $sitemap_url = home_url() . "/sitemap.xml";
+	$status_code = wp_remote_retrieve_response_code( wp_remote_get( $sitemap_url ) );
+
+	if ( $status_code === 200 ) {
+		wp_remote_get( $google_url . $sitemap_url );
+	}
+}
 
 /**
  * Escape Javascript. Remove <script></script> from target html.
