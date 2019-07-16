@@ -11,11 +11,9 @@
  *
  * @package         Vk_Google_Job_Posting_Manager
  */
-
-
- /*
-  Setting & load file
- /*-------------------------------------------*/
+/*
+ Setting & load file
+/*-------------------------------------------*/
 $vgjpm_prefix = 'common_';
 $data         = get_file_data(
 	__FILE__, array(
