@@ -104,6 +104,7 @@ function vgjpm_get_common_customfields_config() {
 		'vkjp_salaryRaise',
 		'vkjp_unitText',
 		'vkjp_validThrough',
+		'vkjp_identifier'
 		// 'vkjp_experienceRequirements',
 	);
 	$labels_ordered = array();
@@ -135,6 +136,7 @@ function vgjpm_get_common_customfields_config() {
 		'vkjp_addressLocality',
 		'vkjp_streetAddress',
 		'vkjp_validThrough',
+		'vkjp_identifier'
 	);
 
 	foreach ( $labels_ordered as $key => $value ) {
@@ -484,6 +486,11 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
   "datePosted" : "' . esc_attr( $custom_fields['vkjp_datePosted'] ) . '",
   "validThrough" : "' . esc_attr( $custom_fields['vkjp_validThrough'] ) . '",
   "employmentType" : ' . $custom_fields['vkjp_employmentType'] . ',
+  "identifier": {
+    "@type": "PropertyValue",
+    "name":  "' . esc_attr( $custom_fields['vkjp_name'] ) . '",
+    "value": "' . esc_attr( $custom_fields['vkjp_identifier'] ) . '"
+  }
   "hiringOrganization" : {
     "@type" : "Organization",
     "name" : "' . esc_attr( $custom_fields['vkjp_name'] ) . '",

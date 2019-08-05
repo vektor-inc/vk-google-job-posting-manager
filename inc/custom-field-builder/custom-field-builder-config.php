@@ -193,16 +193,22 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 				'description' => __( 'Example : Mountain View', 'vk-google-job-posting-manager' ),
 				'required'    => false,
 			),
-			'vkjp_streetAddress'          => array(
+			'vkjp_streetAddress' => array(
 				'label'       => __( 'Street Address of Work Location', 'vk-google-job-posting-manager' ),
 				'type'        => 'text',
 				'description' => __( 'Example : 1600 Amphitheatre Pkwy', 'vk-google-job-posting-manager' ),
 				'required'    => false,
 			),
-			'vkjp_validThrough'           => array(
+			'vkjp_validThrough'  => array(
 				'label'       => __( 'Expiry Date', 'vk-google-job-posting-manager' ),
 				'type'        => 'datepicker',
 				'description' => __( 'Please enter expiry date. If you are not sure about expiry date, please leave it blank.', 'vk-google-job-posting-manager' ),
+				'required'    => false,
+			),
+			'vkjp_identifier'    => array(
+				'label'       => __( 'Company Identifier Number', 'vk-google-job-posting-manager' ),
+				'type'        => 'text',
+				'description' => __( 'The hiring organization\'s unique identifier number for the job posting. <br> Please enter a unique number id whatever you want. Example : 1234567', 'vk-google-job-posting-manager' ),
 				'required'    => false,
 			),
 		);
