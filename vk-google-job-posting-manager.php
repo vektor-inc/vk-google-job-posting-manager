@@ -490,7 +490,7 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
     "@type": "PropertyValue",
     "name":  "' . esc_attr( $custom_fields['vkjp_name'] ) . '",
     "value": "' . esc_attr( $custom_fields['vkjp_identifier'] ) . '"
-  }
+  },
   "hiringOrganization" : {
     "@type" : "Organization",
     "name" : "' . esc_attr( $custom_fields['vkjp_name'] ) . '",
