@@ -87,20 +87,14 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 			'vkjp_title'                  => array(
 				'label'       => __( 'Job Title', 'vk-google-job-posting-manager' ),
 				'type'        => 'text',
-				'description' => __( 'Example: Software Engineer, Barista. Please enter only the name of the job. Please do not include the job code, address, date, salary, company name.', 'vk-google-job-posting-manager' ),
+				'description' => __( 'Please enter ONLY the name of the job. Please DO NOT include the job description, extra catch copy, etc. <br> ○ : Software Engineer / Barista. </br> × : Software Engineer in awesome startup / Barista who brews tasty coffee. </br></br>Also, please avoid to use special characters like "!", "?", etc.', 'vk-google-job-posting-manager' ),
 				'required'    => true,
 			),
 			'vkjp_description'            => array(
 				'label'       => __( 'Description', 'vk-google-job-posting-manager' ),
 				'type'        => 'textarea',
-				'description' => __( 'Please enter specific description of the job.', 'vk-google-job-posting-manager' ),
+				'description' => __( 'Please enter specific description of the job by HTML. You can use the templates from  <a href="https://www.vektor-inc.co.jp/service/products/wordpress-plugins/vk-google-jog-posting-manager/#vk-google-job-template" target="_blank">here</a>.', 'vk-google-job-posting-manager' ),
 				'required'    => true,
-			),
-			'vkjp_value'                  => array(
-				'label'       => __( 'Base Salary', 'vk-google-job-posting-manager' ),
-				'type'        => 'text',
-				'description' => __( 'Please enter the base salary in integer. Ex：250000', 'vk-google-job-posting-manager' ),
-				'required'    => false,
 			),
 			'vkjp_minValue'               => array(
 				'label'       => __( 'Minimum Value of Salary', 'vk-google-job-posting-manager' ),
@@ -130,36 +124,6 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 				'type'        => 'select',
 				'options'     => apply_filters( 'vkjp_currency_options', $currency_options ),
 				'description' => __( 'Example : Japanese Yen', 'vk-google-job-posting-manager' ),
-				'required'    => false,
-			),
-			'vkjp_incentiveCompensation'  => array(
-				'label'       => __( 'Incentive Compensation', 'vk-google-job-posting-manager' ),
-				'type'        => 'text',
-				'description' => __( 'Please enter the description of incentive compensation.', 'vk-google-job-posting-manager' ),
-				'required'    => false,
-			),
-			'vkjp_salaryRaise'            => array(
-				'label'       => __( 'Salary Raise', 'vk-google-job-posting-manager' ),
-				'type'        => 'text',
-				'description' => __( 'Please enter the description of salary raise.', 'vk-google-job-posting-manager' ),
-				'required'    => false,
-			),
-			'vkjp_workHours'              => array(
-				'label'       => __( 'Work Hours', 'vk-google-job-posting-manager' ),
-				'type'        => 'text',
-				'description' => __( 'Please enter the description of work hours.', 'vk-google-job-posting-manager' ),
-				'required'    => false,
-			),
-			'vkjp_experienceRequirements' => array(
-				'label'       => __( 'Experience Requirements', 'vk-google-job-posting-manager' ),
-				'type'        => 'textarea',
-				'description' => __( 'Please enter the description of experience requirements. If you have the one.', 'vk-google-job-posting-manager' ),
-				'required'    => false,
-			),
-			'vkjp_specialCommitments'     => array(
-				'label'       => __( 'Special Commitments', 'vk-google-job-posting-manager' ),
-				'type'        => 'textarea',
-				'description' => __( 'Please enter the description of special commitments', 'vk-google-job-posting-manager' ),
 				'required'    => false,
 			),
 			'vkjp_employmentType'         => array(
@@ -206,7 +170,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 				'required'    => false,
 			),
 			'vkjp_postalCode'             => array(
-				'label'       => __( 'Postal Code of ork Location', 'vk-google-job-posting-manager' ),
+				'label'       => __( 'Postal Code of work Location', 'vk-google-job-posting-manager' ),
 				'type'        => 'text',
 				'description' => __( 'Example : 94043. Do not include hyphens. ', 'vk-google-job-posting-manager' ),
 				'required'    => false,
@@ -229,16 +193,22 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 				'description' => __( 'Example : Mountain View', 'vk-google-job-posting-manager' ),
 				'required'    => false,
 			),
-			'vkjp_streetAddress'          => array(
+			'vkjp_streetAddress' => array(
 				'label'       => __( 'Street Address of Work Location', 'vk-google-job-posting-manager' ),
 				'type'        => 'text',
 				'description' => __( 'Example : 1600 Amphitheatre Pkwy', 'vk-google-job-posting-manager' ),
 				'required'    => false,
 			),
-			'vkjp_validThrough'           => array(
+			'vkjp_validThrough'  => array(
 				'label'       => __( 'Expiry Date', 'vk-google-job-posting-manager' ),
 				'type'        => 'datepicker',
 				'description' => __( 'Please enter expiry date. If you are not sure about expiry date, please leave it blank.', 'vk-google-job-posting-manager' ),
+				'required'    => false,
+			),
+			'vkjp_identifier'    => array(
+				'label'       => __( 'Company Identifier Number', 'vk-google-job-posting-manager' ),
+				'type'        => 'text',
+				'description' => __( 'The hiring organization\'s unique identifier number for the job posting. <br> Please enter a unique number id whatever you want. Example : 1234567', 'vk-google-job-posting-manager' ),
 				'required'    => false,
 			),
 		);

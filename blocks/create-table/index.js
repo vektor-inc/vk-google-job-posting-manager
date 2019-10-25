@@ -10,7 +10,7 @@ const {InspectorControls} = wp.editor;
 registerBlockType('vk-google-job-posting-manager/create-table', {
 
 		title: __( 'Job Posting', 'vk-google-job-posting-manager' ),
-		category: 'widgets',
+		category: 'vk-blocks-cat',
 		attributes: {
 			post_id: {
 				type: 'number',

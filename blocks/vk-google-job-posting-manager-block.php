@@ -89,6 +89,28 @@ add_action( 'init', 'vgjpm_block_init' );
 
 
 /**
+ * Add vk-block's category.
+ */
+if ( ! function_exists( 'vkblocks_blocks_categories' ) ) {
+	function vkblocks_blocks_categories( $categories, $post ) {
+
+		return array_merge(
+			$categories,
+			array(
+				array(
+					'slug'  => 'vk-blocks-cat',
+					'title' => apply_filters( 'vk_blocks_prefix', 'VK ' ) . __( 'Blocks（Beta）', 'vk-blocks' ),
+					'icon'  => '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0V0z" /><path d="M19 13H5v-2h14v2z" /></svg>',
+				)
+			)
+
+		);
+	}
+	add_filter( 'block_categories', 'vkblocks_blocks_categories', 10, 2 );
+}
+
+
+/**
  * @param $args | array( 'FULL_TIME', 'PART_TIME', );
  *
  * @return string | 'FULL TIME, PART TIME'
@@ -294,21 +316,6 @@ function vgjpm_render_job_posting_info( $post_id, $style, $className ) {
 
 	$html .= $tags['title_before'] . __( 'Employment Type', 'vk-google-job-posting-manager' ) . $tags['title_after'];
 	$html .= $tags['content_before'] . vgjpm_get_label_of_array( $custom_fields['vkjp_employmentType'] ) . $tags['content_after'];
-
-	$html .= $tags['title_before'] . __( 'Incentive Compensation', 'vk-google-job-posting-manager' ) . $tags['title_after'];
-	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_incentiveCompensation'] ) . $tags['content_after'];
-
-	$html .= $tags['title_before'] . __( 'Salary Raise', 'vk-google-job-posting-manager' ) . $tags['title_after'];
-	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_salaryRaise'] ) . $tags['content_after'];
-
-	$html .= $tags['title_before'] . __( 'Work Hours', 'vk-google-job-posting-manager' ) . $tags['title_after'];
-	$html .= $tags['content_before'] . esc_html( $custom_fields['vkjp_workHours'] ) . $tags['content_after'];
-
-	$html .= $tags['title_before'] . __( 'Experience Requirements', 'vk-google-job-posting-manager' ) . $tags['title_after'];
-	$html .= $tags['content_before'] . nl2br( esc_textarea( $custom_fields['vkjp_experienceRequirements'] ) ) . $tags['content_after'];
-
-	$html .= $tags['title_before'] . __( 'Special Commitments', 'vk-google-job-posting-manager' ) . $tags['title_after'];
-	$html .= $tags['content_before'] . nl2br( esc_textarea( $custom_fields['vkjp_specialCommitments'] ) ) . $tags['content_after'];
 
 	$html .= $tags['outer_after'];
 	$html .= '</div>';
