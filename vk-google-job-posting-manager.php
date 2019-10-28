@@ -11,11 +11,9 @@
  *
  * @package         Vk_Google_Job_Posting_Manager
  */
-
-
- /*
-  Setting & load file
- /*-------------------------------------------*/
+/*
+ Setting & load file
+/*-------------------------------------------*/
 $vgjpm_prefix = 'common_';
 $data         = get_file_data(
 	__FILE__, array(
@@ -106,6 +104,7 @@ function vgjpm_get_common_customfields_config() {
 		'vkjp_salaryRaise',
 		'vkjp_unitText',
 		'vkjp_validThrough',
+		'vkjp_identifier'
 		// 'vkjp_experienceRequirements',
 	);
 	$labels_ordered = array();
@@ -137,6 +136,7 @@ function vgjpm_get_common_customfields_config() {
 		'vkjp_addressLocality',
 		'vkjp_streetAddress',
 		'vkjp_validThrough',
+		'vkjp_identifier'
 	);
 
 	foreach ( $labels_ordered as $key => $value ) {
@@ -402,14 +402,63 @@ function vgjpm_save_check_list() {
 function vgjpm_print_jsonLD_in_footer() {
 
 	$post_id = get_the_ID();
-
 	$custom_fields = vgjpm_get_custom_fields( $post_id );
-
 	echo vgjpm_generate_jsonLD( $custom_fields );
 
 }
 add_action( 'wp_print_footer_scripts', 'vgjpm_print_jsonLD_in_footer' );
 
+
+/**
+ * Send sitemap.xml to google when it's existed.
+ * @param $post_id
+ *
+ * @return bool
+ */
+function vgjpm_send_sitemap_to_google( $post_id ) {
+
+	//postmeta(vkjp_title)が空の時リターン。（値が存在しても、初めてtitleに値入力した時は弾かれる）
+	$result = get_post_meta( $post_id, 'vkjp_title', true );
+	if ( empty( $result ) ) {
+		return false;
+	}
+
+	$google_url  = "http://www.google.com/ping?sitemap=";
+	$sitemap_url = home_url() . "/sitemap.xml";
+	$status_code = wp_remote_retrieve_response_code( wp_remote_get( $sitemap_url ) );
+
+	if ( $status_code === 200 ) {
+		wp_remote_get( $google_url . $sitemap_url );
+	}
+}
+
+add_action( 'wp_insert_post', 'vgjpm_send_sitemap_to_google', 10, 1 );
+
+/**
+ * Escape Javascript. Remove <script></script> from target html.
+ * @param $html
+ *
+ * @return mixed
+ */
+function vgjpm_esc_script($html) {
+
+	$needles = array("<script>", "</script>", "script");
+	$return = str_replace($needles, "", $html);
+	return $return;
+}
+
+/**
+ * Remove newline character.
+ *
+ * @param $html
+ *
+ * @return mixed
+ */
+function vgjpm_esc_newline( $html ) {
+
+	$return = str_replace(array("\r\n","\n","\r"), '', $html);
+	return $return;
+}
 
 function vgjpm_generate_jsonLD( $custom_fields ) {
 
@@ -419,18 +468,29 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 
 	$custom_fields = vgjpm_use_common_values( $custom_fields, 'json' );
 
+	if ( $custom_fields['vkjp_validThrough'] ) {
+		$custom_fields['vkjp_validThrough'] = date( 'Y-m-d', strtotime( $custom_fields['vkjp_validThrough'] ) );
+	}
+
+	if ( isset( $custom_fields['vkjp_employmentType'] ) && strpos( $custom_fields['vkjp_employmentType'], ',' ) === false ) {
+		$custom_fields['vkjp_employmentType'] = '"' . $custom_fields['vkjp_employmentType'] . '"';
+	} else {
+		$custom_fields['vkjp_employmentType'] = '["' . $custom_fields['vkjp_employmentType'] . '"]';
+	}
+
 	$JSON = '<script type="application/ld+json"> {
   "@context" : "https://schema.org/",
   "@type" : "JobPosting",
   "title" : "' . esc_attr( $custom_fields['vkjp_title'] ) . '",
-  "description" : "' . esc_attr( $custom_fields['vkjp_description'] ) . '",
+  "description" : "' . vgjpm_esc_newline( vgjpm_esc_script( $custom_fields['vkjp_description'] ) ) . '",
   "datePosted" : "' . esc_attr( $custom_fields['vkjp_datePosted'] ) . '",
   "validThrough" : "' . esc_attr( $custom_fields['vkjp_validThrough'] ) . '",
-  "employmentType" : ["' . $custom_fields['vkjp_employmentType'] . '"],
-  "specialCommitments" : "' . esc_attr( $custom_fields['vkjp_specialCommitments'] ) . '",
-  "experienceRequirements" : "' . esc_attr( $custom_fields['vkjp_experienceRequirements'] ) . '",
-  "workHours" : "' . esc_attr( $custom_fields['vkjp_workHours'] ) . '",
-  "incentiveCompensation" : "' . esc_attr( $custom_fields['vkjp_incentiveCompensation'] ) . '",
+  "employmentType" : ' . $custom_fields['vkjp_employmentType'] . ',
+  "identifier": {
+    "@type": "PropertyValue",
+    "name":  "' . esc_attr( $custom_fields['vkjp_name'] ) . '",
+    "value": "' . esc_attr( $custom_fields['vkjp_identifier'] ) . '"
+  },
   "hiringOrganization" : {
     "@type" : "Organization",
     "name" : "' . esc_attr( $custom_fields['vkjp_name'] ) . '",
@@ -458,7 +518,6 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
     "currency": "' . esc_attr( $custom_fields['vkjp_currency'] ) . '",
     "value": {
       "@type": "QuantitativeValue",
-      "value": ' . esc_attr( $custom_fields['vkjp_value'] ) . ',
       "minValue": ' . esc_attr( $custom_fields['vkjp_minValue'] ) . ',
       "maxValue": ' . esc_attr( $custom_fields['vkjp_maxValue'] ) . ',
       "unitText": "' . esc_attr( $custom_fields['vkjp_unitText'] ) . '"

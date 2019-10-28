@@ -60,7 +60,8 @@ function vgjpm_get_custom_fields( $post_id ) {
 	}
 
 	if ( isset( $post->post_date ) ) {
-		$custom_fields['vkjp_datePosted'] = $post->post_date;
+
+		$custom_fields['vkjp_datePosted'] = date( "Y-m-d", strtotime( $post->post_date ) );
 	}
 
 	return $custom_fields;
@@ -92,9 +93,6 @@ function vgjpm_use_common_values( $custom_fields, $output_type ) {
 	if ( $output_type == 'json' ) {
 		// Array to string.
 		$custom_fields = vgjpm_array_to_string( $custom_fields );
-
-	} elseif ( $output_type == 'block' ) {
-
 	}
 
 	return $custom_fields;
