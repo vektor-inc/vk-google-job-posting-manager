@@ -21,7 +21,7 @@ gulp.task('sass', function () {
 							'./assets/css/'
 					]
 			}))
-			.pipe($.autoprefixer({browsers: ['last 2 version', '> 5%']}))
+			.pipe($.autoprefixer())
 			.pipe(gulp.dest('./assets/css/'));
 });
 gulp.task('sass_block', function () {
@@ -37,7 +37,7 @@ gulp.task('sass_block', function () {
                 './blocks/create-table/'
             ]
         }))
-        .pipe($.autoprefixer({browsers: ['last 2 version', '> 5%']}))
+        .pipe($.autoprefixer())
         .pipe($.sourcemaps.write('./map'))
         .pipe(gulp.dest('./blocks/create-table/'))
 });
@@ -51,7 +51,7 @@ gulp.task('js', function () {
 
 // replace_text_domain ////////////////////////////////////////////////
 gulp.task('replace_text_domain', function () {
-		gulp.src(['./inc/custom-field-builder/package/*'])
+		return gulp.src(['./inc/custom-field-builder/package/*'])
 				.pipe(replace('custom_field_builder_textdomain', 'vk-google-job-posting-manager'))
 				.pipe(gulp.dest('./inc/custom-field-builder/package/'));
 });
@@ -59,16 +59,16 @@ gulp.task('replace_text_domain', function () {
 
 // watch
 gulp.task('watch', function () {
-    gulp.watch('./blocks/create-table/*.js', ['js']);
-    gulp.watch('./blocks/create-table/*.scss', ['sass_block']);
-		gulp.watch('./assets/_scss/*.scss', ['sass']);
+    gulp.watch('./blocks/create-table/*.js', gulp.parallel('js'));
+    gulp.watch('./blocks/create-table/*.scss', gulp.parallel('sass_block'));
+		gulp.watch('./assets/_scss/*.scss', gulp.parallel('sass'));
 });
 
 // Build
-gulp.task('build', ['js', 'sass', 'replace_text_domain']);
+gulp.task('build', gulp.series('js', 'sass', 'replace_text_domain'));
 
 // Default Tasks
-gulp.task('default', ['watch']);
+gulp.task('default', gulp.series('watch'));
 
 // copy dist ////////////////////////////////////////////////
 

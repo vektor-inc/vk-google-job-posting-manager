@@ -1,3 +1,24 @@
-.vk_jobInfo-type-stripe table{border-top:none}.vk_jobInfo-type-stripe th,.vk_jobInfo-type-stripe td{border:none}.vk_jobInfo-type-stripe tr:nth-of-type(odd){background-color:rgba(0,0,0,0.05)}.vk_jobInfo_table th,.vk_jobInfo_table td{padding:10px;font-size:14px}.vk_jobInfo_amount_before,.vk_jobInfo_amount_figure,.vk_jobInfo_amount_after{margin-right:3px;display:inline-block}
+/**
+ * The following styles get applied both on the front of your site and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.vk_jobInfo-type-stripe table {
+  border-top: none;
+}
+.vk_jobInfo-type-stripe th, .vk_jobInfo-type-stripe td {
+  border: none;
+}
+.vk_jobInfo-type-stripe tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.vk_jobInfo_table th, .vk_jobInfo_table td {
+  padding: 10px;
+  font-size: 14px;
+}
+.vk_jobInfo_amount_before, .vk_jobInfo_amount_figure, .vk_jobInfo_amount_after {
+  margin-right: 3px;
+  display: inline-block;
+}
 
-/*# sourceMappingURL=map/style.css.map */
+/*# sourceMappingURL=style.css.map */
