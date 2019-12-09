@@ -3,8 +3,8 @@ Contributors: vektor-inc,kurudrive,naoki0h
 Donate link:
 Tags: Google Job Posting, Recruitment, Gutenberg.
 Requires at least: 5.0
-Tested up to: 5.1.1
-Stable tag: 0.6.0
+Tested up to: 5.2.4
+Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,11 @@ You can overwrite common fields value by fill out each post's custom fields.
 4. You can use common fields to omit to enter duplicated information.
 
 == Changelog ==
+
+= 1.0.0 =
+* Add the identifier input form.
+* Removed Incentive Compensation, Salary Raise, Work Hours, Experience Requirements, and Special Commitment input form for optimization.
+* Fix bugs.
 
 = 0.6.0 =
 [ Add filter ] Add Job info table html tag filter and more...
