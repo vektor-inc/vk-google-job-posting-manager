@@ -16,7 +16,8 @@
 /*-------------------------------------------*/
 $vgjpm_prefix = 'common_';
 $data         = get_file_data(
-	__FILE__, array(
+	__FILE__,
+	array(
 		'version'    => 'Version',
 		'textdomain' => 'Text Domain',
 	)
@@ -26,10 +27,10 @@ $data         = get_file_data(
  define( 'VGJPM_URL', plugin_dir_url( __FILE__ ) );
  define( 'VGJPM_DIR', plugin_dir_path( __FILE__ ) );
 
-require_once( dirname( __FILE__ ) . '/functions-tags.php' );
-require_once( dirname( __FILE__ ) . '/inc/custom-field-builder/package/custom-field-builder.php' );
-require_once( dirname( __FILE__ ) . '/inc/custom-field-builder/custom-field-builder-config.php' );
-require_once( dirname( __FILE__ ) . '/blocks/vk-google-job-posting-manager-block.php' );
+require_once dirname( __FILE__ ) . '/functions-tags.php';
+require_once dirname( __FILE__ ) . '/inc/custom-field-builder/package/custom-field-builder.php';
+require_once dirname( __FILE__ ) . '/inc/custom-field-builder/custom-field-builder-config.php';
+require_once dirname( __FILE__ ) . '/blocks/vk-google-job-posting-manager-block.php';
 
 
 function vgjpm_load_textdomain() {
@@ -44,7 +45,7 @@ register_activation_hook( __FILE__, 'vgjpm_activate' );
 
 $flag_custom_posttype = get_option( 'vgjpm_create_jobpost_posttype' );
 if ( isset( $flag_custom_posttype ) && $flag_custom_posttype == 'true' ) {
-	require_once( dirname( __FILE__ ) . '/inc/custom-posttype-builder.php' );
+	require_once dirname( __FILE__ ) . '/inc/custom-posttype-builder.php';
 }
 
 function vgjpm_add_setting_menu() {
@@ -77,7 +78,7 @@ add_action( 'admin_enqueue_scripts', 'vgjpm_admin_css' );
 
 function vgjpm_get_common_customfields_config() {
 
-	$VGJPM_Custom_Field_Job_Post = new VGJPM_Custom_Field_Job_Post;
+	$VGJPM_Custom_Field_Job_Post = new VGJPM_Custom_Field_Job_Post();
 	$labels                      = $VGJPM_Custom_Field_Job_Post->custom_fields_array();
 
 	// 共通設定ページで、共通になりそうな項目が上になるように並び替え
@@ -101,7 +102,7 @@ function vgjpm_get_common_customfields_config() {
 		'vkjp_salaryRaise',
 		'vkjp_unitText',
 		'vkjp_validThrough',
-		'vkjp_identifier'
+		'vkjp_identifier',
 		// 'vkjp_experienceRequirements',
 	);
 	$labels_ordered = array();
@@ -133,7 +134,7 @@ function vgjpm_get_common_customfields_config() {
 		'vkjp_addressLocality',
 		'vkjp_streetAddress',
 		'vkjp_validThrough',
-		'vkjp_identifier'
+		'vkjp_identifier',
 	);
 
 	foreach ( $labels_ordered as $key => $value ) {
@@ -350,7 +351,7 @@ function vgjpm_save_data( $common_customfields ) {
 				update_option( $checkbox_key, vgjpm_sanitize_arr( $_POST[ $checkbox_key ] ) );
 
 			} else {
-				update_option( $checkbox_key, [] );
+				update_option( $checkbox_key, array() );
 
 			}
 		}
@@ -398,7 +399,7 @@ function vgjpm_save_check_list() {
 
 function vgjpm_print_jsonLD_in_footer() {
 
-	$post_id = get_the_ID();
+	$post_id       = get_the_ID();
 	$custom_fields = vgjpm_get_custom_fields( $post_id );
 	echo vgjpm_generate_jsonLD( $custom_fields );
 
@@ -408,20 +409,21 @@ add_action( 'wp_print_footer_scripts', 'vgjpm_print_jsonLD_in_footer' );
 
 /**
  * Send sitemap.xml to google when it's existed.
+ *
  * @param $post_id
  *
  * @return bool
  */
 function vgjpm_send_sitemap_to_google( $post_id ) {
 
-	//postmeta(vkjp_title)が空の時リターン。（値が存在しても、初めてtitleに値入力した時は弾かれる）
+	// postmeta(vkjp_title)が空の時リターン。（値が存在しても、初めてtitleに値入力した時は弾かれる）
 	$result = get_post_meta( $post_id, 'vkjp_title', true );
 	if ( empty( $result ) ) {
 		return false;
 	}
 
-	$google_url  = "http://www.google.com/ping?sitemap=";
-	$sitemap_url = home_url() . "/sitemap.xml";
+	$google_url  = 'http://www.google.com/ping?sitemap=';
+	$sitemap_url = home_url() . '/sitemap.xml';
 	$status_code = wp_remote_retrieve_response_code( wp_remote_get( $sitemap_url ) );
 
 	if ( $status_code === 200 ) {
@@ -433,14 +435,15 @@ add_action( 'wp_insert_post', 'vgjpm_send_sitemap_to_google', 10, 1 );
 
 /**
  * Escape Javascript. Remove <script></script> from target html.
+ *
  * @param $html
  *
  * @return mixed
  */
-function vgjpm_esc_script($html) {
+function vgjpm_esc_script( $html ) {
 
-	$needles = array("<script>", "</script>", "script");
-	$return = str_replace($needles, "", $html);
+	$needles = array( '<script>', '</script>', 'script' );
+	$return  = str_replace( $needles, '', $html );
 	return $return;
 }
 
@@ -453,7 +456,7 @@ function vgjpm_esc_script($html) {
  */
 function vgjpm_esc_newline( $html ) {
 
-	$return = str_replace(array("\r\n","\n","\r"), '', $html);
+	$return = str_replace( array( "\r\n", "\n", "\r" ), '', $html );
 	return $return;
 }
 
