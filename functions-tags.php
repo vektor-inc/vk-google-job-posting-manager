@@ -50,8 +50,12 @@ function vgjpm_get_custom_fields( $post_id ) {
 	$post          = get_post( $post_id );
 	$custom_fields = get_post_custom( $post_id );
 
-	foreach ( (array) $custom_fields as $key => $value ) {
+	if(!$custom_fields){
+		return [];
+	}
 
+	foreach ( (array) $custom_fields as $key => $value ) {
+		
 		$custom_fields[ $key ] = maybe_unserialize( $value[0] );
 
 		if ( substr_count( $key, 'vkjp_' ) == 0 ) {

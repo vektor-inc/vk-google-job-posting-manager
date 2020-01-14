@@ -7,7 +7,7 @@
  * Author URI:      https://www.vektor-inc.co.jp
  * Text Domain:     vk-google-job-posting-manager
  * Domain Path:     /languages
- * Version:         0.6.0
+ * Version:         1.0.0
  *
  * @package         Vk_Google_Job_Posting_Manager
  */
@@ -38,9 +38,6 @@ function vgjpm_load_textdomain() {
 add_action( 'plugins_loaded', 'vgjpm_load_textdomain' );
 
 function vgjpm_activate() {
-
-	load_plugin_textdomain( 'vk-google-job-posting-manager', false, 'vk-google-job-posting-manager/languages' );
-	flush_rewrite_rules();
 	update_option( 'vgjpm_create_jobpost_posttype', 'true' );
 }
 register_activation_hook( __FILE__, 'vgjpm_activate' );
