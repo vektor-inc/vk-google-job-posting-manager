@@ -38,9 +38,6 @@ function vgjpm_load_textdomain() {
 add_action( 'plugins_loaded', 'vgjpm_load_textdomain' );
 
 function vgjpm_activate() {
-
-	load_plugin_textdomain( 'vk-google-job-posting-manager', false, 'vk-google-job-posting-manager/languages' );
-	flush_rewrite_rules();
 	update_option( 'vgjpm_create_jobpost_posttype', 'true' );
 }
 register_activation_hook( __FILE__, 'vgjpm_activate' );
