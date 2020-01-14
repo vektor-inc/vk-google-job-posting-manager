@@ -113,6 +113,8 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 				'type'        => 'select',
 				'options'     => array(
 					'HOUR'  => __( 'Per hour', 'vk-google-job-posting-manager' ),
+					'DAY'   => __( 'Per Day', 'vk-google-job-posting-manager' ),
+					'WEEK'  => __( 'Per Week', 'vk-google-job-posting-manager' ),
 					'MONTH' => __( 'Per month', 'vk-google-job-posting-manager' ),
 					'YEAR'  => __( 'Per year', 'vk-google-job-posting-manager' ),
 				),
