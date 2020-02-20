@@ -23,12 +23,12 @@ jQuery(document).ready(function($){
             return;
         }
         custom_uploader = wp.media({
-            title: '画像を選択',
+            title: 'Select image',
             // library: {
             //     type: 'image'
             // },
             button: {
-                text: '画像を選択'
+                text: 'Select image'
             },
             multiple: false, // falseにすると画像を1つしか選択できなくなる
         });
