@@ -13,8 +13,8 @@
  * @see https://wordpress.org/gutenberg/handbook/blocks/writing-your-first-block-type/#enqueuing-block-scripts
  */
 
-require_once( dirname( dirname( __FILE__ ) ) . '/vk-google-job-posting-manager.php' );
-require_once( dirname( dirname( __FILE__ ) ) . '/inc/custom-field-builder/custom-field-builder-config.php' );
+require_once dirname( dirname( __FILE__ ) ) . '/vk-google-job-posting-manager.php';
+require_once dirname( dirname( __FILE__ ) ) . '/inc/custom-field-builder/custom-field-builder-config.php';
 
 function vgjpm_block_init() {
 	// Skip block registration if Gutenberg is not enabled/merged.
@@ -60,24 +60,25 @@ function vgjpm_block_init() {
 	}
 
 	register_block_type(
-		'vk-google-job-posting-manager/create-table', array(
+		'vk-google-job-posting-manager/create-table',
+		array(
 			'editor_script'   => 'vk-google-job-posting-manager-block-editor',
 			'editor_style'    => 'vk-google-job-posting-manager-block-editor',
 			'style'           => 'vk-google-job-posting-manager-block',
-			'attributes'      => [
-				'style'     => [
+			'attributes'      => array(
+				'style'     => array(
 					'type'    => 'string',
 					'default' => 'default',
-				],
-				'className' => [
+				),
+				'className' => array(
 					'type'    => 'string',
 					'default' => '',
-				],
-				'post_id'   => [
+				),
+				'post_id'   => array(
 					'type'    => 'number',
 					'default' => 0,
-				],
-			],
+				),
+			),
 			'render_callback' => function ( $attributes ) {
 				return vgjpm_render_job_posting_info( $attributes['post_id'], $attributes['style'], $attributes['className'] );
 			},
@@ -101,9 +102,8 @@ if ( ! function_exists( 'vkblocks_blocks_categories' ) ) {
 					'slug'  => 'vk-blocks-cat',
 					'title' => apply_filters( 'vk_blocks_prefix', 'VK ' ) . __( 'Blocks（Beta）', 'vk-blocks' ),
 					'icon'  => '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0V0z" /><path d="M19 13H5v-2h14v2z" /></svg>',
-				)
+				),
 			)
-
 		);
 	}
 	add_filter( 'block_categories', 'vkblocks_blocks_categories', 10, 2 );
@@ -138,7 +138,7 @@ function vgjpm_get_labels( $args ) {
 		return false;
 	}
 
-	$VGJPM_CFJP = new VGJPM_Custom_Field_Job_Post;
+	$VGJPM_CFJP = new VGJPM_Custom_Field_Job_Post();
 	$default    = $VGJPM_CFJP->custom_fields_array();
 	$return     = array();
 
