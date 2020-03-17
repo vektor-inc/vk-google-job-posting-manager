@@ -31,7 +31,7 @@ require_once dirname( __FILE__ ) . '/functions-tags.php';
 require_once dirname( __FILE__ ) . '/inc/custom-field-builder/package/custom-field-builder.php';
 require_once dirname( __FILE__ ) . '/inc/custom-field-builder/custom-field-builder-config.php';
 require_once dirname( __FILE__ ) . '/blocks/vk-google-job-posting-manager-block.php';
-
+require_once dirname( __FILE__ ) . '/inc/template-tags/package/template-tags.php';
 
 function vgjpm_load_textdomain() {
 	load_plugin_textdomain( 'vk-google-job-posting-manager', false, 'vk-google-job-posting-manager/languages' );
