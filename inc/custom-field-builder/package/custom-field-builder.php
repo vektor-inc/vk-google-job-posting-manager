@@ -34,6 +34,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 			wp_register_script( 'datepicker', self::admin_directory_url() . 'js/datepicker.js', array( 'jquery', 'jquery-ui-datepicker' ), self::$version, true );
 			wp_enqueue_script( 'datepicker' );
 			wp_register_script( 'vk_mediauploader', self::admin_directory_url() . 'js/mediauploader.js', array( 'jquery' ), self::$version, true );
+			wp_localize_script( 'vk_mediauploader', 'vk_cfb_select_image', __( 'Select image', 'vk-google-job-posting-manager' ) );
 			wp_enqueue_script( 'vk_mediauploader' );
 			wp_enqueue_script( 'flexible-table', self::admin_directory_url() . 'js/flexible-table.js', array( 'jquery', 'jquery-ui-sortable' ), self::$version, true );
 			wp_enqueue_style( 'cf-builder-style', self::admin_directory_url() . 'css/cf-builder.css', array(), self::$version, 'all' );
