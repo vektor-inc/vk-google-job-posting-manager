@@ -33,7 +33,7 @@
     "gulp-plumber": "^1.2.1",
     "gulp-replace": "^1.0.0",
     "gulp-sourcemaps": "^2.6",
-    "npm-check-updates": "^3.1.25",
+    "npm-check-updates": "^3.2.2",
     "run-sequence": "^2.2.1",
     "vinyl-named": "^1.1.0",
     "webpack": "^4.41.2",
@@ -41,11 +41,11 @@
     "webpack-stream": "^5.2.1"
   },
   "dependencies": {
-    "@wordpress/i18n": "^3.6.1",
+    "@wordpress/i18n": "^3.16.0",
     "gulp-autoprefixer": "^7.0.1",
     "gulp-clean-css": "^4.2.0",
     "gulp-sass": "^4.0.2",
-    "po2json": "^1.0.0-alpha",
+    "po2json": "^1.0.0-beta-3",
     "react": "^16.11.0",
     "react-dom": "^16.11.0"
   }

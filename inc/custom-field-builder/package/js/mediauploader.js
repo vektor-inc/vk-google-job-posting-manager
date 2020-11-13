@@ -1,6 +1,7 @@
 /*-------------------------------------------*/
 /* メディアアップローダー
 /*-------------------------------------------*/
+import { __ } from wp.i18n;
 jQuery(document).ready(function($){
     var custom_uploader;
     // var media_id = new Array(2);　//配列の宣言
@@ -23,12 +24,12 @@ jQuery(document).ready(function($){
             return;
         }
         custom_uploader = wp.media({
-            title: 'Select image',
+            title: __( 'Select image', 'vk-google-job-posting-manager' ),
             // library: {
             //     type: 'image'
             // },
             button: {
-                text: 'Select image'
+                text: __( 'Select image', 'vk-google-job-posting-manager' )
             },
             multiple: false, // falseにすると画像を1つしか選択できなくなる
         });
