@@ -2,7 +2,7 @@
 Contributors: vektor-inc,kurudrive,naoki0h
 Donate link:
 Tags: Google Job Posting, Recruitment, Gutenberg.
-Requires at least: 5.0
+Requires at least: 5.3
 Tested up to: 5.2.4
 Stable tag: 1.1.6
 License: GPLv2 or later
@@ -46,7 +46,7 @@ You can overwrite common fields value by fill out each post's custom fields.
 == Changelog ==
 
 = 1.1.2 =
-* [ Bug fix ] Description html escaped 
+* [ Bug fix ] Description html escaped
 
 = 1.1.1 =
 * [ Bug fix ] Translation first aid
