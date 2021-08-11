@@ -4,7 +4,7 @@ Donate link:
 Tags: Google Job Posting, Recruitment, Gutenberg.
 Requires at least: 5.3
 Tested up to: 5.2.4
-Stable tag: 1.1.6
+Stable tag: 1.1.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,9 @@ You can overwrite common fields value by fill out each post's custom fields.
 4. You can use common fields to omit to enter duplicated information.
 
 == Changelog ==
+
+= 1.1.7 =
+* [ Bug fix ] Cope with 1.1.7
 
 = 1.1.2 =
 * [ Bug fix ] Description html escaped
