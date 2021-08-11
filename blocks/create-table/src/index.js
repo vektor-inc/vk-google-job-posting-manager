@@ -23,12 +23,11 @@ registerBlockType( 'vk-google-job-posting-manager/create-table', {
 		},
 	},
 
-	edit( { attributes, setAttributes, className } ) {
+	edit( { attributes, setAttributes } ) {
 		const { style } = attributes;
 
 		//Get postID from dom.
-		attributes.post_id = document.getElementById( '#post_ID' ).value;
-		attributes.className = className;
+		attributes.post_id = document.getElementById( 'post_ID' ).value;
 
 		return (
 			<>
