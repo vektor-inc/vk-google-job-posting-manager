@@ -22,22 +22,16 @@ function vgjpm_block_init() {
 		return;
 	}
 	$dir = dirname( __FILE__ );
-
-	$index_js = 'create-table/build.js';
+	$asset_file = include plugin_dir_path( __FILE__ ) . '/create-table/build/block.asset.php';
+	$index_js =  'create-table/build/block-build.js';
 	wp_register_script(
 		'vk-google-job-posting-manager-block-editor',
 		plugins_url( $index_js, __FILE__ ),
-		array(
-			'wp-blocks',
-			'wp-i18n',
-			'wp-element',
-			'wp-components',
-			'wp-editor',
-		),
+		$asset_file,
 		filemtime( "$dir/$index_js" )
 	);
 
-	$editor_css = 'create-table/style.css';
+	$editor_css = 'create-table/build/style.css';
 	wp_register_style(
 		'vk-google-job-posting-manager-block-editor',
 		plugins_url( $editor_css, __FILE__ ),
@@ -45,19 +39,13 @@ function vgjpm_block_init() {
 		filemtime( "$dir/$editor_css" )
 	);
 
-	$style_css = 'create-table/style.css';
+	$style_css = 'create-table/build/style.css';
 	wp_register_style(
 		'vk-google-job-posting-manager-block',
 		plugins_url( $style_css, __FILE__ ),
 		array(),
 		filemtime( "$dir/$style_css" )
 	);
-
-	wp_set_script_translations( 'vk-google-job-posting-manager-block-editor', 'vk-google-job-posting-manager', VGJPM_DIR . '/languages/' );
-
-	if ( function_exists( 'wp_set_script_translations' ) ) {
-		wp_set_script_translations( 'vk-google-job-posting-manager-block-editor', 'vk-google-job-posting-manager', VGJPM_DIR . '/languages/' );
-	}
 
 	register_block_type(
 		'vk-google-job-posting-manager/create-table',
@@ -109,7 +97,12 @@ if ( ! function_exists( 'vkblocks_blocks_categories' ) ) {
 		}
 		return $categories;
 	}
-	add_filter( 'block_categories', 'vkblocks_blocks_categories', 10, 2 );
+	// ver5.8.0 block_categories_all
+	if ( function_exists( 'get_default_block_categories' ) && function_exists( 'get_block_editor_settings' ) ) {
+		add_filter( 'block_categories_all', 'vkblocks_blocks_categories', 10, 2 );
+	} else {
+		add_filter( 'block_categories', 'vkblocks_blocks_categories', 10, 2 );
+	}
 }
 
 

@@ -5,7 +5,7 @@ const {__} = wp.i18n;
 const { registerBlockType } = wp.blocks;
 const {ServerSideRender, PanelBody, SelectControl,BaseControl} = wp.components;
 const {Fragment} = wp.element;
-const {InspectorControls} = wp.editor;
+const {InspectorControls} = wp.blockEditor;
 
 registerBlockType('vk-google-job-posting-manager/create-table', {
 
