@@ -499,12 +499,7 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 		"name" : "' . esc_attr( $custom_fields['vkjp_name'] ) . '",
 		"sameAs" : "' . esc_url( $custom_fields['vkjp_sameAs'] ) . '",
 		"logo" : "' . esc_url( $custom_fields['vkjp_logo'] ) . '"
-	},';
-	if ( $custom_fields['vkjp_jobLocationType'] ) {
-		$JSON .= '
-	"jobLocationType": "' . esc_attr( $custom_fields['vkjp_jobLocationType'] ) . '",';
-	} else {
-		$JSON .= '
+	},
 	"jobLocation": {
 		"@type": "Place",
 		"address": {
@@ -516,6 +511,9 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 			"addressCountry": "' . esc_attr( $custom_fields['vkjp_addressCountry'] ) . '"
 		}
 	},';
+	if ( $custom_fields['vkjp_jobLocationType'] ) {
+		$JSON .= '
+	"jobLocationType": "' . esc_attr( $custom_fields['vkjp_jobLocationType'] ) . '",';
 	}
 	$JSON .= '
 	"baseSalary": {
