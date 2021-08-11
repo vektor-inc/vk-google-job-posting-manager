@@ -68,7 +68,6 @@ function vgjpm_block_init() {
 			},
 		)
 	);
-
 }
 add_action( 'init', 'vgjpm_block_init' );
 
