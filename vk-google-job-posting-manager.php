@@ -527,9 +527,8 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 		}
 	}
 }
-
 </script>
 ';
-  
+
 	return $JSON;
 }
