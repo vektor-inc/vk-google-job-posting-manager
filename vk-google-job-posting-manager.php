@@ -405,7 +405,7 @@ function vgjpm_print_jsonLD_in_footer() {
 	echo vgjpm_generate_jsonLD( $custom_fields );
 
 }
-add_action( 'wp_print_footer_scripts', 'vgjpm_print_jsonLD_in_footer' );
+add_action( 'wp_head', 'vgjpm_print_jsonLD_in_footer' );
 
 
 /**
@@ -479,53 +479,58 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 		$custom_fields['vkjp_employmentType'] = '["' . $custom_fields['vkjp_employmentType'] . '"]';
 	}
 
-	$JSON = '<script type="application/ld+json"> {
-  "@context" : "https://schema.org/",
-  "@type" : "JobPosting",
-  "title" : "' . esc_attr( $custom_fields['vkjp_title'] ) . '",
-  "description" : "' . vgjpm_esc_newline( vgjpm_esc_script( $custom_fields['vkjp_description'] ) ) . '",
-  "datePosted" : "' . esc_attr( $custom_fields['vkjp_datePosted'] ) . '",
-  "validThrough" : "' . esc_attr( $custom_fields['vkjp_validThrough'] ) . '",
-  "employmentType" : ' . $custom_fields['vkjp_employmentType'] . ',
-  "identifier": {
-    "@type": "PropertyValue",
-    "name":  "' . esc_attr( $custom_fields['vkjp_name'] ) . '",
-    "value": "' . esc_attr( $custom_fields['vkjp_identifier'] ) . '"
-  },
-  "hiringOrganization" : {
-    "@type" : "Organization",
-    "name" : "' . esc_attr( $custom_fields['vkjp_name'] ) . '",
-    "sameAs" : "' . esc_url( $custom_fields['vkjp_sameAs'] ) . '",
-    "logo" : "' . esc_url( $custom_fields['vkjp_logo'] ) . '"
-  },
-  "jobLocation": {
-  "@type": "Place",
-    "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "' . esc_attr( $custom_fields['vkjp_streetAddress'] ) . '",
-    "addressLocality": "' . esc_attr( $custom_fields['vkjp_addressLocality'] ) . '",
-    "addressRegion": "' . esc_attr( $custom_fields['vkjp_addressRegion'] ) . '",
-    "postalCode": "' . esc_attr( $custom_fields['vkjp_postalCode'] ) . '",
-    "addressCountry": "' . esc_attr( $custom_fields['vkjp_addressCountry'] ) . '"
-    }
-  },';
-	if ( $custom_fields['vkjp_jobLocationType'] ) {
-		$JSON .= '
-  "jobLocationType": "' . esc_attr( $custom_fields['vkjp_jobLocationType'] ) . '",';
+	$JSON = '
+<script type="application/ld+json">
+{
+	"@context" : "https://schema.org/",
+	"@type" : "JobPosting",
+	"title" : "' . esc_attr( $custom_fields['vkjp_title'] ) . '",
+	"description" : "' . vgjpm_esc_newline( vgjpm_esc_script( $custom_fields['vkjp_description'] ) ) . '",
+	"identifier": {
+		"@type": "PropertyValue",
+		"name":  "' . esc_attr( $custom_fields['vkjp_name'] ) . '",
+		"value": "' . esc_attr( $custom_fields['vkjp_identifier'] ) . '"
+	},
+	"datePosted" : "' . esc_attr( $custom_fields['vkjp_datePosted'] ) . '",
+	"validThrough" : "' . esc_attr( $custom_fields['vkjp_validThrough'] ) . '",
+	"employmentType" : ' . $custom_fields['vkjp_employmentType'] . ',
+	"hiringOrganization" : {
+		"@type" : "Organization",
+		"name" : "' . esc_attr( $custom_fields['vkjp_name'] ) . '",
+		"sameAs" : "' . esc_url( $custom_fields['vkjp_sameAs'] ) . '",
+		"logo" : "' . esc_url( $custom_fields['vkjp_logo'] ) . '"
+	},';
+  if( $custom_fields['vkjp_jobLocationType'] ) {
+	$JSON .= '
+	"jobLocationType": "TELECOMMUTE",';
+  } else {
+	$JSON .= '
+	"jobLocation": {
+		"@type": "Place",
+		  "address": {
+		  "@type": "PostalAddress",
+		  "streetAddress": "' . esc_attr( $custom_fields['vkjp_streetAddress'] ) . '",
+		  "addressLocality": "' . esc_attr( $custom_fields['vkjp_addressLocality'] ) . '",
+		  "addressRegion": "' . esc_attr( $custom_fields['vkjp_addressRegion'] ) . '",
+		  "postalCode": "' . esc_attr( $custom_fields['vkjp_postalCode'] ) . '",
+		  "addressCountry": "' . esc_attr( $custom_fields['vkjp_addressCountry'] ) . '"
+		}
+	},';
 	}
 	$JSON .= '
-  "baseSalary": {
-    "@type": "MonetaryAmount",
-    "currency": "' . esc_attr( $custom_fields['vkjp_currency'] ) . '",
-    "value": {
-      "@type": "QuantitativeValue",
-      "minValue": ' . esc_attr( $custom_fields['vkjp_minValue'] ) . ',
-      "maxValue": ' . esc_attr( $custom_fields['vkjp_maxValue'] ) . ',
-      "unitText": "' . esc_attr( $custom_fields['vkjp_unitText'] ) . '"
-    }
-  }
+	"baseSalary": {
+		"@type": "MonetaryAmount",
+		"currency": "' . esc_attr( $custom_fields['vkjp_currency'] ) . '",
+		"value": {
+		"@type": "QuantitativeValue",
+			"minValue": ' . esc_attr( $custom_fields['vkjp_minValue'] ) . ',
+			"maxValue": ' . esc_attr( $custom_fields['vkjp_maxValue'] ) . ',
+			"unitText": "' . esc_attr( $custom_fields['vkjp_unitText'] ) . '"
+		}
+ 	}
 }
-</script>';
+</script>
+';
 
 	return $JSON;
 }
