@@ -520,9 +520,8 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 	"jobLocationType": "' . esc_attr( $custom_fields['vkjp_jobLocationType'] ) . '",
 	"applicantLocationRequirements": {
 		"@type": "Country",
-		"name":' . esc_attr( $custom_fields['vkjp_applicantLocationRequirements_name'] ) . '",
-	  },
-	}';
+		"name": "' . esc_attr( $custom_fields['vkjp_applicantLocationRequirements_name'] ) . '"
+	},';
 	}
 	$JSON .= '
 	"baseSalary": {
@@ -534,10 +533,10 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 			"maxValue": ' . esc_attr( $custom_fields['vkjp_maxValue'] ) . ',
 			"unitText": "' . esc_attr( $custom_fields['vkjp_unitText'] ) . '"
 		}
-	}';
+	},';
 	if ( $custom_fields['vkjp_directApply'] ) {
 		$JSON .= '
-	"directApply": true,';
+	"directApply": true';
 	}
 	$JSON .= '
 }
