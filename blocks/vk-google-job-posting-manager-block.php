@@ -287,7 +287,7 @@ function vgjpm_render_job_posting_info( $post_id, $style, $className ) {
 	$separater = __( ' - ', 'vk-google-job-posting-manager' );
 	$separater = apply_filters( 'vgjpm_salary_separater', $separater );
 
-	$html .= vgjpm_get_label_of_array( array( $custom_fields['vkjp_unitText'] ) );
+	$html .= vgjpm_get_label_of_array( array( $custom_fields['vkjp_unitText'] ) ) . ' ';
 	$html .= vgjpm_salary_and_currency( $args_min ) . $separater . vgjpm_salary_and_currency( $args_max );
 	$html .= $tags['content_after'];
 

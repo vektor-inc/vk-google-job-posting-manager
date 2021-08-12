@@ -104,6 +104,8 @@ function vgjpm_get_common_customfields_config() {
 		'vkjp_unitText',
 		'vkjp_validThrough',
 		'vkjp_identifier',
+		'vkjp_applicantLocationRequirements_name',
+		'vkjp_directApply'
 		// 'vkjp_experienceRequirements',
 	);
 	$labels_ordered = array();
@@ -136,6 +138,8 @@ function vgjpm_get_common_customfields_config() {
 		'vkjp_streetAddress',
 		'vkjp_validThrough',
 		'vkjp_identifier',
+		'vkjp_applicantLocationRequirements_name',
+		'vkjp_directApply'
 	);
 
 	foreach ( $labels_ordered as $key => $value ) {
@@ -513,7 +517,12 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 	},';
 	if ( $custom_fields['vkjp_jobLocationType'] ) {
 		$JSON .= '
-	"jobLocationType": "' . esc_attr( $custom_fields['vkjp_jobLocationType'] ) . '",';
+	"jobLocationType": "' . esc_attr( $custom_fields['vkjp_jobLocationType'] ) . '",
+	"applicantLocationRequirements": {
+		"@type": "Country",
+		"name":' . esc_attr( $custom_fields['vkjp_applicantLocationRequirements_name'] ) . '",
+	  },
+	}';
 	}
 	$JSON .= '
 	"baseSalary": {
@@ -525,7 +534,12 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 			"maxValue": ' . esc_attr( $custom_fields['vkjp_maxValue'] ) . ',
 			"unitText": "' . esc_attr( $custom_fields['vkjp_unitText'] ) . '"
 		}
+	}';
+	if ( $custom_fields['vkjp_directApply'] ) {
+		$JSON .= '
+	"directApply": true,';
 	}
+	$JSON .= '
 }
 </script>
 ';
