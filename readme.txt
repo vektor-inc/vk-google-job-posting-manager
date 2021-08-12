@@ -2,9 +2,9 @@
 Contributors: vektor-inc,kurudrive,naoki0h
 Donate link:
 Tags: Google Job Posting, Recruitment, Gutenberg.
-Requires at least: 5.6
+Requires at least: 5.7
 Tested up to: 5.8.0
-Stable tag: 1.1.9
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,9 @@ You can overwrite common fields value by fill out each post's custom fields.
 4. You can use common fields to omit to enter duplicated information.
 
 == Changelog ==
+
+= 1.2.0 =
+* Add applicantLocationRequirements ( Country Onry ) & directApply Setting
 
 = 1.1.9 =
 * version only
