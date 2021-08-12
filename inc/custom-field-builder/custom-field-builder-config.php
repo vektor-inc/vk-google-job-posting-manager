@@ -153,11 +153,17 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 				'description' => __( 'Please check it, only if you allow employees full remote work.', 'vk-google-job-posting-manager' ),
 				'required'    => false,
 			),
+			'vkjp_applicantLocationRequirements_name'        => array(
+				'label'       => __( 'Country of Remote Work Location', 'vk-google-job-posting-manager' ),
+				'type'        => 'text',
+				'description' => __( 'Example : USA', 'vk-google-job-posting-manager' ),
+				'required'    => false,
+			),
 			'vkjp_name'                   => array(
 				'label'       => __( 'Hiring Organization Name', 'vk-google-job-posting-manager' ),
 				'type'        => 'text',
 				'description' => __( 'Example : Vektor,Inc. Do not include address of organization', 'vk-google-job-posting-manager' ),
-				'required'    => false,
+				'required'    => true,
 			),
 			'vkjp_sameAs'                 => array(
 				'label'       => __( 'Hiring Organization Website', 'vk-google-job-posting-manager' ),
@@ -211,6 +217,15 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 				'label'       => __( 'Company Identifier Number', 'vk-google-job-posting-manager' ),
 				'type'        => 'text',
 				'description' => __( 'The hiring organization\'s unique identifier number for the job posting. <br> Please enter a unique number id whatever you want. Example : 1234567', 'vk-google-job-posting-manager' ),
+				'required'    => false,
+			),
+			'vkjp_directApply'    => array(
+				'label'       => __( 'Direct Apply', 'vk-google-job-posting-manager' ),
+				'type'        => 'checkbox',
+				'options'     => array(
+					'true' => __( 'You can apply from this page', 'vk-google-job-posting-manager' ),
+				),
+				'description' => __( 'Please check it, only if you set apply form on this page.', 'vk-google-job-posting-manager' ),
 				'required'    => false,
 			),
 		);
