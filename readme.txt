@@ -45,6 +45,9 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
+= 1.2.1 =
+* [ Bug fix ] Fix Syntax Error
+
 = 1.2.0 =
 * Add applicantLocationRequirements ( Country Only ) & directApply Setting
 
