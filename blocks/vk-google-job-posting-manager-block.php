@@ -16,6 +16,27 @@
 require_once dirname( dirname( __FILE__ ) ) . '/vk-google-job-posting-manager.php';
 require_once dirname( dirname( __FILE__ ) ) . '/inc/custom-field-builder/custom-field-builder-config.php';
 
+/**
+ * Chack block category exist
+ *
+ * @param array  $categories
+ * @param string $slug
+ * @return boolian
+ */
+if ( ! function_exists( 'vk_is_block_category_exist' ) ) {
+	function vk_is_block_category_exist( $categories, $slug ) {
+		$keys = array();
+		foreach ( $categories as $key => $value ) {
+			$keys[] = $value['slug'];
+		}
+		if ( in_array( $slug, $keys ) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+}
+
 function vgjpm_block_init() {
 	$dir        = dirname( __FILE__ );
 	$asset_file = include plugin_dir_path( __FILE__ ) . '/create-table/build/block-build.asset.php';
