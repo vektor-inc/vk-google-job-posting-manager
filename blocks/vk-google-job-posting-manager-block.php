@@ -45,7 +45,7 @@ function vgjpm_block_init() {
 		'vk-google-job-posting-manager-block-editor',
 		plugins_url( $index_js, __FILE__ ),
 		$asset_file['dependencies'],
-		$asset_file['version'],
+		$asset_file['version']
 	);
 
 	$editor_css = '/create-table/build/editor.css';
