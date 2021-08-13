@@ -16,15 +16,36 @@
 require_once dirname( dirname( __FILE__ ) ) . '/vk-google-job-posting-manager.php';
 require_once dirname( dirname( __FILE__ ) ) . '/inc/custom-field-builder/custom-field-builder-config.php';
 
+/**
+ * Chack block category exist
+ *
+ * @param array  $categories
+ * @param string $slug
+ * @return boolian
+ */
+if ( ! function_exists( 'vgjpm_is_block_category_exist' ) ) {
+	function vgjpm_is_block_category_exist( $categories, $slug ) {
+		$keys = array();
+		foreach ( $categories as $key => $value ) {
+			$keys[] = $value['slug'];
+		}
+		if ( in_array( $slug, $keys ) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+}
+
 function vgjpm_block_init() {
-	$dir = dirname( __FILE__ );
+	$dir        = dirname( __FILE__ );
 	$asset_file = include plugin_dir_path( __FILE__ ) . '/create-table/build/block-build.asset.php';
-	$index_js =  '/create-table/build/block-build.js';
+	$index_js   = '/create-table/build/block-build.js';
 	wp_register_script(
 		'vk-google-job-posting-manager-block-editor',
 		plugins_url( $index_js, __FILE__ ),
 		$asset_file['dependencies'],
-		$asset_file['version'],
+		$asset_file['version']
 	);
 
 	$editor_css = '/create-table/build/editor.css';
@@ -78,7 +99,7 @@ add_action( 'init', 'vgjpm_block_init' );
 if ( ! function_exists( 'vkblocks_blocks_categories' ) ) {
 	function vkblocks_blocks_categories( $categories, $post ) {
 
-		if ( ! vk_is_block_category_exist( $categories, 'vk-blocks-cat' ) ) {
+		if ( ! vgjpm_is_block_category_exist( $categories, 'vk-blocks-cat' ) ) {
 			$categories = array_merge(
 				$categories,
 				array(
