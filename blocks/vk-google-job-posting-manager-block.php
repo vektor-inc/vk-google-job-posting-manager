@@ -23,8 +23,8 @@ require_once dirname( dirname( __FILE__ ) ) . '/inc/custom-field-builder/custom-
  * @param string $slug
  * @return boolian
  */
-if ( ! function_exists( 'vk_is_block_category_exist' ) ) {
-	function vk_is_block_category_exist( $categories, $slug ) {
+if ( ! function_exists( 'vgjpm_is_block_category_exist' ) ) {
+	function vgjpm_is_block_category_exist( $categories, $slug ) {
 		$keys = array();
 		foreach ( $categories as $key => $value ) {
 			$keys[] = $value['slug'];
@@ -99,7 +99,7 @@ add_action( 'init', 'vgjpm_block_init' );
 if ( ! function_exists( 'vkblocks_blocks_categories' ) ) {
 	function vkblocks_blocks_categories( $categories, $post ) {
 
-		if ( ! vk_is_block_category_exist( $categories, 'vk-blocks-cat' ) ) {
+		if ( ! vgjpm_is_block_category_exist( $categories, 'vk-blocks-cat' ) ) {
 			$categories = array_merge(
 				$categories,
 				array(
