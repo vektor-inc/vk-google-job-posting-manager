@@ -17,9 +17,9 @@ require_once dirname( dirname( __FILE__ ) ) . '/vk-google-job-posting-manager.ph
 require_once dirname( dirname( __FILE__ ) ) . '/inc/custom-field-builder/custom-field-builder-config.php';
 
 function vgjpm_block_init() {
-	$dir = dirname( __FILE__ );
+	$dir        = dirname( __FILE__ );
 	$asset_file = include plugin_dir_path( __FILE__ ) . '/create-table/build/block-build.asset.php';
-	$index_js =  '/create-table/build/block-build.js';
+	$index_js   = '/create-table/build/block-build.js';
 	wp_register_script(
 		'vk-google-job-posting-manager-block-editor',
 		plugins_url( $index_js, __FILE__ ),
