@@ -261,7 +261,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 			// ダミー & プレビュー画像
 			$form .= '<img src="' . $thumb_image_url . '" id="thumb_' . esc_attr( $key ) . '" alt="" class="input_thumb" style="width:200px;height:auto;"> ';
 			// 実際に送信する値
-			$form .= '<input type="hidden" name="' . $field_prefix . '[' . esc_attr( $key ) . ']'  . '" id="' . esc_attr( $key ) . '" value="' . $thumb_image_url . '" style="width:60%;" />';
+			$form .= '<input type="hidden" name="' . $field_prefix . '[' . esc_attr( $key ) . ']'  . '" id="' . esc_attr( $key ) . '" value="' . $options[ esc_attr( $key ) ] . '" style="width:60%;" />';
 			// $form .= '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . self::form_post_value( $key ) . '" style="width:60%;" />';
 			// 画像選択ボタン
 			// .media_btn がトリガーでメディアアップローダーが起動する
