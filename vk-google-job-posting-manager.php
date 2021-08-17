@@ -384,8 +384,6 @@ function vgjpm_save_create_jobpost_posttype() {
 
 }
 
-
-
 function vgjpm_save_check_list() {
 
 	$args       = array(

@@ -60,12 +60,13 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 		global $post;
 		$custom_fields_array = self::custom_fields_array();
 		$befor_custom_fields = '';
+		$field_options = vkjpm_get_common_field_options();
 		echo '<ul>';
 		echo '<li>' . __( 'Please fill in recruitment information for Google Job Posting.', 'vk-google-job-posting-manager' ) . '</li>';
 		echo '<li>' . __( 'If you do not fill in this form that, common settings will apply.', 'vk-google-job-posting-manager' ) . ' [ <a href="' . admin_url() . 'options-general.php?page=vgjpm_settings" target="_blank">' . __( 'Common Settings', 'vk-google-job-posting-manager' ) . '</a> ]</li>';
 		echo '<li>' . __( 'If you want to display these items table to publish page, you use to the Job Posting Block set to content area.', 'vk-google-job-posting-manager' ) . '</li>';
 		echo '</ul>';
-		self::form_table( $custom_fields_array, $befor_custom_fields );
+		self::form_table( $custom_fields_array, $befor_custom_fields, true, $field_options );
 	}
 
 	public static function custom_fields_array() {
@@ -154,7 +155,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 				'required'    => false,
 			),
 			'vkjp_applicantLocationRequirements_name'        => array(
-				'label'       => __( 'Country of Remote Work Location', 'vk-google-job-posting-manager' ),
+				'label'       => __( 'Countries that allow remote work', 'vk-google-job-posting-manager' ),
 				'type'        => 'text',
 				'description' => __( 'Example : USA', 'vk-google-job-posting-manager' ),
 				'required'    => false,
