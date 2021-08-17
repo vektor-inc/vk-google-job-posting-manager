@@ -55,7 +55,7 @@ function vgjpm_get_custom_fields( $post_id ) {
 	}
 
 	foreach ( (array) $custom_fields as $key => $value ) {
-		
+
 		$custom_fields[ $key ] = maybe_unserialize( $value[0] );
 
 		if ( substr_count( $key, 'vkjp_' ) == 0 ) {
@@ -80,15 +80,15 @@ function vgjpm_use_common_values( $custom_fields, $output_type ) {
 
 	foreach ( $default_custom_fields as $key => $value ) {
 
-		$temp = get_option( $vgjpm_prefix . $key, null );
+		$options = vkjpm_get_common_field_options();
 
-		$custom_fields = vgjpm_image_filter_id_to_url( $custom_fields, $key, $temp );
+		$custom_fields = vgjpm_image_filter_id_to_url( $custom_fields, $key, $options );
 
-		if ( ! isset( $custom_fields[ $key ] ) && isset( $temp ) ) {
+		if ( ! isset( $custom_fields[ $key ] ) && isset( $options[ $key ] ) ) {
 
-			$custom_fields[ $key ] = $temp;
+			$custom_fields[ $key ] = $options[ $key ];
 
-		} elseif ( ! isset( $custom_fields[ $key ] ) && ! isset( $temp ) ) {
+		} elseif ( ! isset( $custom_fields[ $key ] ) && ! isset( $options[ $key ] ) ) {
 
 			$custom_fields[ $key ] = '';
 		}
@@ -117,7 +117,7 @@ function vgjpm_array_to_string( $custom_fields ) {
 	return $custom_fields;
 }
 
-function vgjpm_image_filter_id_to_url( $custom_fields, $key, $common_attachment_id ) {
+function vgjpm_image_filter_id_to_url( $custom_fields, $key, $options ) {
 
 	if ( $key == 'vkjp_logo' ) {
 
@@ -130,9 +130,9 @@ function vgjpm_image_filter_id_to_url( $custom_fields, $key, $common_attachment_
 				$custom_fields[ $key ] = $each_post_attachment_url;
 
 			}
-		} elseif ( isset( $common_attachment_id ) ) {
+		} elseif ( isset( $options[ $key ] ) ) {
 
-			$common_attachment_url = wp_get_attachment_url( $common_attachment_id );
+			$common_attachment_url = wp_get_attachment_url( $options[ $key ] );
 
 			if ( $common_attachment_url ) {
 
