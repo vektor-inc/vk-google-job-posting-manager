@@ -20,7 +20,6 @@ gulp.task('replace_text_domain', function () {
 gulp.task('dist', (done) => {
 	gulp.src(
 		[
-			'.wordpress-org/',
 			'./assets/**',
 			'./blocks/**',
 			'./inc/**',
