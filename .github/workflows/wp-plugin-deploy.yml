@@ -27,7 +27,7 @@ jobs:
             - name: Make Distribution
               run: |
                   npm run dist
-                  cd dist/ && zip -r ${{ env.plugin_name }}.zip ${{ env.plugin_name }}/ && mv ${{ env.plugin_name }}.zip ${GITHUB_WORKSPACE}
+                  cd dist/${{ env.plugin_name }}
             - name: WordPress Plugin Deploy
               uses: 10up/action-wordpress-plugin-deploy@master
               env:
@@ -54,7 +54,7 @@ jobs:
             - name: Make Distribution
               run: |
                   npm run dist
-                  cd dist/${{ env.plugin_name }}
+                  cd dist/ && zip -r ${{ env.plugin_name }}.zip ${{ env.plugin_name }}/ && mv ${{ env.plugin_name }}.zip ${GITHUB_WORKSPACE}
             - name: Create Release
               id: create_release
               uses: actions/create-release@v1
