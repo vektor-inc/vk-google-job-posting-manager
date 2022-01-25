@@ -25,9 +25,7 @@ jobs:
             - name: Build
               run: npm run build
             - name: Make Distribution
-              run: |
-                  npm run dist
-                  mv dist/${{ env.plugin_name }}/ ${GITHUB_WORKSPACE}
+              run: composer install --no-dev
             - name: WordPress Plugin Deploy
               uses: 10up/action-wordpress-plugin-deploy@master
               env:
