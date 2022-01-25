@@ -9,12 +9,15 @@ jobs:
     dist:
         name: Make Distribution
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node-version: [14.x]
-                php: [7.4]
         steps:
             - uses: actions/checkout@master
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: 14.x
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 7.4
             - name: Install NPM Scripts
               run: npm install
             - name: Install Composer Packages
