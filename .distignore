@@ -2,7 +2,7 @@
 .circleci
 .github
 .git
-.bin
+bin
 dist
 node_modules
 tests
