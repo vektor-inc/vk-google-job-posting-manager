@@ -1,29 +1,28 @@
-const gulp = require( 'gulp' );
-const replace = require( 'gulp-replace' );
+const gulp = require('gulp');
+const replace = require('gulp-replace');
 
 // replace_text_domain ////////////////////////////////////////////////
-gulp.task( 'replace_text_domain', function () {
+gulp.task('replace_text_domain', function () {
 	return gulp
-		.src( [ './inc/custom-field-builder/package/*' ] )
+		.src(['./inc/custom-field-builder/package/*'])
 		.pipe(
 			replace(
 				'custom_field_builder_textdomain',
 				'vk-google-job-posting-manager'
 			)
 		)
-		.pipe( gulp.dest( './inc/custom-field-builder/package/' ) );
-} );
+		.pipe(gulp.dest('./inc/custom-field-builder/package/'));
+});
 
-// copy dist ////////////////////////////////////////////////
-
-// copy dist ////////////////////////////////////////////////
-
+/**
+ * Dist
+ */
 gulp.task('dist', (done) => {
 	gulp.src(
 		[
-			'./build/**',
+			'./assets/**',
+			'./blocks/**',
 			'./inc/**',
-			'./src/**',
 			'./vendor/**',
 			'./*.txt',
 			'./*.png',
@@ -33,6 +32,6 @@ gulp.task('dist', (done) => {
 			'!./node_modules/**',
 		],
 		{ base: './' }
-	).pipe(gulp.dest('dist/vk-blocks-pro')); // distディレクトリに出力
+	).pipe(gulp.dest('dist/vk-google-job-posting-manager')); // distディレクトリに出力
 	done();
 });
