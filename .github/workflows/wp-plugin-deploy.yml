@@ -6,8 +6,8 @@ on:
 env:
     plugin_name: vk-google-job-posting-manager
 jobs:
-    dist:
-        name: Make Distribution
+    plugin-deploy:
+        name:  WordPress Plugin Deploy
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@master
@@ -28,15 +28,6 @@ jobs:
               run: |
                   npm run dist
                   cd dist/ && zip -r ${{ env.plugin_name }}.zip ${{ env.plugin_name }}/ && mv ${{ env.plugin_name }}.zip ${GITHUB_WORKSPACE}
-    plugin-deploy:
-        name:  WordPress Plugin Deploy
-        runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node-version: [14.x]
-                php: [7.4]
-        needs: [dist]
-        steps:
             - name: WordPress Plugin Deploy
               uses: 10up/action-wordpress-plugin-deploy@master
               env:
@@ -45,12 +36,25 @@ jobs:
     release:
         name: Create Release
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node-version: [14.x]
-                php: [7.4]
-        needs: [dist]
         steps:
+            - uses: actions/checkout@master
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: 14.x
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 7.4
+            - name: Install NPM Scripts
+              run: npm install
+            - name: Install Composer Packages
+              run: composer install
+            - name: Build
+              run: npm run build
+            - name: Make Distribution
+              run: |
+                  npm run dist
+                  cd dist/ && zip -r ${{ env.plugin_name }}.zip ${{ env.plugin_name }}/ && mv ${{ env.plugin_name }}.zip ${GITHUB_WORKSPACE}
             - name: Create Release
               id: create_release
               uses: actions/create-release@v1
