@@ -1,5 +1,27 @@
 {
+  "name": "vektor/vk-google-job-posting-manager",
+	"authors": [
+		{
+			"name": "vektor,inc.",
+			"email": "info@vektor-inc.co.jp"
+		}
+	],
+	"repositories": [
+		{
+			"type": "composer",
+			"url": "https://wpackagist.org"
+		}
+	],
     "require": {
         "alcohol/iso4217": "^3.1"
+    },
+    "require-dev": {
+      "squizlabs/php_codesniffer": "*",
+      "sirbrillig/phpcs-variable-analysis": "^2.8",
+      "wp-phpunit/wp-phpunit": "^5.4",
+      "dealerdirect/phpcodesniffer-composer-installer": "*",
+      "phpcompatibility/phpcompatibility-wp": "*",
+      "wp-coding-standards/wpcs": "*",
+      "yoast/phpunit-polyfills": "^1.0"
     }
 }

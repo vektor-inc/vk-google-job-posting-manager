@@ -98,7 +98,6 @@ add_action( 'init', 'vgjpm_block_init' );
  */
 if ( ! function_exists( 'vkblocks_blocks_categories' ) ) {
 	function vkblocks_blocks_categories( $categories, $post ) {
-
 		if ( ! vgjpm_is_block_category_exist( $categories, 'vk-blocks-cat' ) ) {
 			$categories = array_merge(
 				$categories,
@@ -128,7 +127,6 @@ if ( ! function_exists( 'vkblocks_blocks_categories' ) ) {
  * @return string | 'FULL TIME, PART TIME'
  */
 function vgjpm_get_label_of_array( $args ) {
-
 	if ( ! is_array( $args ) ) {
 		return false;
 	}
@@ -136,7 +134,6 @@ function vgjpm_get_label_of_array( $args ) {
 	$labels = vgjpm_get_labels( $args );
 
 	return implode( ', ', $labels );
-
 }
 
 /**
@@ -145,7 +142,6 @@ function vgjpm_get_label_of_array( $args ) {
  * @return array | array( 'Remote Work' );
  */
 function vgjpm_get_labels( $args ) {
-
 	if ( ! is_array( $args ) ) {
 		return false;
 	}
@@ -155,7 +151,6 @@ function vgjpm_get_labels( $args ) {
 	$return     = array();
 
 	foreach ( $args as $key => $value ) {
-
 		$searched = array_column( $default, 'options' );
 		$searched = array_column( $searched, $value );
 		$return   = array_merge( $return, $searched );
@@ -172,7 +167,6 @@ function vgjpm_get_labels( $args ) {
 // 'after'    => true,
 // );
 function vgjpm_salary_and_currency( $args ) {
-
 	$currency_data = array(
 		'JPY' => array(
 			'before' => '¥',
@@ -186,46 +180,35 @@ function vgjpm_salary_and_currency( $args ) {
 	$currency_data = apply_filters( 'vgjpm_salary_and_currency_currency_data', $currency_data );
 
 	if ( empty( $args['figure'] ) && $args['empty_expression'] == 'no_display' ) {
-
 			$return = '';
-
 	} elseif ( key_exists( $args['currency'], $currency_data ) ) {
-
 		$target_currency = $currency_data[ $args['currency'] ];
 
 		if ( $args['before'] ) {
-
 			$before = $target_currency['before'];
-
 		} else {
 			$before = '';
 		}
 
 		if ( $args['after'] ) {
-
 			$after = '<span class="vk_jobInfo_amount_before">' . $target_currency['after'] . '</span>';
-
 		} else {
 			$after = '';
 		}
 
 		$return = $before . '<span class="vk_jobInfo_amount_figure">' . number_format( intval( $args['figure'] ) ) . '</span>' . $after;
-
 	} else {
 		// 通貨記号のリストにない場合
 		$return = '<span class="vk_jobInfo_amount_after">' . $args['figure'] . '</span>' . ' (' . $args['currency'] . ')';
-
 	}
 
 	return apply_filters( 'vgjpm_salary_and_currency', $return );
 }
 
 function vgjpm_render_job_posting_info( $post_id, $style, $className ) {
-
 	$custom_fields = vgjpm_get_custom_fields( $post_id );
 
 	if ( ! isset( $custom_fields['vkjp_title'] ) ) {
-
 		return '<div>' . __( 'Preview can be enabled after save or publish the content.', 'vk-google-job-posting-manager' ) . '</div>';
 	}
 

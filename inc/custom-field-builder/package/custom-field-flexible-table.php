@@ -95,7 +95,6 @@ class VK_Custom_Field_Builder_Flexible_Table {
 
 				if ( $value['type'] == 'textarea' ) {
 					$form_table .= '<textarea class="flexible-field-item" class="cf_textarea_wysiwyg" name="' . $id . '" cols="100" rows="3">' . wp_kses_post( $input_value ) . '</textarea>';
-
 				} elseif ( $value['type'] == 'select' ) {
 					$form_table .= '<select id="' . $id . '" class="flexible-field-item" name="' . $name . '"  >';
 
@@ -109,7 +108,6 @@ class VK_Custom_Field_Builder_Flexible_Table {
 						$form_table .= '<option value="' . esc_attr( $option_value ) . '"' . $selected . '>' . esc_html( $option_label ) . '</option>';
 					}
 					$form_table .= '</select>';
-
 				} elseif ( isset( $value['type'] ) && $value['type'] == 'datepicker' ) {
 					$form_table .= '<input class="flexible-field-item datepicker" type="text" id="' . $id . '" name="' . $name . '" value="' . esc_attr( $input_value ) . '" size="70">';
 				} else {
@@ -138,7 +136,6 @@ class VK_Custom_Field_Builder_Flexible_Table {
 	 * @return [type]                      [description]
 	 */
 	public static function save_cf_value( $custom_fields_array ) {
-
 		global $post;
 
 		// 設定したnonce を取得（CSRF対策）
@@ -173,7 +170,6 @@ class VK_Custom_Field_Builder_Flexible_Table {
 		} elseif ( $field_value == '' ) {
 			delete_post_meta( $post->ID, $field, get_post_meta( $post->ID, $field, true ) );
 		}
-
 	}
 
 	/*
@@ -213,7 +209,6 @@ class VK_Custom_Field_Builder_Flexible_Table {
 
 			// 値が存在するか、空の行の出力指定がされている場合のみ行を出力
 			if ( $exist_value || $custom_fields_array['row_empty_display'] ) {
-
 				$table_body_html .= '<tr>';
 
 				foreach ( $cells as $cell_key => $cell_value ) {
@@ -244,9 +239,7 @@ class VK_Custom_Field_Builder_Flexible_Table {
 				} // foreach ( $cells as $cell_key => $cell_value ) {
 
 				$table_body_html .= '</tr>';
-
 			} // if ( $exist_value || $custom_fields_array['row_empty_display'] ) {
-
 		}
 		return $table_body_html;
 	}

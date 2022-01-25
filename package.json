@@ -6,39 +6,37 @@
   "scripts": {
     "start": "npm install && npm run build && npm run watch && wp plugin activate vk-google-job-posting-manager && wp browse --wp-admin",
     "watch": "npx gulp watch",
-    "build": "gulp replace_text_domain && npm run build:block && npm run build:css",
+    "build": "npx gulp replace_text_domain && npm run build:block && npm run build:css",
     "build:css": "sass --style=compressed --no-source-map blocks/create-table/src/:blocks/create-table/build/ assets/_scss/:assets/css/",
     "build:block": "wp-scripts build --config webpack.config.js",
-    "lint:js": "wp-scripts format blocks/create-table/src/ && wp-scripts lint-js blocks/create-table/src/ --fix",
+    "lint": "wp-scripts format && wp-scripts lint-js --fix",
+    "dist": "composer install --no-dev && npx gulp dist",
     "gulp": "npx gulp",
+    "phpunit": "composer install && npx wp-env run phpunit \"phpunit -c /var/www/html/wp-content/plugins/vk-google-job-posting-manager/phpunit.xml --verbose\"",
     "test": "bash bin/install-wp-tests.sh wordpress_test root 'wordpress' localhost latest && phpunit"
   },
   "browserslist": [
-		"last 2 version",
-		"> 5%"
-	],
+    "last 2 version",
+    "> 5%"
+  ],
   "devDependencies": {
+    "@emotion/babel-plugin": "^11.7.2",
     "@wordpress/babel-plugin-makepot": "^4.2.0",
-    "@wordpress/scripts": "^16.1.2",
-    "grunt": "~1.4.1",
-    "grunt-wp-i18n": "~1.0.3",
-    "grunt-wp-readme-to-markdown": "~2.0.1",
+    "@wordpress/env": "^4.1.3",
+    "@wordpress/i18n": "^4.2.4",
+    "@wordpress/scripts": "^19.2.3",
+    "babel-plugin-inline-json-import": "^0.3.2",
     "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^8.0.0",
+    "gulp-clean-css": "^4.3.0",
     "gulp-load-plugins": "^2.0",
     "gulp-notify": "^4.0.0",
     "gulp-plumber": "^1.2.1",
     "gulp-replace": "^1.1.3",
+    "gulp-sass": "^5.1.0",
     "gulp-sourcemaps": "^3.0",
-    "npm-check-updates": "^11.8.3",
-    "run-sequence": "^2.2.1"
-  },
-  "dependencies": {
-    "@wordpress/i18n": "^4.2.1",
-    "gulp-autoprefixer": "^8.0.0",
-    "gulp-clean-css": "^4.3.0",
-    "gulp-sass": "^5.0.0",
+    "npm-check-updates": "^12.2.1",
     "po2json": "^1.0.0-alpha",
-    "react": "^16.14.0",
-    "react-dom": "16.14.0"
+    "run-sequence": "^2.2.1"
   }
 }

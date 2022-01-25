@@ -1,5 +1,5 @@
-const defaultConfig = require( '@wordpress/scripts/config/webpack.config' );
-defaultConfig.module.rules.splice( 0, 1 ); // JSをトランスパイルするルールを削除。下の独自ルールでPOTファイルを上書きして空にしてしまう。
+const defaultConfig = require('@wordpress/scripts/config/webpack.config');
+defaultConfig.module.rules.splice(0, 1); // JSをトランスパイルするルールを削除。下の独自ルールでPOTファイルを上書きして空にしてしまう。
 module.exports = {
 	mode: 'production',
 	...defaultConfig,
@@ -21,7 +21,7 @@ module.exports = {
 						cacheDirectory: false, // キャッシュをOFF。理由：vk-blocks-js.pot を消した時に変更箇所以外の文字列が抽出されなくなる。
 						babelrc: false, // babelrcを反映させない
 						configFile: false, // babel.config.jsonを反映させない
-						presets: [ '@wordpress/default' ],
+						presets: ['@wordpress/default'],
 					},
 				},
 			},

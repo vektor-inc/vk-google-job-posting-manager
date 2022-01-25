@@ -18,7 +18,6 @@ class DefaultTest extends WP_UnitTestCase {
 	 * Test to get array of label correspond to data.
 	 */
 	function test_01() {
-
 		$input = array(
 			array(
 				'FULL_TIME',
@@ -28,7 +27,7 @@ class DefaultTest extends WP_UnitTestCase {
 			),
 			array(
 				'TELECOMMUTE',
-			)
+			),
 		);
 
 		$output = array(
@@ -40,16 +39,14 @@ class DefaultTest extends WP_UnitTestCase {
 			),
 			array(
 				'Remote Work',
-			)
+			),
 		);
 
 		foreach ( $output as $key => $value ) {
-
 			$expected = $output[ $key ];
 			$actual   = vgjpm_get_labels( $input[ $key ] );
 
 			$this->assertSame( $expected, $actual );
-
 		}
 	}
 
@@ -57,8 +54,7 @@ class DefaultTest extends WP_UnitTestCase {
 	 * Test to return false, when argument is empty.
 	 */
 	function test_01_2() {
-
-		$input = '';
+		$input    = '';
 		$expected = false;
 		$actual   = vgjpm_get_labels( $input );
 
@@ -69,7 +65,6 @@ class DefaultTest extends WP_UnitTestCase {
 	 * Test to get string of concat label.
 	 */
 	function test_02() {
-
 		$input = array(
 			array(
 				'FULL_TIME',
@@ -77,7 +72,7 @@ class DefaultTest extends WP_UnitTestCase {
 			),
 			array(
 				'TELECOMMUTE',
-			)
+			),
 		);
 
 		$output = array(
@@ -90,12 +85,10 @@ class DefaultTest extends WP_UnitTestCase {
 		);
 
 		foreach ( $input as $key => $value ) {
-
 			$expected = $output[ $key ][0];
 			$actual   = vgjpm_get_label_of_array( $value );
 
 			$this->assertSame( $expected, $actual );
-
 		}
 	}
 
@@ -103,8 +96,7 @@ class DefaultTest extends WP_UnitTestCase {
 	 * Test to return false, when argument is empty.
 	 */
 	function test_02_2() {
-
-		$input = '';
+		$input    = '';
 		$expected = false;
 		$actual   = vgjpm_get_label_of_array( $input );
 
