@@ -16,30 +16,23 @@ gulp.task( 'replace_text_domain', function () {
 
 // copy dist ////////////////////////////////////////////////
 
-gulp.task( 'dist', function () {
-	return gulp
-		.src(
-			[
-				'./**.php',
-				'./**.txt',
-				'./**.png',
-				'./**.jpg',
-				'./**.md',
-				'./assets/**',
-				'./blocks/**',
-				'./inc/**',
-				'./vendor/**',
-				'./languages/**',
-				'!./.distignore',
-				'!./.gitignore',
-				'!./Gruntfile.js',
-				'!./gulpfile.js',
-				'!./**.yml',
-				'!./**.json',
-				'!./**.dist',
-				'!./**.config.js',
-			],
-			{ base: './' }
-		)
-		.pipe( gulp.dest( 'dist' ) ); // distディレクトリに出力
-} );
+// copy dist ////////////////////////////////////////////////
+
+gulp.task('dist', (done) => {
+	gulp.src(
+		[
+			'./build/**',
+			'./inc/**',
+			'./src/**',
+			'./vendor/**',
+			'./*.txt',
+			'./*.png',
+			'./*.php',
+			'!./tests/**',
+			'!./dist/**',
+			'!./node_modules/**',
+		],
+		{ base: './' }
+	).pipe(gulp.dest('dist/vk-blocks-pro')); // distディレクトリに出力
+	done();
+});
