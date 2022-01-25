@@ -38,7 +38,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				'vk_mediauploader',
 				'vk_cfb',
 				array(
-					'select_image' => __( 'Select image', 'vk-google-job-posting-manager' )
+					'select_image' => __( 'Select image', 'vk-google-job-posting-manager' ),
 				)
 			);
 
@@ -49,7 +49,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 			$cfb_flexible_table_excludes = array( 'toplevel_page_nestedpages' );
 			$cfb_flexible_table_excludes = apply_filters( 'cfb_flexible_table_excludes', $cfb_flexible_table_excludes );
 
-			if ( ! in_array( $hook_suffix, $cfb_flexible_table_excludes ) ){
+			if ( ! in_array( $hook_suffix, $cfb_flexible_table_excludes ) ) {
 				wp_enqueue_script( 'flexible-table', self::admin_directory_url() . 'js/flexible-table.js', array( 'jquery', 'jquery-ui-sortable' ), self::$version, true );
 			}
 
@@ -154,7 +154,6 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 						$form_html .= '<option value="' . esc_attr( $option_value ) . '"' . $selected . '>' . esc_html( $option_label ) . '</option>';
 					}
 					$form_html .= '</select>';
-
 				} elseif ( $value['type'] == 'checkbox' || $value['type'] == 'radio' ) {
 					$field_value = array();
 					if ( ! empty( get_post_meta( $post->ID, $key, true ) ) ) {
@@ -177,7 +176,6 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 						// print '<pre style="text-align:left">';print_r($field_value);print '</pre>';
 						// チェックボックス
 						if ( $value['type'] == 'checkbox' ) {
-
 							if ( is_array( $field_value ) && in_array( $option_value, $field_value ) ) {
 								$selected = ' checked';
 							}
@@ -194,7 +192,6 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 					} // foreach ($value['options'] as $option_value => $option_label) {
 
 					$form_html .= '</ul>';
-
 				} elseif ( $value['type'] == 'image' ) {
 					if ( $post->$key ) {
 						$thumb_image     = wp_get_attachment_image_src( $post->$key, 'medium', false );
@@ -230,7 +227,6 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 					// 削除ボタン
 					// ボタンタグだとその場でページが再読込されてしまうのでaタグに変更
 					$form_html .= '<a id="media_reset_' . $key . '" class="media_reset_btn btn btn-default button button-default">' . __( 'Delete Image', 'vk-google-job-posting-manager' ) . '</a>';
-
 				} elseif ( $value['type'] == 'file' ) {
 
 					$post_value = '';
@@ -260,7 +256,6 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				wp_enqueue_media();
 				return $form_html;
 			}
-
 		} // public static function form_table( $custom_fields_array, $befor_items, $echo = true ){
 
 		/*
@@ -269,7 +264,6 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 		-------------------------------------------
 		*/
 		public static function save_cf_value( $custom_fields_array ) {
-
 			global $post;
 
 			// 設定したnonce を取得（CSRF対策）
@@ -285,7 +279,6 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				return $post_id; }
 
 			foreach ( $custom_fields_array as $key => $value ) {
-
 				$field_value = ( isset( $_POST[ $key ] ) ) ? $_POST[ $key ] : '';
 
 				// データが空だったら入れる
@@ -305,6 +298,5 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 	VK_Custom_Field_Builder::init();
 
-	require_once( 'custom-field-flexible-table.php' );
-
+	require_once 'custom-field-flexible-table.php';
 } // if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
