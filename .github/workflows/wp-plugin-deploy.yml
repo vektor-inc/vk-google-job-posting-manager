@@ -26,13 +26,14 @@ jobs:
               run: npm run build
             - name: Make Distribution
               run: |
-                  composer install --no-dev
-                  bash bin/deploy.sh
+                  npm run dist
+                  mv dist/${{ env.plugin_name }} ${GITHUB_WORKSPACE}
             - name: WordPress Plugin Deploy
               uses: 10up/action-wordpress-plugin-deploy@master
               env:
                   SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
                   SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+                  SLUG: ${{ env.plugin_name }}
     release:
         name: Create Release
         runs-on: ubuntu-latest
