@@ -9,6 +9,10 @@ jobs:
     dist:
         name: Make Distribution
         runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [14.x]
+                php: [7.4]
         steps:
             - uses: actions/checkout@master
             - name: Install NPM Scripts
@@ -24,6 +28,10 @@ jobs:
     plugin-deploy:
         name:  WordPress Plugin Deploy
         runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [14.x]
+                php: [7.4]
         needs: [dist]
         steps:
             - name: WordPress Plugin Deploy
@@ -34,6 +42,10 @@ jobs:
     release:
         name: Create Release
         runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [14.x]
+                php: [7.4]
         needs: [dist]
         steps:
             - name: Create Release
