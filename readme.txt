@@ -4,7 +4,7 @@ Donate link:
 Tags: Google Job Posting, Recruitment, Gutenberg.
 Requires at least: 5.7
 Tested up to: 5.9.0
-Stable tag: 1.2.10
+Stable tag: 1.2.11
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,7 +45,7 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
-= 1.2.10 =
+= 1.2.11 =
 * [ Bug fix ] Fix Syntax Error
 
 = 1.2.1 =
