@@ -56,12 +56,13 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 		global $post;
 		$custom_fields_array = self::custom_fields_array();
 		$befor_custom_fields = '';
+		$field_options = vkjpm_get_common_field_options();
 		echo '<ul>';
 		echo '<li>' . __( 'Please fill in recruitment information for Google Job Posting.', 'vk-google-job-posting-manager' ) . '</li>';
 		echo '<li>' . __( 'If you do not fill in this form that, common settings will apply.', 'vk-google-job-posting-manager' ) . ' [ <a href="' . admin_url() . 'options-general.php?page=vgjpm_settings" target="_blank">' . __( 'Common Settings', 'vk-google-job-posting-manager' ) . '</a> ]</li>';
 		echo '<li>' . __( 'If you want to display these items table to publish page, you use to the Job Posting Block set to content area.', 'vk-google-job-posting-manager' ) . '</li>';
 		echo '</ul>';
-		self::form_table( $custom_fields_array, $befor_custom_fields );
+		self::form_table( $custom_fields_array, $befor_custom_fields, true, $field_options );
 	}
 
 	public static function custom_fields_array() {
@@ -86,7 +87,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 			'vkjp_description'                        => array(
 				'label'       => __( 'Description', 'vk-google-job-posting-manager' ),
 				'type'        => 'textarea',
-				'description' => __( 'Please enter specific description of the job by HTML. You can use the templates from  <a href="https://www.vektor-inc.co.jp/service/products/wordpress-plugins/vk-google-jog-posting-manager/#vk-google-job-template" target="_blank">here</a>.', 'vk-google-job-posting-manager' ),
+				'description' => __( 'Please enter specific description of the job by HTML. You can use the templates from  <a href="https://www.vektor-inc.co.jp/service/wordpress-plugins/vk-google-jog-posting-manager/#vk-google-job-template" target="_blank">here</a>.', 'vk-google-job-posting-manager' ),
 				'required'    => true,
 			),
 			'vkjp_minValue'                           => array(
@@ -146,8 +147,8 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 				'description' => __( 'Please check it, only if you allow employees full remote work.', 'vk-google-job-posting-manager' ),
 				'required'    => false,
 			),
-			'vkjp_applicantLocationRequirements_name' => array(
-				'label'       => __( 'Country of Remote Work Location', 'vk-google-job-posting-manager' ),
+			'vkjp_applicantLocationRequirements_name'        => array(
+				'label'       => __( 'Countries that allow remote work', 'vk-google-job-posting-manager' ),
 				'type'        => 'text',
 				'description' => __( 'Example : USA', 'vk-google-job-posting-manager' ),
 				'required'    => false,

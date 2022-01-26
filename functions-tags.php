@@ -72,13 +72,17 @@ function vgjpm_use_common_values( $custom_fields, $output_type ) {
 	$default_custom_fields       = $VGJPM_Custom_Field_Job_Post->custom_fields_array();
 
 	foreach ( $default_custom_fields as $key => $value ) {
-		$temp = get_option( $vgjpm_prefix . $key, null );
 
-		$custom_fields = vgjpm_image_filter_id_to_url( $custom_fields, $key, $temp );
+		$options = vkjpm_get_common_field_options();
 
-		if ( ! isset( $custom_fields[ $key ] ) && isset( $temp ) ) {
-			$custom_fields[ $key ] = $temp;
-		} elseif ( ! isset( $custom_fields[ $key ] ) && ! isset( $temp ) ) {
+		$custom_fields = vgjpm_image_filter_id_to_url( $custom_fields, $key, $options );
+
+		if ( ! isset( $custom_fields[ $key ] ) && isset( $options[ $key ] ) ) {
+
+			$custom_fields[ $key ] = $options[ $key ];
+
+		} elseif ( ! isset( $custom_fields[ $key ] ) && ! isset( $options[ $key ] ) ) {
+
 			$custom_fields[ $key ] = '';
 		}
 	}
@@ -102,7 +106,8 @@ function vgjpm_array_to_string( $custom_fields ) {
 	return $custom_fields;
 }
 
-function vgjpm_image_filter_id_to_url( $custom_fields, $key, $common_attachment_id ) {
+function vgjpm_image_filter_id_to_url( $custom_fields, $key, $options ) {
+
 	if ( $key == 'vkjp_logo' ) {
 		if ( isset( $custom_fields[ $key ] ) ) {
 			$each_post_attachment_url = wp_get_attachment_url( $custom_fields[ $key ] );
@@ -110,8 +115,9 @@ function vgjpm_image_filter_id_to_url( $custom_fields, $key, $common_attachment_
 			if ( $each_post_attachment_url ) {
 				$custom_fields[ $key ] = $each_post_attachment_url;
 			}
-		} elseif ( isset( $common_attachment_id ) ) {
-			$common_attachment_url = wp_get_attachment_url( $common_attachment_id );
+		} elseif ( isset( $options[ $key ] ) ) {
+
+			$common_attachment_url = wp_get_attachment_url( $options[ $key ] );
 
 			if ( $common_attachment_url ) {
 				$custom_fields[ $key ] = $common_attachment_url;
