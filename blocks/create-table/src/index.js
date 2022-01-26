@@ -5,8 +5,8 @@ import ServerSideRender from '@wordpress/server-side-render';
 import { PanelBody, SelectControl, BaseControl } from '@wordpress/components';
 import { InspectorControls } from '@wordpress/block-editor';
 
-registerBlockType( 'vk-google-job-posting-manager/create-table', {
-	title: __( 'Job Posting', 'vk-google-job-posting-manager' ),
+registerBlockType('vk-google-job-posting-manager/create-table', {
+	title: __('Job Posting', 'vk-google-job-posting-manager'),
 	category: 'vk-blocks-cat',
 	attributes: {
 		post_id: {
@@ -23,33 +23,33 @@ registerBlockType( 'vk-google-job-posting-manager/create-table', {
 		},
 	},
 
-	edit( { attributes, setAttributes } ) {
+	edit({ attributes, setAttributes }) {
 		const { style } = attributes;
 
 		//Get postID from dom.
-		attributes.post_id = document.getElementById( 'post_ID' ).value;
+		attributes.post_id = document.getElementById('post_ID').value;
 
 		return (
 			<>
 				<InspectorControls>
 					<PanelBody>
 						<BaseControl
-							id={ `vkgjpm-tableStyle` }
-							label={ __(
+							id={`vkgjpm-tableStyle`}
+							label={__(
 								'Table Style',
 								'vk-google-job-posting-manager'
-							) }
-							help={ __(
+							)}
+							help={__(
 								'The preview will work after publish or save action.',
 								'vk-google-job-posting-manager'
-							) }
+							)}
 						>
 							<SelectControl
-								value={ style }
-								onChange={ ( value ) =>
-									setAttributes( { style: value } )
+								value={style}
+								onChange={(value) =>
+									setAttributes({ style: value })
 								}
-								options={ [
+								options={[
 									{
 										value: 'default',
 										label: __(
@@ -64,7 +64,7 @@ registerBlockType( 'vk-google-job-posting-manager/create-table', {
 											'vk-google-job-posting-manager'
 										),
 									},
-								] }
+								]}
 							/>
 						</BaseControl>
 					</PanelBody>
@@ -72,7 +72,7 @@ registerBlockType( 'vk-google-job-posting-manager/create-table', {
 				<div>
 					<ServerSideRender
 						block="vk-google-job-posting-manager/create-table"
-						attributes={ attributes }
+						attributes={attributes}
 					/>
 				</div>
 			</>
@@ -82,4 +82,4 @@ registerBlockType( 'vk-google-job-posting-manager/create-table', {
 	save() {
 		return null;
 	},
-} );
+});

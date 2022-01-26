@@ -7,7 +7,7 @@
  * Author URI:      https://www.vektor-inc.co.jp
  * Text Domain:     vk-google-job-posting-manager
  * Domain Path:     /languages
- * Version:         1.2.1
+ * Version:         1.2.11
  * Requires at least: 5.7
  *
  * @package         Vk_Google_Job_Posting_Manager
@@ -76,8 +76,37 @@ function vgjpm_admin_css() {
 }
 add_action( 'admin_enqueue_scripts', 'vgjpm_admin_css' );
 
-function vgjpm_get_common_customfields_config() {
+/**
+ * 新旧オプション値を変換しつつ古いオプション値を削除
+ */
+function vkjpm_get_common_field_options() {
+	global $vgjpm_prefix;
+	$options = get_option( 'vkjpm_common_fields' );
+	if ( empty( $options ) ) {
+		$old_options_array = array(
+			'vkjp_name',
+			'vkjp_sameAs',
+			'vkjp_logo',
+			'vkjp_postalCode',
+			'vkjp_addressCountry',
+			'vkjp_addressRegion',
+			'vkjp_addressLocality',
+			'vkjp_streetAddress',
+			'vkjp_currency',
+			'vkjp_applicantLocationRequirements_name',
+		);
 
+		$new_options = array();
+		foreach( $old_options_array as $old_option ) {
+			$new_options[ $old_option ] = get_option( $vgjpm_prefix . esc_attr( $old_option ) );
+			delete_option( $vgjpm_prefix . esc_attr( $old_option ) );
+		}
+		update_option( 'vkjpm_common_fields', $new_options );
+	}
+	return $options;
+}
+
+function vgjpm_get_common_customfields_config() {
 	$VGJPM_Custom_Field_Job_Post = new VGJPM_Custom_Field_Job_Post();
 	$labels                      = $VGJPM_Custom_Field_Job_Post->custom_fields_array();
 
@@ -91,21 +120,8 @@ function vgjpm_get_common_customfields_config() {
 		'vkjp_addressRegion',
 		'vkjp_addressLocality',
 		'vkjp_streetAddress',
-		'vkjp_workHours',
-		'vkjp_specialCommitments',
 		'vkjp_currency',
-		'vkjp_employmentType',
-		'vkjp_value',
-		'vkjp_minValue',
-		'vkjp_maxValue',
-		'vkjp_incentiveCompensation',
-		'vkjp_salaryRaise',
-		'vkjp_unitText',
-		'vkjp_validThrough',
-		'vkjp_identifier',
 		'vkjp_applicantLocationRequirements_name',
-		'vkjp_directApply'
-		// 'vkjp_experienceRequirements',
 	);
 	$labels_ordered = array();
 	foreach ( $common_page_field_order as $key => $value ) {
@@ -115,18 +131,7 @@ function vgjpm_get_common_customfields_config() {
 	}
 
 	$common_customfields = array(
-		'vkjp_value',
-		'vkjp_minValue',
-		'vkjp_maxValue',
-		'vkjp_unitText',
 		'vkjp_currency',
-		'vkjp_salaryCurrency',
-		'vkjp_incentiveCompensation',
-		'vkjp_salaryRaise',
-		'vkjp_workHours',
-		'vkjp_employmentType',
-		'vkjp_experienceRequirements',
-		'vkjp_specialCommitments',
 		'vkjp_name',
 		'vkjp_sameAs',
 		'vkjp_logo',
@@ -135,15 +140,11 @@ function vgjpm_get_common_customfields_config() {
 		'vkjp_addressRegion',
 		'vkjp_addressLocality',
 		'vkjp_streetAddress',
-		'vkjp_validThrough',
-		'vkjp_identifier',
 		'vkjp_applicantLocationRequirements_name',
-		'vkjp_directApply'
 	);
 
 	foreach ( $labels_ordered as $key => $value ) {
 		if ( in_array( $key, $common_customfields ) ) {
-
 			$new_array = array(
 				'label'       => $value['label'],
 				'type'        => $value['type'],
@@ -162,13 +163,11 @@ function vgjpm_get_common_customfields_config() {
 }
 
 function vgjpm_render_settings() {
-
 	$common_custom_fields = vgjpm_get_common_customfields_config();
 
 	vgjpm_save_data( $common_custom_fields );
 
 	echo vgjpm_create_common_form( $common_custom_fields );
-
 }
 
 /**
@@ -179,7 +178,6 @@ function vgjpm_render_settings() {
  * @return [type]                      [description]
  */
 function vgjpm_create_common_form( $common_customfields ) {
-
 	$form = '<div class="vgjpm">';
 
 	$form .= '<h1>' . __( 'Job Posting Manager Settings', 'vk-google-job-posting-manager' ) . '</h1>';
@@ -221,31 +219,31 @@ function vgjpm_create_common_form( $common_customfields ) {
  * @return [type]                      [description]
  */
 function vgjpm_render_form_input( $common_customfields ) {
-
 	global $vgjpm_prefix;
+	$field_prefix = 'vkjpm_common_fields';
+	$options = vkjpm_get_common_field_options();
 
 	$form = '<table class="admin-table">';
 
 	foreach ( $common_customfields as $key => $value ) {
-
 		$form .= '<tr>';
 		$form .= '<th>' . esc_html( $value['label'] ) . '</th>';
 		$form .= '<td>';
 
 		if ( $value['type'] == 'text' ) {
-			$form .= '<input type="text" name="' . $vgjpm_prefix . esc_attr( $key ) . '" value="' . get_option( $vgjpm_prefix . esc_attr( $key ) ) . '">';
+			$form .= '<input type="text" name="' . $field_prefix . '[' . esc_attr( $key ) . ']'  . '" value="' . $options[ esc_attr( $key ) ] . '">';
 
 		} elseif ( $value['type'] == 'textarea' ) {
 
-			$form .= '<textarea class="form-control" class="cf_textarea_wysiwyg" name="' . $vgjpm_prefix . esc_attr( $key ) . '" cols="70" rows="3">' . esc_html( get_option( $vgjpm_prefix . esc_attr( $key ) ) ) . '</textarea>';
+			$form .= '<textarea class="form-control" class="cf_textarea_wysiwyg" name="' . $field_prefix . '[' . esc_attr( $key ) . ']'  . '" cols="70" rows="3">' . esc_html( $options[ esc_attr( $key ) ] ) . '</textarea>';
 
 		} elseif ( $value['type'] == 'datepicker' ) {
 
-			$form .= '<input class="form-control datepicker" type="text" " name="' . $vgjpm_prefix . esc_attr( $key ) . '" value="' . get_option( $vgjpm_prefix . esc_attr( $key ) ) . '" size="70">';
+			$form .= '<input class="form-control datepicker" type="text" " name="' . $field_prefix . '[' . esc_attr( $key ) . ']'  . '" value="' . $options[ esc_attr( $key ) ] . '" size="70">';
 
 		} elseif ( $value['type'] == 'image' ) {
 
-			$saved = get_option( $vgjpm_prefix . esc_attr( $key ) );
+			$saved = $options[ esc_attr( $key ) ];
 
 			if ( ! empty( $saved ) ) {
 				$thumb_image_url = wp_get_attachment_url( $saved );
@@ -256,7 +254,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 			// ダミー & プレビュー画像
 			$form .= '<img src="' . $thumb_image_url . '" id="thumb_' . esc_attr( $key ) . '" alt="" class="input_thumb" style="width:200px;height:auto;"> ';
 			// 実際に送信する値
-			$form .= '<input type="hidden" name="' . $vgjpm_prefix . esc_attr( $key ) . '" id="' . esc_attr( $key ) . '" value="' . $thumb_image_url . '" style="width:60%;" />';
+			$form .= '<input type="hidden" name="' . $field_prefix . '[' . esc_attr( $key ) . ']'  . '" id="' . esc_attr( $key ) . '" value="' . $options[ esc_attr( $key ) ] . '" style="width:60%;" />';
 			// $form .= '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . self::form_post_value( $key ) . '" style="width:60%;" />';
 			// 画像選択ボタン
 			// .media_btn がトリガーでメディアアップローダーが起動する
@@ -267,52 +265,43 @@ function vgjpm_render_form_input( $common_customfields ) {
 			// 削除ボタン
 			// ボタンタグだとその場でページが再読込されてしまうのでaタグに変更
 			$form .= '<a id="media_reset_' . $key . '" class="media_reset_btn btn btn-default button button-default">' . __( 'Delete Image', 'vk-google-job-posting-manager' ) . '</a>';
-
 		} elseif ( $value['type'] == 'select' ) {
 
-			$form .= '<select name="' . $vgjpm_prefix . esc_attr( $key ) . '"  >';
+			$form .= '<select name="' . $field_prefix . '[' . esc_attr( $key ) . ']'  . '"  >';
 
 			foreach ( $value['options'] as $option_value => $option_label ) {
 
-				$saved = get_option( $vgjpm_prefix . esc_attr( $key ) );
+				$saved = $options[ esc_attr( $key ) ];
 
 				if ( $saved == $option_value ) {
 					$selected = ' selected="selected"';
 				} else {
 					$selected = '';
-
 				}
 
 				$form .= '<option value="' . esc_attr( $option_value ) . '" ' . esc_attr( $selected ) . '>' . esc_html( $option_label ) . '</option>';
 			}
 			$form .= '</select>';
-
 		} elseif ( $value['type'] == 'checkbox' ) {
-
 			$form .= '<ul>';
 
-			$saved = get_option( $vgjpm_prefix . esc_attr( $key ) );
+			$saved = $options[ esc_attr( $key ) ];
 
 			if ( $value['type'] == 'checkbox' ) {
-
 				foreach ( $value['options'] as $option_value => $option_label ) {
-
 					if ( is_array( $saved ) && in_array( $option_value, $saved ) ) {
 						$selected = ' checked';
 					} else {
 						$selected = '';
 					}
 					$form .= '<li style="list-style: none"><label><input type="checkbox" name="' . $vgjpm_prefix . esc_attr( $key ) . '[]" value="' . esc_attr( $option_value ) . '" ' . esc_attr( $selected ) . '  /><span>' . esc_html( $option_label ) . '</span></label></li>';
-
 				}
 				$form .= '</ul>';
-
 			}
 		}
 		$form .= '<div>' . wp_kses_post( $value['description'] ) . '</div>';
 		$form .= '</td>';
 		$form .= '</tr>';
-
 	} // foreach ( $common_customfields as $key => $value ) {
 	$form .= '</table>';
 
@@ -321,8 +310,9 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 
 function vgjpm_save_data( $common_customfields ) {
-
 	global $vgjpm_prefix;
+	$options = vkjpm_get_common_field_options();
+	$field_prefix = 'vkjpm_common_fields';
 
 	// nonce
 	if ( ! isset( $_POST['vgjpm_nonce'] ) ) {
@@ -337,25 +327,22 @@ function vgjpm_save_data( $common_customfields ) {
 	}
 
 	foreach ( $common_customfields as $key => $value ) {
-
 		if ( $value['type'] == 'text' || $value['type'] == 'select' || $value['type'] == 'image' || $value['type'] == 'datepicker' ) {
 
-			update_option( $vgjpm_prefix . sanitize_text_field( $key ), vgjpm_sanitize_arr( $_POST[ $vgjpm_prefix . $key ] ) );
+			$options[ $key ] = vgjpm_sanitize_arr( $_POST[ $field_prefix ][ $key ] );
 
 		} elseif ( $value['type'] == 'textarea' ) {
 
-			update_option( $vgjpm_prefix . sanitize_text_field( $key ), sanitize_textarea_field( $_POST[ $vgjpm_prefix . $key ] ) );
+			$options[ $key ] = sanitize_textarea_field( $_POST[ $field_prefix ][ $key ] );
 
 		} elseif ( $value['type'] == 'checkbox' ) {
 
-			$checkbox_key = $vgjpm_prefix . sanitize_text_field( $key );
+			if ( isset( $_POST[ $field_prefix ][ $key ] ) && is_array( $_POST[ $field_prefix ][ $key ] ) ) {
 
-			if ( isset( $_POST[ $checkbox_key ] ) && is_array( $_POST[ $checkbox_key ] ) ) {
-
-				update_option( $checkbox_key, vgjpm_sanitize_arr( $_POST[ $checkbox_key ] ) );
+				$options[ $key ] = vgjpm_sanitize_arr( $_POST[ $field_prefix ][ $key ] );
 
 			} else {
-				update_option( $checkbox_key, array() );
+				$options[ $key ] = array();
 
 			}
 		}
@@ -364,10 +351,10 @@ function vgjpm_save_data( $common_customfields ) {
 
 		vgjpm_save_create_jobpost_posttype();
 	}
+	update_option( $field_prefix, $options );
 }
 
 function vgjpm_save_create_jobpost_posttype() {
-
 	$name = 'vgjpm_create_jobpost_posttype';
 
 	if ( isset( $_POST[ $name ] ) ) {
@@ -375,13 +362,9 @@ function vgjpm_save_create_jobpost_posttype() {
 	} else {
 		update_option( $name, false );
 	}
-
 }
 
-
-
 function vgjpm_save_check_list() {
-
 	$args       = array(
 		'public' => true,
 	);
@@ -389,7 +372,6 @@ function vgjpm_save_check_list() {
 
 	foreach ( $post_types as $key => $value ) {
 		if ( $key != 'attachment' ) {
-
 			$name = 'vgjpm_post_type_display_customfields' . sanitize_text_field( $key );
 
 			if ( isset( $_POST[ $name ] ) ) {
@@ -402,11 +384,9 @@ function vgjpm_save_check_list() {
 }
 
 function vgjpm_print_jsonLD_in_footer() {
-
 	$post_id       = get_the_ID();
 	$custom_fields = vgjpm_get_custom_fields( $post_id );
 	echo vgjpm_generate_jsonLD( $custom_fields );
-
 }
 add_action( 'wp_head', 'vgjpm_print_jsonLD_in_footer', 9999 );
 
@@ -445,7 +425,6 @@ add_action( 'wp_insert_post', 'vgjpm_send_sitemap_to_google', 10, 1 );
  * @return mixed
  */
 function vgjpm_esc_script( $html ) {
-
 	$needles = array( '<script>', '</script>', 'script' );
 	$return  = str_replace( $needles, '', $html );
 	return $return;
@@ -459,13 +438,11 @@ function vgjpm_esc_script( $html ) {
  * @return mixed
  */
 function vgjpm_esc_newline( $html ) {
-
 	$return = str_replace( array( "\r\n", "\n", "\r" ), '', $html );
 	return $return;
 }
 
 function vgjpm_generate_jsonLD( $custom_fields ) {
-
 	if ( ! isset( $custom_fields['vkjp_title'] ) ) {
 		return;
 	}

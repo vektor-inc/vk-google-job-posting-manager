@@ -1,20 +1,77 @@
 name: Deploy to WordPress.org
 on:
-  push:
-    tags:
-    - "*"
+    push:
+        tags:
+             - '[0-9]+.[0-9]+.[0-9]+'
+env:
+    plugin_name: vk-google-job-posting-manager
 jobs:
-  tag:
-    name: New tag
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@master
-    - name: Build
-      run: |
-        npm install
-        npm run build
-    - name: WordPress Plugin Deploy
-      uses: 10up/action-wordpress-plugin-deploy@master
-      env:
-        SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
-        SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+    plugin-deploy:
+        name:  WordPress Plugin Deploy
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@master
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: 14.x
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 7.4
+            - name: Install NPM Scripts
+              run: npm install
+            - name: Install Composer Packages
+              run: composer install
+            - name: Build
+              run: npm run build
+            - name: Make Distribution
+              run: composer install --no-dev
+            - name: WordPress Plugin Deploy
+              uses: 10up/action-wordpress-plugin-deploy@master
+              env:
+                  SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+                  SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+                  SLUG: ${{ env.plugin_name }}
+    release:
+        name: Create Release
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@master
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: 14.x
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 7.4
+            - name: Install NPM Scripts
+              run: npm install
+            - name: Install Composer Packages
+              run: composer install
+            - name: Build
+              run: npm run build
+            - name: Make Distribution
+              run: |
+                  npm run dist
+                  cd dist/ && zip -r ${{ env.plugin_name }}.zip ${{ env.plugin_name }}/ && mv ${{ env.plugin_name }}.zip ${GITHUB_WORKSPACE}
+            - name: Create Release
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: ${{ github.ref }}
+                  release_name: Release ${{ github.ref }}
+                  draft: false
+                  prerelease: false
+            - run: test -e ${{ env.plugin_name }}.zip
+            - name: Upload Release Asset
+              id: upload-release-asset
+              uses: actions/upload-release-asset@v1.0.1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ${{ env.plugin_name }}.zip
+                  asset_name: ${{ env.plugin_name }}.zip
+                  asset_content_type: application/zip
