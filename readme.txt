@@ -1,5 +1,5 @@
 === VK Google Job Posting Manager ===
-Contributors: vektor-inc,kurudrive,naoki0h
+Contributors: vektor-inc,kurudrive,naoki0h,una9,rickaddison7634
 Donate link:
 Tags: Google Job Posting, Recruitment, Gutenberg.
 Requires at least: 5.7
