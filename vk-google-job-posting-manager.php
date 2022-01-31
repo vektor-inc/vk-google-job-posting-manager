@@ -509,9 +509,9 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 			"maxValue": ' . esc_attr( $custom_fields['vkjp_maxValue'] ) . ',
 			"unitText": "' . esc_attr( $custom_fields['vkjp_unitText'] ) . '"
 		}
-	},';
+	}';
 	if ( $custom_fields['vkjp_directApply'] ) {
-		$JSON .= '
+		$JSON .= ',
 	"directApply": true';
 	}
 	$JSON .= '
