@@ -7,7 +7,7 @@
  * Author URI:      https://www.vektor-inc.co.jp
  * Text Domain:     vk-google-job-posting-manager
  * Domain Path:     /languages
- * Version:         1.2.11
+ * Version:         1.2.12
  * Requires at least: 5.7
  *
  * @package         Vk_Google_Job_Posting_Manager
@@ -97,7 +97,7 @@ function vkjpm_get_common_field_options() {
 		);
 
 		$new_options = array();
-		foreach( $old_options_array as $old_option ) {
+		foreach ( $old_options_array as $old_option ) {
 			$new_options[ $old_option ] = get_option( $vgjpm_prefix . esc_attr( $old_option ) );
 			delete_option( $vgjpm_prefix . esc_attr( $old_option ) );
 		}
@@ -123,7 +123,7 @@ function vgjpm_get_common_customfields_config() {
 		'vkjp_currency',
 		'vkjp_applicantLocationRequirements_name',
 	);
-	$labels_ordered = array();
+	$labels_ordered          = array();
 	foreach ( $common_page_field_order as $key => $value ) {
 		if ( isset( $labels[ $value ] ) ) {
 			$labels_ordered[ $value ] = $labels[ $value ];
@@ -221,7 +221,7 @@ function vgjpm_create_common_form( $common_customfields ) {
 function vgjpm_render_form_input( $common_customfields ) {
 	global $vgjpm_prefix;
 	$field_prefix = 'vkjpm_common_fields';
-	$options = vkjpm_get_common_field_options();
+	$options      = vkjpm_get_common_field_options();
 
 	$form = '<table class="admin-table">';
 
@@ -231,15 +231,15 @@ function vgjpm_render_form_input( $common_customfields ) {
 		$form .= '<td>';
 
 		if ( $value['type'] == 'text' ) {
-			$form .= '<input type="text" name="' . $field_prefix . '[' . esc_attr( $key ) . ']'  . '" value="' . $options[ esc_attr( $key ) ] . '">';
+			$form .= '<input type="text" name="' . $field_prefix . '[' . esc_attr( $key ) . ']' . '" value="' . $options[ esc_attr( $key ) ] . '">';
 
 		} elseif ( $value['type'] == 'textarea' ) {
 
-			$form .= '<textarea class="form-control" class="cf_textarea_wysiwyg" name="' . $field_prefix . '[' . esc_attr( $key ) . ']'  . '" cols="70" rows="3">' . esc_html( $options[ esc_attr( $key ) ] ) . '</textarea>';
+			$form .= '<textarea class="form-control" class="cf_textarea_wysiwyg" name="' . $field_prefix . '[' . esc_attr( $key ) . ']' . '" cols="70" rows="3">' . esc_html( $options[ esc_attr( $key ) ] ) . '</textarea>';
 
 		} elseif ( $value['type'] == 'datepicker' ) {
 
-			$form .= '<input class="form-control datepicker" type="text" " name="' . $field_prefix . '[' . esc_attr( $key ) . ']'  . '" value="' . $options[ esc_attr( $key ) ] . '" size="70">';
+			$form .= '<input class="form-control datepicker" type="text" " name="' . $field_prefix . '[' . esc_attr( $key ) . ']' . '" value="' . $options[ esc_attr( $key ) ] . '" size="70">';
 
 		} elseif ( $value['type'] == 'image' ) {
 
@@ -254,7 +254,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 			// ダミー & プレビュー画像
 			$form .= '<img src="' . $thumb_image_url . '" id="thumb_' . esc_attr( $key ) . '" alt="" class="input_thumb" style="width:200px;height:auto;"> ';
 			// 実際に送信する値
-			$form .= '<input type="hidden" name="' . $field_prefix . '[' . esc_attr( $key ) . ']'  . '" id="' . esc_attr( $key ) . '" value="' . $options[ esc_attr( $key ) ] . '" style="width:60%;" />';
+			$form .= '<input type="hidden" name="' . $field_prefix . '[' . esc_attr( $key ) . ']' . '" id="' . esc_attr( $key ) . '" value="' . $options[ esc_attr( $key ) ] . '" style="width:60%;" />';
 			// $form .= '<input type="hidden" name="' . $key . '" id="' . $key . '" value="' . self::form_post_value( $key ) . '" style="width:60%;" />';
 			// 画像選択ボタン
 			// .media_btn がトリガーでメディアアップローダーが起動する
@@ -267,7 +267,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 			$form .= '<a id="media_reset_' . $key . '" class="media_reset_btn btn btn-default button button-default">' . __( 'Delete Image', 'vk-google-job-posting-manager' ) . '</a>';
 		} elseif ( $value['type'] == 'select' ) {
 
-			$form .= '<select name="' . $field_prefix . '[' . esc_attr( $key ) . ']'  . '"  >';
+			$form .= '<select name="' . $field_prefix . '[' . esc_attr( $key ) . ']' . '"  >';
 
 			foreach ( $value['options'] as $option_value => $option_label ) {
 
@@ -311,7 +311,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 function vgjpm_save_data( $common_customfields ) {
 	global $vgjpm_prefix;
-	$options = vkjpm_get_common_field_options();
+	$options      = vkjpm_get_common_field_options();
 	$field_prefix = 'vkjpm_common_fields';
 
 	// nonce
@@ -509,9 +509,9 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 			"maxValue": ' . esc_attr( $custom_fields['vkjp_maxValue'] ) . ',
 			"unitText": "' . esc_attr( $custom_fields['vkjp_unitText'] ) . '"
 		}
-	},';
+	}';
 	if ( $custom_fields['vkjp_directApply'] ) {
-		$JSON .= '
+		$JSON .= ',
 	"directApply": true';
 	}
 	$JSON .= '
