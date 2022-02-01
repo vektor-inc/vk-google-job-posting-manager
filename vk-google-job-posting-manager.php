@@ -490,16 +490,16 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 			"postalCode": "' . esc_attr( $custom_fields['vkjp_postalCode'] ) . '",
 			"addressCountry": "' . esc_attr( $custom_fields['vkjp_addressCountry'] ) . '"
 		}
-	},';
+	}';
 	if ( $custom_fields['vkjp_jobLocationType'] ) {
-		$JSON .= '
+		$JSON .= ',
 	"jobLocationType": "' . esc_attr( $custom_fields['vkjp_jobLocationType'] ) . '",
 	"applicantLocationRequirements": {
 		"@type": "Country",
 		"name": "' . esc_attr( $custom_fields['vkjp_applicantLocationRequirements_name'] ) . '"
-	},';
+	}';
 	}
-	$JSON .= '
+	$JSON .= ',
 	"baseSalary": {
 		"@type": "MonetaryAmount",
 		"currency": "' . esc_attr( $custom_fields['vkjp_currency'] ) . '",
