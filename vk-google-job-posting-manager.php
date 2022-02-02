@@ -7,7 +7,7 @@
  * Author URI:      https://www.vektor-inc.co.jp
  * Text Domain:     vk-google-job-posting-manager
  * Domain Path:     /languages
- * Version:         1.2.12
+ * Version:         1.2.13
  * Requires at least: 5.7
  *
  * @package         Vk_Google_Job_Posting_Manager
@@ -490,16 +490,16 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 			"postalCode": "' . esc_attr( $custom_fields['vkjp_postalCode'] ) . '",
 			"addressCountry": "' . esc_attr( $custom_fields['vkjp_addressCountry'] ) . '"
 		}
-	},';
+	}';
 	if ( $custom_fields['vkjp_jobLocationType'] ) {
-		$JSON .= '
+		$JSON .= ',
 	"jobLocationType": "' . esc_attr( $custom_fields['vkjp_jobLocationType'] ) . '",
 	"applicantLocationRequirements": {
 		"@type": "Country",
 		"name": "' . esc_attr( $custom_fields['vkjp_applicantLocationRequirements_name'] ) . '"
-	},';
+	}';
 	}
-	$JSON .= '
+	$JSON .= ',
 	"baseSalary": {
 		"@type": "MonetaryAmount",
 		"currency": "' . esc_attr( $custom_fields['vkjp_currency'] ) . '",
