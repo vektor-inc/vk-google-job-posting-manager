@@ -459,6 +459,14 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 		$custom_fields['vkjp_employmentType'] = '["' . $custom_fields['vkjp_employmentType'] . '"]';
 	}
 
+	if ( empty( $custom_fields['vkjp_minValue'] ) ) {
+		$custom_fields['vkjp_minValue'] = 0;
+	}
+
+	if ( empty( $custom_fields['vkjp_maxValue'] ) ) {
+		$custom_fields['vkjp_maxValue'] = 0;
+	}
+
 	$JSON = '
 <script type="application/ld+json">
 {
