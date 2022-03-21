@@ -505,8 +505,14 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 		"currency": "' . esc_attr( $custom_fields['vkjp_currency'] ) . '",
 		"value": {
 			"@type": "QuantitativeValue",
-			"minValue": ' . esc_attr( $custom_fields['vkjp_minValue'] ) . ',
-			"maxValue": ' . esc_attr( $custom_fields['vkjp_maxValue'] ) . ',
+			';
+	if ( null !== $custom_fields['vkjp_minValue'] && '' !== $custom_fields['vkjp_minValue'] ) {
+		$JSON .= '"minValue": ' . esc_attr( $custom_fields['vkjp_minValue'] ) . ',';
+	}
+	if ( null !== $custom_fields['vkjp_maxValue'] && '' !== $custom_fields['vkjp_maxValue'] ) {
+		$JSON .= '"maxValue": ' . esc_attr( $custom_fields['vkjp_maxValue'] ) . ',';
+	}
+		$JSON .= '
 			"unitText": "' . esc_attr( $custom_fields['vkjp_unitText'] ) . '"
 		}
 	}';
