@@ -7,7 +7,7 @@
  * Author URI:      https://www.vektor-inc.co.jp
  * Text Domain:     vk-google-job-posting-manager
  * Domain Path:     /languages
- * Version:         1.2.13
+ * Version:         1.2.14
  * Requires at least: 5.7
  *
  * @package         Vk_Google_Job_Posting_Manager
@@ -505,8 +505,14 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 		"currency": "' . esc_attr( $custom_fields['vkjp_currency'] ) . '",
 		"value": {
 			"@type": "QuantitativeValue",
-			"minValue": ' . esc_attr( $custom_fields['vkjp_minValue'] ) . ',
-			"maxValue": ' . esc_attr( $custom_fields['vkjp_maxValue'] ) . ',
+			';
+	if ( null !== $custom_fields['vkjp_minValue'] && '' !== $custom_fields['vkjp_minValue'] ) {
+		$JSON .= '"minValue": ' . esc_attr( $custom_fields['vkjp_minValue'] ) . ',';
+	}
+	if ( null !== $custom_fields['vkjp_maxValue'] && '' !== $custom_fields['vkjp_maxValue'] ) {
+		$JSON .= '"maxValue": ' . esc_attr( $custom_fields['vkjp_maxValue'] ) . ',';
+	}
+		$JSON .= '
 			"unitText": "' . esc_attr( $custom_fields['vkjp_unitText'] ) . '"
 		}
 	}';
