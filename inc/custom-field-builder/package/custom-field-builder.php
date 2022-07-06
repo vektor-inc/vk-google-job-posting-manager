@@ -12,7 +12,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 	class VK_Custom_Field_Builder {
 
-		public static $version = '0.2.1';
+		public static $version = '0.2.2';
 
 		// define( 'Bill_URL', get_template_directory_uri() );
 		public static function init() {
@@ -42,22 +42,21 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				)
 			);
 
-			/*
-			flexible-table の js が NestedPagesのjsと干渉して正常に動かなくなるので、NestedPagesのページで読み込まないように
-			*/
+			// flexible-table の js が NestedPagesのjsと干渉して正常に動かなくなるので、NestedPagesのページで読み込まないように.
 			global $hook_suffix;
 			$cfb_flexible_table_excludes = array( 'toplevel_page_nestedpages' );
 			$cfb_flexible_table_excludes = apply_filters( 'cfb_flexible_table_excludes', $cfb_flexible_table_excludes );
 
-			if ( ! in_array( $hook_suffix, $cfb_flexible_table_excludes ) ) {
+			if ( ! in_array( $hook_suffix, $cfb_flexible_table_excludes, true ) ) {
 				wp_enqueue_script( 'flexible-table', self::admin_directory_url() . 'js/flexible-table.js', array( 'jquery', 'jquery-ui-sortable' ), self::$version, true );
 			}
 
 			wp_enqueue_style( 'cf-builder-style', self::admin_directory_url() . 'css/cf-builder.css', array(), self::$version, 'all' );
 
-			// Contact form 7　が jQuery ui のクラス名を使っていて干渉するので除外.
-			$cfb_jquery_ui_excludes = array( 'toplevel_page_wpcf7' );
-			if ( ! in_array( $hook_suffix, $cfb_jquery_ui_excludes ) ) {
+			// Contact form 7　など jQuery ui のクラス名を使っていて干渉するので除外 .
+			$cfb_jquery_ui_excludes = array( 'toplevel_page_wpcf7', 'toplevel_page_gf_edit_forms' );
+			$cfb_jquery_ui_excludes = apply_filters( 'cfb_jquery_ui_excludes', $cfb_jquery_ui_excludes );
+			if ( ! in_array( $hook_suffix, $cfb_jquery_ui_excludes, true ) ) {
 				wp_enqueue_style( 'cf-builder-jquery-ui-style', self::admin_directory_url() . 'css/jquery-ui.css', array( 'cf-builder-style' ), self::$version, 'all' );
 			}
 

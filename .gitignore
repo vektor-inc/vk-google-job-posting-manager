@@ -7,3 +7,4 @@ vendor/
 *.sql
 *.tar.gz
 *.zip
+.wp-env.override.json

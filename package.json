@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm install && npm run build && npm run watch && wp plugin activate vk-google-job-posting-manager && wp browse --wp-admin",
     "watch": "npx gulp watch",
-    "build": "npx gulp replace_text_domain && npm run build:block && npm run build:css",
+    "build": "npx gulp replace_text_domain && npm run build:block && npm run build:css && npx gulp replace_text_domain",
     "build:css": "sass --style=compressed --no-source-map blocks/create-table/src/:blocks/create-table/build/ assets/_scss/:assets/css/",
     "build:block": "wp-scripts build --config webpack.config.js",
     "lint": "wp-scripts format && wp-scripts lint-js --fix",
