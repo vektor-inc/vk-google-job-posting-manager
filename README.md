@@ -5,3 +5,8 @@
 npm run build
 ```
 
+PHPUnitテスト
+```
+npm run phpunit
+```
+
