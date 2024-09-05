@@ -13,11 +13,11 @@ jobs:
           - uses: actions/checkout@master
           - uses: actions/setup-node@v1
             with:
-                node-version: 14.x
+                node-version: 20.x
           - name: Setup PHP
             uses: shivammathur/setup-php@v2
             with:
-                php-version: 7.4
+                php-version: 8.2
           - name: Install NPM Scripts
             run: npm install
           - name: Install Composer Packages
@@ -39,11 +39,11 @@ jobs:
             - uses: actions/checkout@master
             - uses: actions/setup-node@v1
               with:
-                  node-version: 14.x
+                  node-version: 20.x
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.4
+                  php-version: 8.2
             - name: Install NPM Scripts
               run: npm install
             - name: Install Composer Packages

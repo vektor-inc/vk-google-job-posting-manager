@@ -64,6 +64,17 @@ function vgjpm_block_init() {
 		$asset_file['version']
 	);
 
+	// WordPress 6.5 以下の対策
+	if ( ! wp_script_is( 'react-jsx-runtime', 'registered' ) ) {
+		wp_register_script(
+			'react-jsx-runtime',
+			VGJPM_URL . '/assets/js/react-jsx-runtime.js',
+			array( 'react' ),
+			'18.3.1',
+			true
+		);
+	}
+
 	register_block_type(
 		'vk-google-job-posting-manager/create-table',
 		array(
