@@ -45,6 +45,8 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
+* [ Other ] WordPress 6.6 Compatible
+
 = 1.2.15 =
 * [ Other ] Update custom field builder 0.2.2
 
