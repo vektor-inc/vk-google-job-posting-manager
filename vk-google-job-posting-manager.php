@@ -7,13 +7,13 @@
  * Author URI:      https://www.vektor-inc.co.jp
  * Text Domain:     vk-google-job-posting-manager
  * Domain Path:     /languages
- * Version:         1.2.15
+ * Version:         1.2.16
  * Requires at least: 5.7
  *
  * @package         Vk_Google_Job_Posting_Manager
  */
 /*
- Setting & load file
+Setting & load file
 /*-------------------------------------------*/
 $vgjpm_prefix = 'common_';
 $data         = get_file_data(
@@ -23,15 +23,15 @@ $data         = get_file_data(
 		'textdomain' => 'Text Domain',
 	)
 );
- define( 'VGJPM_VERSION', $data['version'] );
- define( 'VGJPM_BASENAME', plugin_basename( __FILE__ ) );
- define( 'VGJPM_URL', plugin_dir_url( __FILE__ ) );
- define( 'VGJPM_DIR', plugin_dir_path( __FILE__ ) );
+define( 'VGJPM_VERSION', $data['version'] );
+define( 'VGJPM_BASENAME', plugin_basename( __FILE__ ) );
+define( 'VGJPM_URL', plugin_dir_url( __FILE__ ) );
+define( 'VGJPM_DIR', plugin_dir_path( __FILE__ ) );
 
-require_once dirname( __FILE__ ) . '/functions-tags.php';
-require_once dirname( __FILE__ ) . '/inc/custom-field-builder/package/custom-field-builder.php';
-require_once dirname( __FILE__ ) . '/inc/custom-field-builder/custom-field-builder-config.php';
-require_once dirname( __FILE__ ) . '/blocks/vk-google-job-posting-manager-block.php';
+require_once __DIR__ . '/functions-tags.php';
+require_once __DIR__ . '/inc/custom-field-builder/package/custom-field-builder.php';
+require_once __DIR__ . '/inc/custom-field-builder/custom-field-builder-config.php';
+require_once __DIR__ . '/blocks/vk-google-job-posting-manager-block.php';
 
 function vgjpm_load_textdomain() {
 	load_plugin_textdomain( 'vk-google-job-posting-manager', false, 'vk-google-job-posting-manager/languages' );
@@ -45,7 +45,7 @@ register_activation_hook( __FILE__, 'vgjpm_activate' );
 
 $flag_custom_posttype = get_option( 'vgjpm_create_jobpost_posttype' );
 if ( isset( $flag_custom_posttype ) && $flag_custom_posttype == 'true' ) {
-	require_once dirname( __FILE__ ) . '/inc/custom-posttype-builder.php';
+	require_once __DIR__ . '/inc/custom-posttype-builder.php';
 }
 
 function vgjpm_add_setting_menu() {

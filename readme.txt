@@ -2,9 +2,9 @@
 Contributors: vektor-inc,kurudrive,naoki0h,una9,rickaddison7634
 Donate link:
 Tags: Google Job Posting, Recruitment, Gutenberg.
-Requires at least: 5.7
-Tested up to: 6.0.0
-Stable tag: 1.2.15
+Requires at least: 6.2
+Tested up to: 6.6
+Stable tag: 1.2.16
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -45,7 +45,8 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
-* [ Other ] WordPress 6.6 Compatible
+= 1.2.16 =
+* [ Bug fix ] WordPress 6.6 Compatible
 
 = 1.2.15 =
 * [ Other ] Update custom field builder 0.2.2
