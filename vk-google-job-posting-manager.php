@@ -7,8 +7,8 @@
  * Author URI:      https://www.vektor-inc.co.jp
  * Text Domain:     vk-google-job-posting-manager
  * Domain Path:     /languages
- * Version:         1.2.16
- * Requires at least: 5.7
+ * Version:         1.2.17
+ * Requires at least: 6.3
  *
  * @package         Vk_Google_Job_Posting_Manager
  */
