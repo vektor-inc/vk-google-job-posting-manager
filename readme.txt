@@ -4,7 +4,8 @@ Donate link:
 Tags: Google Job Posting, Recruitment, Gutenberg.
 Requires at least: 6.3
 Tested up to: 6.6
-Stable tag: 1.2.17
+Stable tag: 1.2.18
+Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +45,9 @@ You can overwrite common fields value by fill out each post's custom fields.
 4. You can use common fields to omit to enter duplicated information.
 
 == Changelog ==
+
+= 1.2.18 =
+* [ Outer ] Add PHP Require 7.4
 
 = 1.2.17 =
 * [ Bug fix ] Update Custom Field Builder 0.2.3
