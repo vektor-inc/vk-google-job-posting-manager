@@ -28,7 +28,7 @@
     "@wordpress/i18n": "^5.7.0",
     "@wordpress/scripts": "^29.0.0",
     "babel-plugin-inline-json-import": "^0.3.2",
-    "gulp": "^4.0.2",
+    "gulp": "^5.0.1",
     "gulp-autoprefixer": "^9.0.0",
     "gulp-clean-css": "^4.3.0",
     "gulp-load-plugins": "^2.0",
