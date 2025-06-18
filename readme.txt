@@ -46,8 +46,10 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
+* [ Outer ] Update block to use apiVersion: 3 for iframe-based editing
+
 = 1.2.19 =
-[ Bug fix ] Fixed an issue where a value of 0 in a custom field would disappear after reloading the page.
+* [ Bug fix ] Fixed an issue where a value of 0 in a custom field would disappear after reloading the page.
 
 = 1.2.18 =
 * [ Outer ] Add PHP Require 7.4
