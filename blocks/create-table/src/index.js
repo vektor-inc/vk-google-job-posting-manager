@@ -6,6 +6,7 @@ import { PanelBody, SelectControl, BaseControl } from '@wordpress/components';
 import { InspectorControls } from '@wordpress/block-editor';
 
 registerBlockType('vk-google-job-posting-manager/create-table', {
+	apiVersion: 3,
 	title: __('Job Posting', 'vk-google-job-posting-manager'),
 	category: 'vk-blocks-cat',
 	attributes: {
