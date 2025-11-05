@@ -46,6 +46,8 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
+[ Add feature ] Added i18n support for "Job Posting" block to enable WordPress.org translations.
+
 = 1.2.20 =
 * [ Outer ] Update block to use apiVersion: 3 for iframe-based editing
 

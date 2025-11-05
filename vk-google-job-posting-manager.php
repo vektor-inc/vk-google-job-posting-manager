@@ -38,6 +38,18 @@ function vgjpm_load_textdomain() {
 }
 add_action( 'plugins_loaded', 'vgjpm_load_textdomain' );
 
+if ( ! function_exists( 'vgjpm_set_script_translations' ) ) {
+	/**
+	 * Set text domain for JavaScript translations.
+	 */
+	function vgjpm_set_script_translations() {
+		if ( function_exists( 'wp_set_script_translations' ) ) {
+			wp_set_script_translations( 'vk-google-job-posting-manager-block-editor', 'vk-google-job-posting-manager' );
+		}
+	}
+	add_action( 'enqueue_block_editor_assets', 'vgjpm_set_script_translations' );
+}
+
 function vgjpm_activate() {
 	update_option( 'vgjpm_create_jobpost_posttype', 'true' );
 }
