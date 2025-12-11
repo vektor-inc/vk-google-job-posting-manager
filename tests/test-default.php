@@ -250,7 +250,7 @@ class DefaultTest extends WP_UnitTestCase {
 		$decoded = json_decode( trim( $json ), true );
 
 		$this->assertSame( 'ダブル"クォート & アポ\'ス', $decoded['title'] );
-		$this->assertSame( '説明 " &  ', $decoded['description'] );
+		$this->assertSame( '説明 " & < >', $decoded['description'] );
 	}
 
 	/**
