@@ -146,7 +146,11 @@ class DefaultTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test vgjpm_generate_jsonLD excludes non-numeric min/max values.
+	 * Verifies that JSON-LD generation omits non-numeric or empty salary bounds.
+	 *
+	 * Constructs custom job fields where minValue is non-numeric and maxValue is empty,
+	 * generates JSON-LD via vgjpm_generate_jsonLD, and asserts that neither
+	 * `minValue` nor `maxValue` appear under `baseSalary.value`.
 	 */
 	function test_generate_jsonLD_ignores_non_numeric_salary() {
 		$custom_fields = array(
@@ -183,7 +187,9 @@ class DefaultTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * title field should strip script tags.
+	 * Verifies that a title containing <script> tags is sanitized in the generated JSON-LD.
+	 *
+	 * Asserts the resulting `title` value has script tags removed and preserves the inner text.
 	 */
 	function test_generate_jsonLD_strips_title_script() {
 		$custom_fields = array(
