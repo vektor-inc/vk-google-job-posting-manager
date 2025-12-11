@@ -514,42 +514,42 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 		'employmentType'  => $employment_types,
 		'identifier'      => array(
 			'@type' => 'PropertyValue',
-			'name'  => $custom_fields['vkjp_name'],
-			'value' => $custom_fields['vkjp_identifier'],
+			'name'  => wp_strip_all_tags( $custom_fields['vkjp_name'] ),
+			'value' => wp_strip_all_tags( $custom_fields['vkjp_identifier'] ),
 		),
 		'hiringOrganization' => array(
 			'@type'  => 'Organization',
-			'name'   => $custom_fields['vkjp_name'],
-			'sameAs' => $custom_fields['vkjp_sameAs'],
-			'logo'   => $custom_fields['vkjp_logo'],
+			'name'   => wp_strip_all_tags( $custom_fields['vkjp_name'] ),
+			'sameAs' => esc_url_raw( $custom_fields['vkjp_sameAs'] ),
+			'logo'   => esc_url_raw( $custom_fields['vkjp_logo'] ),
 		),
 		'jobLocation' => array(
 			'@type'   => 'Place',
 			'address' => array(
 				'@type'           => 'PostalAddress',
-				'streetAddress'   => $custom_fields['vkjp_streetAddress'],
-				'addressLocality' => $custom_fields['vkjp_addressLocality'],
-				'addressRegion'   => $custom_fields['vkjp_addressRegion'],
-				'postalCode'      => $custom_fields['vkjp_postalCode'],
-				'addressCountry'  => $custom_fields['vkjp_addressCountry'],
+				'streetAddress'   => wp_strip_all_tags( $custom_fields['vkjp_streetAddress'] ),
+				'addressLocality' => wp_strip_all_tags( $custom_fields['vkjp_addressLocality'] ),
+				'addressRegion'   => wp_strip_all_tags( $custom_fields['vkjp_addressRegion'] ),
+				'postalCode'      => wp_strip_all_tags( $custom_fields['vkjp_postalCode'] ),
+				'addressCountry'  => wp_strip_all_tags( $custom_fields['vkjp_addressCountry'] ),
 			),
 		),
 		'baseSalary' => array(
 			'@type'   => 'MonetaryAmount',
-			'currency'=> $custom_fields['vkjp_currency'],
+			'currency' => wp_strip_all_tags( $custom_fields['vkjp_currency'] ),
 			'value'   => $base_salary_value,
 		),
 	);
 
-	if ( $custom_fields['vkjp_jobLocationType'] ) {
-		$json_array['jobLocationType'] = $custom_fields['vkjp_jobLocationType'];
+	if ( isset( $custom_fields['vkjp_jobLocationType'] ) && '' !== $custom_fields['vkjp_jobLocationType'] ) {
+		$json_array['jobLocationType'] = wp_strip_all_tags( $custom_fields['vkjp_jobLocationType'] );
 		$json_array['applicantLocationRequirements'] = array(
 			'@type' => 'Country',
-			'name'  => $custom_fields['vkjp_applicantLocationRequirements_name'],
+			'name'  => isset( $custom_fields['vkjp_applicantLocationRequirements_name'] ) ? wp_strip_all_tags( $custom_fields['vkjp_applicantLocationRequirements_name'] ) : '',
 		);
 	}
 
-	if ( $custom_fields['vkjp_directApply'] ) {
+	if ( isset( $custom_fields['vkjp_directApply'] ) && $custom_fields['vkjp_directApply'] ) {
 		$json_array['directApply'] = true;
 	}
 
