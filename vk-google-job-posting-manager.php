@@ -454,6 +454,17 @@ function vgjpm_esc_newline( $html ) {
 	return $return;
 }
 
+/****
+ * Build a JobPosting JSON-LD script tag from provided custom field values.
+ *
+ * Converts job-related fields into a schema.org JobPosting JSON-LD payload and wraps it in a
+ * <script type="application/ld+json"> tag suitable for output in the document head.
+ *
+ * @param array $custom_fields Associative array of custom field values keyed by field names
+ *                             (e.g. 'vkjp_title', 'vkjp_description', 'vkjp_datePosted', etc.).
+ * @return string|null The complete <script> tag containing the encoded JSON-LD, or `null` if
+ *                     required data (title) is missing.
+ ****/
 function vgjpm_generate_jsonLD( $custom_fields ) {
 	if ( ! isset( $custom_fields['vkjp_title'] ) ) {
 		return;
