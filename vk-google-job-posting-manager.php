@@ -496,7 +496,7 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 	$json_array = array(
 		'@context'        => 'https://schema.org/',
 		'@type'           => 'JobPosting',
-		'title'           => $custom_fields['vkjp_title'],
+		'title'           => wp_strip_all_tags( vgjpm_esc_newline( vgjpm_esc_script( $custom_fields['vkjp_title'] ) ) ),
 		'description'     => wp_strip_all_tags( vgjpm_esc_newline( vgjpm_esc_script( $custom_fields['vkjp_description'] ) ) ),
 		'datePosted'      => $custom_fields['vkjp_datePosted'],
 		'validThrough'    => $custom_fields['vkjp_validThrough'],
