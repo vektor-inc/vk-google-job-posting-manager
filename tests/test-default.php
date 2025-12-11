@@ -181,4 +181,110 @@ class DefaultTest extends WP_UnitTestCase {
 		$this->assertArrayNotHasKey( 'minValue', $decoded['baseSalary']['value'] );
 		$this->assertArrayNotHasKey( 'maxValue', $decoded['baseSalary']['value'] );
 	}
+
+	/**
+	 * title field should strip script tags.
+	 */
+	function test_generate_jsonLD_strips_title_script() {
+		$custom_fields = array(
+			'vkjp_title'                           => '<script>alert(1)</script>タイトル',
+			'vkjp_description'                     => '説明',
+			'vkjp_datePosted'                      => '2025-12-11',
+			'vkjp_validThrough'                    => '2025-12-27',
+			'vkjp_employmentType'                  => 'FULL_TIME',
+			'vkjp_name'                            => '社名',
+			'vkjp_identifier'                      => '12345',
+			'vkjp_sameAs'                          => 'https://example.com',
+			'vkjp_logo'                            => 'https://example.com/logo.png',
+			'vkjp_streetAddress'                   => '1-1',
+			'vkjp_addressLocality'                 => 'city',
+			'vkjp_addressRegion'                   => 'pref',
+			'vkjp_postalCode'                      => '000',
+			'vkjp_addressCountry'                  => 'JP',
+			'vkjp_currency'                        => 'JPY',
+			'vkjp_unitText'                        => 'MONTH',
+			'vkjp_minValue'                        => '',
+			'vkjp_maxValue'                        => '',
+			'vkjp_jobLocationType'                 => '',
+			'vkjp_applicantLocationRequirements_name' => '',
+			'vkjp_directApply'                     => false,
+		);
+
+		$json_ld = vgjpm_generate_jsonLD( $custom_fields );
+		$json    = preg_replace( '#</?script[^>]*>#i', '', $json_ld );
+		$decoded = json_decode( trim( $json ), true );
+
+		$this->assertSame( 'alert(1)タイトル', $decoded['title'] );
+	}
+
+	/**
+	 * JSON special characters should remain valid and unbroken.
+	 */
+	function test_generate_jsonLD_escapes_special_chars() {
+		$custom_fields = array(
+			'vkjp_title'                           => 'ダブル"クォート & アポ\'ス <タグ>',
+			'vkjp_description'                     => '説明 " & < >',
+			'vkjp_datePosted'                      => '2025-12-11',
+			'vkjp_validThrough'                    => '2025-12-27',
+			'vkjp_employmentType'                  => 'FULL_TIME',
+			'vkjp_name'                            => '社名',
+			'vkjp_identifier'                      => '12345',
+			'vkjp_sameAs'                          => 'https://example.com',
+			'vkjp_logo'                            => 'https://example.com/logo.png',
+			'vkjp_streetAddress'                   => '1-1',
+			'vkjp_addressLocality'                 => 'city',
+			'vkjp_addressRegion'                   => 'pref',
+			'vkjp_postalCode'                      => '000',
+			'vkjp_addressCountry'                  => 'JP',
+			'vkjp_currency'                        => 'JPY',
+			'vkjp_unitText'                        => 'MONTH',
+			'vkjp_minValue'                        => '',
+			'vkjp_maxValue'                        => '',
+			'vkjp_jobLocationType'                 => '',
+			'vkjp_applicantLocationRequirements_name' => '',
+			'vkjp_directApply'                     => false,
+		);
+
+		$json_ld = vgjpm_generate_jsonLD( $custom_fields );
+		$json    = preg_replace( '#</?script[^>]*>#i', '', $json_ld );
+		$decoded = json_decode( trim( $json ), true );
+
+		$this->assertSame( 'ダブル"クォート & アポ\'ス タグ', $decoded['title'] );
+		$this->assertSame( '説明 " &  ', $decoded['description'] );
+	}
+
+	/**
+	 * employmentType should strip stray quotes.
+	 */
+	function test_generate_jsonLD_employmentType_strips_quotes() {
+		$custom_fields = array(
+			'vkjp_title'                           => 'タイトル',
+			'vkjp_description'                     => '説明',
+			'vkjp_datePosted'                      => '2025-12-11',
+			'vkjp_validThrough'                    => '2025-12-27',
+			'vkjp_employmentType'                  => '"FULL_TIME","PART_TIME"',
+			'vkjp_name'                            => '社名',
+			'vkjp_identifier'                      => '12345',
+			'vkjp_sameAs'                          => 'https://example.com',
+			'vkjp_logo'                            => 'https://example.com/logo.png',
+			'vkjp_streetAddress'                   => '1-1',
+			'vkjp_addressLocality'                 => 'city',
+			'vkjp_addressRegion'                   => 'pref',
+			'vkjp_postalCode'                      => '000',
+			'vkjp_addressCountry'                  => 'JP',
+			'vkjp_currency'                        => 'JPY',
+			'vkjp_unitText'                        => 'MONTH',
+			'vkjp_minValue'                        => '',
+			'vkjp_maxValue'                        => '',
+			'vkjp_jobLocationType'                 => '',
+			'vkjp_applicantLocationRequirements_name' => '',
+			'vkjp_directApply'                     => false,
+		);
+
+		$json_ld = vgjpm_generate_jsonLD( $custom_fields );
+		$json    = preg_replace( '#</?script[^>]*>#i', '', $json_ld );
+		$decoded = json_decode( trim( $json ), true );
+
+		$this->assertSame( array( 'FULL_TIME', 'PART_TIME' ), $decoded['employmentType'] );
+	}
 }
