@@ -102,4 +102,83 @@ class DefaultTest extends WP_UnitTestCase {
 
 		$this->assertSame( $expected, $actual );
 	}
+
+	/**
+	 * Test vgjpm_generate_jsonLD outputs valid JSON with sanitized fields.
+	 */
+	function test_generate_jsonLD_basic() {
+		$custom_fields = array(
+			'vkjp_title'                           => '株式会社ベクトル',
+			'vkjp_description'                     => '<h1>技術者絶賛募集中！</h1>',
+			'vkjp_datePosted'                      => '2025-12-11',
+			'vkjp_validThrough'                    => '2025-12-27',
+			'vkjp_employmentType'                  => 'FULL_TIME, PART_TIME',
+			'vkjp_name'                            => '株式会社ベクトル',
+			'vkjp_identifier'                      => '41566456',
+			'vkjp_sameAs'                          => 'https://www.vektor-inc.co.jp/',
+			'vkjp_logo'                            => 'https://example.com/logo.png',
+			'vkjp_streetAddress'                   => '中区栄1-1-1',
+			'vkjp_addressLocality'                 => '名古屋市',
+			'vkjp_addressRegion'                   => '愛知県',
+			'vkjp_postalCode'                      => '94043',
+			'vkjp_addressCountry'                  => 'JP',
+			'vkjp_currency'                        => 'JPY',
+			'vkjp_unitText'                        => 'MONTH',
+			'vkjp_minValue'                        => '150000',
+			'vkjp_maxValue'                        => '250000',
+			'vkjp_jobLocationType'                 => 'TELECOMMUTE',
+			'vkjp_applicantLocationRequirements_name' => 'JAPAN',
+			'vkjp_directApply'                     => true,
+		);
+
+		$json_ld = vgjpm_generate_jsonLD( $custom_fields );
+		$json    = preg_replace( '#</?script[^>]*>#i', '', $json_ld );
+		$decoded = json_decode( trim( $json ), true );
+
+		$this->assertIsArray( $decoded );
+		$this->assertSame( '株式会社ベクトル', $decoded['title'] );
+		$this->assertSame( '技術者絶賛募集中！', $decoded['description'] );
+		$this->assertSame( array( 'FULL_TIME', 'PART_TIME' ), $decoded['employmentType'] );
+		$this->assertSame( 150000, $decoded['baseSalary']['value']['minValue'] );
+		$this->assertSame( 250000, $decoded['baseSalary']['value']['maxValue'] );
+		$this->assertArrayHasKey( 'jobLocationType', $decoded );
+		$this->assertArrayHasKey( 'directApply', $decoded );
+	}
+
+	/**
+	 * Test vgjpm_generate_jsonLD excludes non-numeric min/max values.
+	 */
+	function test_generate_jsonLD_ignores_non_numeric_salary() {
+		$custom_fields = array(
+			'vkjp_title'                           => 'タイトル',
+			'vkjp_description'                     => '説明',
+			'vkjp_datePosted'                      => '2025-12-11',
+			'vkjp_validThrough'                    => '2025-12-27',
+			'vkjp_employmentType'                  => 'FULL_TIME',
+			'vkjp_name'                            => '社名',
+			'vkjp_identifier'                      => '12345',
+			'vkjp_sameAs'                          => 'https://example.com',
+			'vkjp_logo'                            => 'https://example.com/logo.png',
+			'vkjp_streetAddress'                   => '1-1',
+			'vkjp_addressLocality'                 => 'city',
+			'vkjp_addressRegion'                   => 'pref',
+			'vkjp_postalCode'                      => '000',
+			'vkjp_addressCountry'                  => 'JP',
+			'vkjp_currency'                        => 'JPY',
+			'vkjp_unitText'                        => 'MONTH',
+			'vkjp_minValue'                        => 'abc', // non-numeric
+			'vkjp_maxValue'                        => '',    // empty
+			'vkjp_jobLocationType'                 => '',
+			'vkjp_applicantLocationRequirements_name' => '',
+			'vkjp_directApply'                     => false,
+		);
+
+		$json_ld = vgjpm_generate_jsonLD( $custom_fields );
+		$json    = preg_replace( '#</?script[^>]*>#i', '', $json_ld );
+		$decoded = json_decode( trim( $json ), true );
+
+		$this->assertIsArray( $decoded );
+		$this->assertArrayNotHasKey( 'minValue', $decoded['baseSalary']['value'] );
+		$this->assertArrayNotHasKey( 'maxValue', $decoded['baseSalary']['value'] );
+	}
 }
