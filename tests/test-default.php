@@ -249,7 +249,7 @@ class DefaultTest extends WP_UnitTestCase {
 		$json    = preg_replace( '#</?script[^>]*>#i', '', $json_ld );
 		$decoded = json_decode( trim( $json ), true );
 
-		$this->assertSame( 'ダブル"クォート & アポ\'ス タグ', $decoded['title'] );
+		$this->assertSame( 'ダブル"クォート & アポ\'ス', $decoded['title'] );
 		$this->assertSame( '説明 " &  ', $decoded['description'] );
 	}
 
