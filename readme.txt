@@ -46,6 +46,8 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
+[ Bug fix ] Fix JSON-LD XSS
+
 = 1.2.22 =
 [ Outer ] Update Custom Field Builder
 

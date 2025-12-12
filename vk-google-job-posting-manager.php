@@ -454,88 +454,117 @@ function vgjpm_esc_newline( $html ) {
 	return $return;
 }
 
+/****
+ * Build a JobPosting JSON-LD script tag from provided custom field values.
+ *
+ * Converts job-related fields into a schema.org JobPosting JSON-LD payload and wraps it in a
+ * <script type="application/ld+json"> tag suitable for output in the document head.
+ *
+ * @param array $custom_fields Associative array of custom field values keyed by field names
+ *                             (e.g. 'vkjp_title', 'vkjp_description', 'vkjp_datePosted', etc.).
+ * @return string|null The complete <script> tag containing the encoded JSON-LD, or `null` if
+ *                     required data (title) is missing.
+ ****/
 function vgjpm_generate_jsonLD( $custom_fields ) {
 	if ( ! isset( $custom_fields['vkjp_title'] ) ) {
 		return;
 	}
 
+	// Use wp_json_encode for safe script output.
 	$custom_fields = vgjpm_use_common_values( $custom_fields, 'json' );
 
 	if ( ! empty( $custom_fields['vkjp_validThrough'] ) ) {
 		$custom_fields['vkjp_validThrough'] = date( 'Y-m-d', strtotime( $custom_fields['vkjp_validThrough'] ) );
 	}
 
-	if ( isset( $custom_fields['vkjp_employmentType'] ) && strpos( $custom_fields['vkjp_employmentType'], ',' ) === false ) {
-		$custom_fields['vkjp_employmentType'] = '"' . $custom_fields['vkjp_employmentType'] . '"';
-	} else {
-		$custom_fields['vkjp_employmentType'] = '["' . $custom_fields['vkjp_employmentType'] . '"]';
+	$employment_types = array();
+	if ( isset( $custom_fields['vkjp_employmentType'] ) ) {
+		$employment_types = array_filter(
+			array_map(
+				function( $value ) {
+					// Remove stray quotes from checkbox values and trim.
+					return trim( str_replace( '"', '', $value ) );
+				},
+				explode( ',', $custom_fields['vkjp_employmentType'] )
+			),
+			'strlen'
+		);
 	}
 
-	$JSON = '
-<script type="application/ld+json">
-{
-	"@context" : "https://schema.org/",
-	"@type" : "JobPosting",
-	"title" : "' . esc_attr( $custom_fields['vkjp_title'] ) . '",
-	"description" : "' . vgjpm_esc_newline( vgjpm_esc_script( $custom_fields['vkjp_description'] ) ) . '",
-	"datePosted" : "' . esc_attr( $custom_fields['vkjp_datePosted'] ) . '",
-	"validThrough" : "' . esc_attr( $custom_fields['vkjp_validThrough'] ) . '",
-	"employmentType" : ' . $custom_fields['vkjp_employmentType'] . ',
-	"identifier": {
-		"@type": "PropertyValue",
-		"name":  "' . esc_attr( $custom_fields['vkjp_name'] ) . '",
-		"value": "' . esc_attr( $custom_fields['vkjp_identifier'] ) . '"
-	},
-	"hiringOrganization" : {
-		"@type" : "Organization",
-		"name" : "' . esc_attr( $custom_fields['vkjp_name'] ) . '",
-		"sameAs" : "' . esc_url( $custom_fields['vkjp_sameAs'] ) . '",
-		"logo" : "' . esc_url( $custom_fields['vkjp_logo'] ) . '"
-	},
-	"jobLocation": {
-		"@type": "Place",
-		"address": {
-			"@type": "PostalAddress",
-			"streetAddress": "' . esc_attr( $custom_fields['vkjp_streetAddress'] ) . '",
-			"addressLocality": "' . esc_attr( $custom_fields['vkjp_addressLocality'] ) . '",
-			"addressRegion": "' . esc_attr( $custom_fields['vkjp_addressRegion'] ) . '",
-			"postalCode": "' . esc_attr( $custom_fields['vkjp_postalCode'] ) . '",
-			"addressCountry": "' . esc_attr( $custom_fields['vkjp_addressCountry'] ) . '"
-		}
-	}';
-	if ( $custom_fields['vkjp_jobLocationType'] ) {
-		$JSON .= ',
-	"jobLocationType": "' . esc_attr( $custom_fields['vkjp_jobLocationType'] ) . '",
-	"applicantLocationRequirements": {
-		"@type": "Country",
-		"name": "' . esc_attr( $custom_fields['vkjp_applicantLocationRequirements_name'] ) . '"
-	}';
-	}
-	$JSON .= ',
-	"baseSalary": {
-		"@type": "MonetaryAmount",
-		"currency": "' . esc_attr( $custom_fields['vkjp_currency'] ) . '",
-		"value": {
-			"@type": "QuantitativeValue",
-			';
-	if ( null !== $custom_fields['vkjp_minValue'] && '' !== $custom_fields['vkjp_minValue'] ) {
-		$JSON .= '"minValue": ' . esc_attr( $custom_fields['vkjp_minValue'] ) . ',';
-	}
-	if ( null !== $custom_fields['vkjp_maxValue'] && '' !== $custom_fields['vkjp_maxValue'] ) {
-		$JSON .= '"maxValue": ' . esc_attr( $custom_fields['vkjp_maxValue'] ) . ',';
-	}
-		$JSON .= '
-			"unitText": "' . esc_attr( $custom_fields['vkjp_unitText'] ) . '"
-		}
-	}';
-	if ( $custom_fields['vkjp_directApply'] ) {
-		$JSON .= ',
-	"directApply": true';
-	}
-	$JSON .= '
-}
-</script>
-';
+	$base_salary_value = array(
+		'@type'    => 'QuantitativeValue',
+		'unitText' => $custom_fields['vkjp_unitText'],
+	);
 
-	return $JSON;
+	if ( '' !== $custom_fields['vkjp_minValue'] && is_numeric( $custom_fields['vkjp_minValue'] ) ) {
+		$base_salary_value['minValue'] = (float) $custom_fields['vkjp_minValue'];
+	}
+
+	if ( '' !== $custom_fields['vkjp_maxValue'] && is_numeric( $custom_fields['vkjp_maxValue'] ) ) {
+		$base_salary_value['maxValue'] = (float) $custom_fields['vkjp_maxValue'];
+	}
+
+	// HTML として解釈されない素の山括弧を保持しつつ、許可タグだけを残す。
+	$description_raw = vgjpm_esc_newline( vgjpm_esc_script( $custom_fields['vkjp_description'] ) );
+	// タグとして始まらない "<" は kses に消されないよう &lt; にしておく。
+	$description_raw = preg_replace( '/<(?![\\/!a-zA-Z])/', '&lt;', $description_raw );
+	$description     = wp_kses_post( $description_raw );
+	// エンティティを戻して、JSON 上で入力どおりの文字 (<, >, &) を保持する。
+	$description     = htmlspecialchars_decode( $description, ENT_QUOTES | ENT_HTML5 );
+
+	$json_array = array(
+		'@context'        => 'https://schema.org/',
+		'@type'           => 'JobPosting',
+		'title'           => wp_strip_all_tags( vgjpm_esc_newline( vgjpm_esc_script( $custom_fields['vkjp_title'] ) ) ),
+		'description'     => $description,
+		'datePosted'      => $custom_fields['vkjp_datePosted'],
+		'validThrough'    => $custom_fields['vkjp_validThrough'],
+		'employmentType'  => $employment_types,
+		'identifier'      => array(
+			'@type' => 'PropertyValue',
+			'name'  => wp_strip_all_tags( $custom_fields['vkjp_name'] ),
+			'value' => wp_strip_all_tags( $custom_fields['vkjp_identifier'] ),
+		),
+		'hiringOrganization' => array(
+			'@type'  => 'Organization',
+			'name'   => wp_strip_all_tags( $custom_fields['vkjp_name'] ),
+			'sameAs' => esc_url_raw( $custom_fields['vkjp_sameAs'] ),
+			'logo'   => esc_url_raw( $custom_fields['vkjp_logo'] ),
+		),
+		'jobLocation' => array(
+			'@type'   => 'Place',
+			'address' => array(
+				'@type'           => 'PostalAddress',
+				'streetAddress'   => wp_strip_all_tags( $custom_fields['vkjp_streetAddress'] ),
+				'addressLocality' => wp_strip_all_tags( $custom_fields['vkjp_addressLocality'] ),
+				'addressRegion'   => wp_strip_all_tags( $custom_fields['vkjp_addressRegion'] ),
+				'postalCode'      => wp_strip_all_tags( $custom_fields['vkjp_postalCode'] ),
+				'addressCountry'  => wp_strip_all_tags( $custom_fields['vkjp_addressCountry'] ),
+			),
+		),
+		'baseSalary' => array(
+			'@type'   => 'MonetaryAmount',
+			'currency' => wp_strip_all_tags( $custom_fields['vkjp_currency'] ),
+			'value'   => $base_salary_value,
+		),
+	);
+
+	if ( isset( $custom_fields['vkjp_jobLocationType'] ) && '' !== $custom_fields['vkjp_jobLocationType'] ) {
+		$json_array['jobLocationType'] = wp_strip_all_tags( $custom_fields['vkjp_jobLocationType'] );
+		$json_array['applicantLocationRequirements'] = array(
+			'@type' => 'Country',
+			'name'  => isset( $custom_fields['vkjp_applicantLocationRequirements_name'] ) ? wp_strip_all_tags( $custom_fields['vkjp_applicantLocationRequirements_name'] ) : '',
+		);
+	}
+
+	if ( isset( $custom_fields['vkjp_directApply'] ) && $custom_fields['vkjp_directApply'] ) {
+		$json_array['directApply'] = true;
+	}
+
+	$json_ld = wp_json_encode(
+		$json_array,
+		JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+	);
+
+	return '<script type="application/ld+json">' . "\n" . $json_ld . "\n" . '</script>' . "\n";
 }
