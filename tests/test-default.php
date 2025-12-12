@@ -137,7 +137,7 @@ class DefaultTest extends WP_UnitTestCase {
 
 		$this->assertIsArray( $decoded );
 		$this->assertSame( '株式会社ベクトル', $decoded['title'] );
-		$this->assertSame( '技術者絶賛募集中！', $decoded['description'] );
+		$this->assertSame( '<h1>技術者絶賛募集中！</h1>', $decoded['description'] );
 		$this->assertSame( array( 'FULL_TIME', 'PART_TIME' ), $decoded['employmentType'] );
 		$this->assertSame( 150000, $decoded['baseSalary']['value']['minValue'] );
 		$this->assertSame( 250000, $decoded['baseSalary']['value']['maxValue'] );
@@ -221,6 +221,41 @@ class DefaultTest extends WP_UnitTestCase {
 		$decoded = json_decode( trim( $json ), true );
 
 		$this->assertSame( 'alert(1)タイトル', $decoded['title'] );
+	}
+
+	/**
+	 * Verifies that allowed HTML tags in description are preserved in JSON-LD output.
+	 */
+	function test_generate_jsonLD_keeps_allowed_html_in_description() {
+		$custom_fields = array(
+			'vkjp_title'                           => 'タイトル',
+			'vkjp_description'                     => '<h1><strong>募集</strong> <em>詳細</em></h1>',
+			'vkjp_datePosted'                      => '2025-12-11',
+			'vkjp_validThrough'                    => '2025-12-27',
+			'vkjp_employmentType'                  => 'FULL_TIME',
+			'vkjp_name'                            => '社名',
+			'vkjp_identifier'                      => '12345',
+			'vkjp_sameAs'                          => 'https://example.com',
+			'vkjp_logo'                            => 'https://example.com/logo.png',
+			'vkjp_streetAddress'                   => '1-1',
+			'vkjp_addressLocality'                 => 'city',
+			'vkjp_addressRegion'                   => 'pref',
+			'vkjp_postalCode'                      => '000',
+			'vkjp_addressCountry'                  => 'JP',
+			'vkjp_currency'                        => 'JPY',
+			'vkjp_unitText'                        => 'MONTH',
+			'vkjp_minValue'                        => '',
+			'vkjp_maxValue'                        => '',
+			'vkjp_jobLocationType'                 => '',
+			'vkjp_applicantLocationRequirements_name' => '',
+			'vkjp_directApply'                     => false,
+		);
+
+		$json_ld = vgjpm_generate_jsonLD( $custom_fields );
+		$json    = preg_replace( '#</?script[^>]*>#i', '', $json_ld );
+		$decoded = json_decode( trim( $json ), true );
+
+		$this->assertSame( '<h1><strong>募集</strong> <em>詳細</em></h1>', $decoded['description'] );
 	}
 
 	/**

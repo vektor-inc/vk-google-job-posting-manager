@@ -504,11 +504,19 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 		$base_salary_value['maxValue'] = (float) $custom_fields['vkjp_maxValue'];
 	}
 
+	// HTML として解釈されない素の山括弧を保持しつつ、許可タグだけを残す。
+	$description_raw = vgjpm_esc_newline( vgjpm_esc_script( $custom_fields['vkjp_description'] ) );
+	// タグとして始まらない "<" は kses に消されないよう &lt; にしておく。
+	$description_raw = preg_replace( '/<(?![\\/!a-zA-Z])/', '&lt;', $description_raw );
+	$description     = wp_kses_post( $description_raw );
+	// エンティティを戻して、JSON 上で入力どおりの文字 (<, >, &) を保持する。
+	$description     = htmlspecialchars_decode( $description, ENT_QUOTES | ENT_HTML5 );
+
 	$json_array = array(
 		'@context'        => 'https://schema.org/',
 		'@type'           => 'JobPosting',
 		'title'           => wp_strip_all_tags( vgjpm_esc_newline( vgjpm_esc_script( $custom_fields['vkjp_title'] ) ) ),
-		'description'     => wp_strip_all_tags( vgjpm_esc_newline( vgjpm_esc_script( $custom_fields['vkjp_description'] ) ) ),
+		'description'     => $description,
 		'datePosted'      => $custom_fields['vkjp_datePosted'],
 		'validThrough'    => $custom_fields['vkjp_validThrough'],
 		'employmentType'  => $employment_types,
