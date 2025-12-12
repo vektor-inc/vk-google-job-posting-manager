@@ -461,7 +461,7 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 
 	$custom_fields = vgjpm_use_common_values( $custom_fields, 'json' );
 
-	if ( $custom_fields['vkjp_validThrough'] ) {
+	if ( ! empty( $custom_fields['vkjp_validThrough'] ) ) {
 		$custom_fields['vkjp_validThrough'] = date( 'Y-m-d', strtotime( $custom_fields['vkjp_validThrough'] ) );
 	}
 
