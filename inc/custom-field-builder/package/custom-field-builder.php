@@ -372,7 +372,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 			// 自動保存ルーチンかどうかチェック。そうだった場合は何もしない（記事の自動保存処理として呼び出された場合の対策）
 			if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-				return $post->ID;
+				return;
 			}
 
 			foreach ( $custom_fields_array as $key => $value ) {
