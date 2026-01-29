@@ -43,6 +43,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 			$media_uploader_exclude = array( 'profile.php' );
 			if ( has_filter( 'cfb_media_uploader_exclude' ) ) {
 				if ( function_exists( 'apply_filters_deprecated' ) ) {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Back-compat for legacy hook.
 					$media_uploader_exclude = apply_filters_deprecated(
 						'cfb_media_uploader_exclude',
 						array( $media_uploader_exclude ),
@@ -50,6 +51,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 						'vgjpm_cfb_media_uploader_exclude'
 					);
 				} else {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Back-compat for legacy hook.
 					$media_uploader_exclude = apply_filters( 'cfb_media_uploader_exclude', $media_uploader_exclude );
 				}
 			}
@@ -69,6 +71,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 			$cfb_flexible_table_excludes = array( 'toplevel_page_nestedpages' );
 			if ( has_filter( 'cfb_flexible_table_excludes' ) ) {
 				if ( function_exists( 'apply_filters_deprecated' ) ) {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Back-compat for legacy hook.
 					$cfb_flexible_table_excludes = apply_filters_deprecated(
 						'cfb_flexible_table_excludes',
 						array( $cfb_flexible_table_excludes ),
@@ -76,6 +79,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 						'vgjpm_cfb_flexible_table_excludes'
 					);
 				} else {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Back-compat for legacy hook.
 					$cfb_flexible_table_excludes = apply_filters( 'cfb_flexible_table_excludes', $cfb_flexible_table_excludes );
 				}
 			}
@@ -91,6 +95,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 			$cfb_jquery_ui_excludes = array( 'toplevel_page_wpcf7', 'toplevel_page_gf_edit_forms' );
 			if ( has_filter( 'cfb_jquery_ui_excludes' ) ) {
 				if ( function_exists( 'apply_filters_deprecated' ) ) {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Back-compat for legacy hook.
 					$cfb_jquery_ui_excludes = apply_filters_deprecated(
 						'cfb_jquery_ui_excludes',
 						array( $cfb_jquery_ui_excludes ),
@@ -98,6 +103,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 						'vgjpm_cfb_jquery_ui_excludes'
 					);
 				} else {
+					// phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- Back-compat for legacy hook.
 					$cfb_jquery_ui_excludes = apply_filters( 'cfb_jquery_ui_excludes', $cfb_jquery_ui_excludes );
 				}
 			}

@@ -123,6 +123,7 @@ function vgjpm_get_common_field_options() {
  * @deprecated Use vgjpm_get_common_field_options() instead.
  */
 function vkjpm_get_common_field_options() {
+	// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Used for deprecation notice.
 	_deprecated_function( __FUNCTION__, VGJPM_VERSION, 'vgjpm_get_common_field_options' );
 	return vgjpm_get_common_field_options();
 }
