@@ -62,7 +62,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 		$field_options = vgjpm_get_common_field_options();
 		echo '<ul>';
 		echo '<li>' . esc_html__( 'Please fill in recruitment information for Google Job Posting.', 'vk-google-job-posting-manager' ) . '</li>';
-		echo '<li>' . esc_html__( 'If you do not fill in this form that, common settings will apply.', 'vk-google-job-posting-manager' ) . ' [ <a href="' . esc_url( admin_url( 'options-general.php?page=vgjpm_settings' ) ) . '" target="_blank">' . esc_html__( 'Common Settings', 'vk-google-job-posting-manager' ) . '</a> ]</li>';
+		echo '<li>' . esc_html__( 'If you do not fill in this form that, common settings will apply.', 'vk-google-job-posting-manager' ) . ' [ <a href="' . esc_url( admin_url( 'options-general.php?page=vgjpm_settings' ) ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Common Settings', 'vk-google-job-posting-manager' ) . '</a> ]</li>';
 		echo '<li>' . esc_html__( 'If you want to display these items table to publish page, you use to the Job Posting Block set to content area.', 'vk-google-job-posting-manager' ) . '</li>';
 		echo '</ul>';
 		self::form_table( $custom_fields_array, $befor_custom_fields, true, $field_options );

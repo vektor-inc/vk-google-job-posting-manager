@@ -316,7 +316,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 					// .media_btn がトリガーでメディアアップローダーが起動する
 					// id名から media_ を削除した id 名の input 要素に返り値が反映される。
 					// id名が media_src_ で始まる場合はURLを返す
-					$form_html .= '<button id="media_' . esc_attr( $key ) . '" class="cfb_media_btn btn btn-default button button-default">' . esc_html__( 'Choose Image', 'vk-google-job-posting-manager' ) . '</button> ';
+					$form_html .= '<button type="button" id="media_' . esc_attr( $key ) . '" class="cfb_media_btn btn btn-default button button-default">' . esc_html__( 'Choose Image', 'vk-google-job-posting-manager' ) . '</button> ';
 
 					// 削除ボタン
 					// ボタンタグだとその場でページが再読込されてしまうのでaタグに変更
@@ -332,7 +332,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 					}
 
 					$form_html .= '<input name="' . esc_attr( $key ) . '" id="' . esc_attr( $key ) . '" value="' . esc_attr( $post_value ) . '" style="width:60%;" />
-<button id="media_src_' . esc_attr( $key ) . '" class="cfb_media_btn btn btn-default button button-default">' . esc_html__( 'Select file', 'vk-google-job-posting-manager' ) . '</button> ';
+<button type="button" id="media_src_' . esc_attr( $key ) . '" class="cfb_media_btn btn btn-default button button-default">' . esc_html__( 'Select file', 'vk-google-job-posting-manager' ) . '</button> ';
 					if ( $post_value ) {
 						$form_html .= '<a href="' . esc_url( $post_value ) . '" target="_blank" class="btn btn-default button button-default">' . __( 'View file', 'vk-google-job-posting-manager' ) . '</a>';
 					}
