@@ -46,6 +46,8 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
+[ Bug fix ] Compatible with the Plugin Checker
+
 = 1.2.23 =
 [ Bug fix ] Fix JSON-LD XSS
 

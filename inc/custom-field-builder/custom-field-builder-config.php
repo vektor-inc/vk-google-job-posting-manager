@@ -5,6 +5,9 @@
   Load modules
 /*
 -------------------------------------------*/
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 // autoloadを読み込む
 require dirname( dirname( dirname( __FILE__ ) ) ) . '/vendor/autoload.php';
 
@@ -12,8 +15,8 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 	require_once dirname( __FILE__ ) . '/package/custom-field-builder.php';
 }
 
-global $custom_field_builder_url;
-$custom_field_builder_url = plugin_dir_url( __FILE__ ) . 'package/';
+global $vgjpm_custom_field_builder_url;
+$vgjpm_custom_field_builder_url = plugin_dir_url( __FILE__ ) . 'package/';
 
 class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 
@@ -56,11 +59,11 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 		global $post;
 		$custom_fields_array = self::custom_fields_array();
 		$befor_custom_fields = '';
-		$field_options = vkjpm_get_common_field_options();
+		$field_options = vgjpm_get_common_field_options();
 		echo '<ul>';
-		echo '<li>' . __( 'Please fill in recruitment information for Google Job Posting.', 'vk-google-job-posting-manager' ) . '</li>';
-		echo '<li>' . __( 'If you do not fill in this form that, common settings will apply.', 'vk-google-job-posting-manager' ) . ' [ <a href="' . admin_url() . 'options-general.php?page=vgjpm_settings" target="_blank">' . __( 'Common Settings', 'vk-google-job-posting-manager' ) . '</a> ]</li>';
-		echo '<li>' . __( 'If you want to display these items table to publish page, you use to the Job Posting Block set to content area.', 'vk-google-job-posting-manager' ) . '</li>';
+		echo '<li>' . esc_html__( 'Please fill in recruitment information for Google Job Posting.', 'vk-google-job-posting-manager' ) . '</li>';
+		echo '<li>' . esc_html__( 'If you do not fill in this form that, common settings will apply.', 'vk-google-job-posting-manager' ) . ' [ <a href="' . esc_url( admin_url( 'options-general.php?page=vgjpm_settings' ) ) . '" target="_blank">' . esc_html__( 'Common Settings', 'vk-google-job-posting-manager' ) . '</a> ]</li>';
+		echo '<li>' . esc_html__( 'If you want to display these items table to publish page, you use to the Job Posting Block set to content area.', 'vk-google-job-posting-manager' ) . '</li>';
 		echo '</ul>';
 		self::form_table( $custom_fields_array, $befor_custom_fields, true, $field_options );
 	}
@@ -74,7 +77,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 			$name   = $currency_list[ $key ]['name'];
 			$alpha3 = $currency_list[ $key ]['alpha3'];
 
-			$currency_options[ $alpha3 ] = __( $name, 'vk-google-job-posting-manager' );
+			$currency_options[ $alpha3 ] = $name;
 		}
 
 		$custom_fields_array = array(
@@ -87,6 +90,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 			'vkjp_description'                        => array(
 				'label'       => __( 'Description', 'vk-google-job-posting-manager' ),
 				'type'        => 'textarea',
+				'wysiwyg'     => true,
 				'description' => __( 'Please enter specific description of the job by HTML. You can use the templates from  <a href="https://www.vektor-inc.co.jp/service/wordpress-plugins/vk-google-jog-posting-manager/#vk-google-job-template" target="_blank">here</a>.', 'vk-google-job-posting-manager' ),
 				'required'    => true,
 			),
@@ -118,7 +122,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 			'vkjp_currency'                           => array(
 				'label'       => __( 'Currency', 'vk-google-job-posting-manager' ),
 				'type'        => 'select',
-				'options'     => apply_filters( 'vkjp_currency_options', $currency_options ),
+				'options'     => apply_filters( 'vgjpm_currency_options', $currency_options ),
 				'description' => __( 'Example : Japanese Yen', 'vk-google-job-posting-manager' ),
 				'required'    => false,
 			),
