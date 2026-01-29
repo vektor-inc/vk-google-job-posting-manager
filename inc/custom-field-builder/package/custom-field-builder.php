@@ -453,7 +453,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				'option' => array( 'value' => true, 'selected' => true ),
 				'button' => array( 'id' => true, 'class' => true, 'type' => true ),
 				'img'    => array( 'src' => true, 'id' => true, 'alt' => true, 'class' => true, 'style' => true ),
-				'a'      => array( 'href' => true, 'target' => true, 'class' => true, 'rel' => true ),
+				'a'      => array( 'href' => true, 'target' => true, 'class' => true, 'rel' => true, 'id' => true ),
 			);
 		}
 	} // class Vk_custom_field_builder
