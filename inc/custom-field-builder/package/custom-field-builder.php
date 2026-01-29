@@ -220,7 +220,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 						);
 						$form_html .= ob_get_clean();
 					} else {
-						$textarea_value = wp_kses( $post_value, self::get_allowed_form_html() );
+						$textarea_value = wp_kses_post( $post_value );
 						$textarea_value = str_ireplace( '</textarea>', '&lt;/textarea&gt;', $textarea_value );
 						$form_html .= '<textarea class="form-control cf_textarea_wysiwyg" name="' . esc_attr( $key ) . '" cols="70" rows="3">' . $textarea_value . '</textarea>';
 					}
