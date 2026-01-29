@@ -129,7 +129,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				}
 				if ( isset( $type ) && $type == 'textarea' ) {
 					// n2brはフォームにbrがそのまま入ってしまうので入れない
-					$value = esc_textarea( $posted_value );
+					$value = wp_kses_post( $posted_value );
 				} else {
 					$value = esc_attr( $posted_value );
 				}
@@ -204,7 +204,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 						$post_value = $options[ $key ];
 					}
 
-					$form_html .= '<textarea class="form-control cf_textarea_wysiwyg" name="' . esc_attr( $key ) . '" cols="70" rows="3">' . wp_kses( $post_value, self::get_allowed_value_html() ) . '</textarea>';
+					$form_html .= '<textarea class="form-control cf_textarea_wysiwyg" name="' . esc_attr( $key ) . '" cols="70" rows="3">' . wp_kses_post( $post_value ) . '</textarea>';
 
 				} elseif ( $value['type'] == 'select' ) {
 					$form_html .= '<select id="' . esc_attr( $key ) . '" class="form-control" name="' . esc_attr( $key ) . '"  >';
@@ -389,7 +389,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 			switch ( $field_config['type'] ) {
 				case 'textarea':
-					return wp_kses( $field_value, self::get_allowed_value_html() );
+					return wp_kses_post( $field_value );
 				case 'url':
 					return esc_url_raw( $field_value );
 				default:
