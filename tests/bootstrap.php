@@ -1,19 +1,19 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) {
-	$maybe_core_dirs = array(
+	$vgjpm_maybe_core_dirs = array(
 		getenv( 'WP_CORE_DIR' ),
 		getenv( 'WP_ROOT_DIR' ),
 		dirname( __DIR__, 4 ),
 	);
 
-	foreach ( $maybe_core_dirs as $maybe_core_dir ) {
-		if ( empty( $maybe_core_dir ) ) {
+	foreach ( $vgjpm_maybe_core_dirs as $vgjpm_maybe_core_dir ) {
+		if ( empty( $vgjpm_maybe_core_dir ) ) {
 			continue;
 		}
 
-		$maybe_core_dir = rtrim( $maybe_core_dir, "/\\" );
-		if ( file_exists( $maybe_core_dir . '/wp-settings.php' ) ) {
-			define( 'ABSPATH', $maybe_core_dir . '/' );
+		$vgjpm_maybe_core_dir = rtrim( $vgjpm_maybe_core_dir, "/\\" );
+		if ( file_exists( $vgjpm_maybe_core_dir . '/wp-settings.php' ) ) {
+			define( 'ABSPATH', $vgjpm_maybe_core_dir . '/' );
 			break;
 		}
 	}

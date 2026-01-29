@@ -422,7 +422,7 @@ function vgjpm_save_check_list() {
 		return;
 	}
 
-	foreach ( $post_types as $key => $value ) {
+	foreach ( array_keys( $post_types ) as $key ) {
 		if ( $key != 'attachment' ) {
 			$name = 'vgjpm_post_type_display_customfields' . sanitize_text_field( $key );
 
