@@ -1,4 +1,31 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	$vgjpm_maybe_core_dirs = array(
+		getenv( 'WP_CORE_DIR' ),
+		getenv( 'WP_ROOT_DIR' ),
+		dirname( __DIR__, 4 ),
+	);
+
+	foreach ( $vgjpm_maybe_core_dirs as $vgjpm_maybe_core_dir ) {
+		if ( empty( $vgjpm_maybe_core_dir ) ) {
+			continue;
+		}
+
+		$vgjpm_maybe_core_dir = rtrim( $vgjpm_maybe_core_dir, "/\\" );
+		if ( file_exists( $vgjpm_maybe_core_dir . '/wp-settings.php' ) ) {
+			define( 'ABSPATH', $vgjpm_maybe_core_dir . '/' );
+			break;
+		}
+	}
+}
+
+if ( ! defined( 'ABSPATH' ) && ( getenv( 'WP_TESTS_DIR' ) || getenv( 'WP_PHPUNIT__DIR' ) ) ) {
+	define( 'ABSPATH', __DIR__ . '/' );
+}
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals -- Test bootstrap uses conventional globals.
 // Require composer dependencies.
 require_once dirname( dirname( __FILE__ ) ) . '/vendor/autoload.php';
 
@@ -60,7 +87,7 @@ function fail_if_died( $message ) {
 		$message = $message->get_error_message();
 	}
 
-	throw new Exception( 'WordPress died: ' . $message );
+	throw new Exception( 'WordPress died: ' . esc_html( $message ) );
 }
 tests_add_filter( 'wp_die_handler', 'fail_if_died' );
 
@@ -75,3 +102,4 @@ require $_tests_dir . '/includes/bootstrap.php';
 
 // Use existing behavior for wp_die during actual test execution.
 remove_filter( 'wp_die_handler', 'fail_if_died' );
+// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals

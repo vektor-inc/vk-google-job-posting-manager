@@ -5,6 +5,9 @@
  *
  * @package vk-google-job-posting-manager
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Registers all block assets so that they can be enqueued through Gutenberg in
@@ -45,7 +48,8 @@ function vgjpm_block_init() {
 		'vk-google-job-posting-manager-block-editor',
 		plugins_url( $index_js, __FILE__ ),
 		$asset_file['dependencies'],
-		$asset_file['version']
+		$asset_file['version'],
+		true
 	);
 
 	$editor_css = '/create-table/build/editor.css';
@@ -107,15 +111,15 @@ add_action( 'init', 'vgjpm_block_init' );
 /**
  * Add vk-block's category.
  */
-if ( ! function_exists( 'vkblocks_blocks_categories' ) ) {
-	function vkblocks_blocks_categories( $categories, $post ) {
+if ( ! function_exists( 'vgjpm_blocks_categories' ) ) {
+	function vgjpm_blocks_categories( $categories, $post ) {
 		if ( ! vgjpm_is_block_category_exist( $categories, 'vk-blocks-cat' ) ) {
 			$categories = array_merge(
 				$categories,
 				array(
 					array(
 						'slug'  => 'vk-blocks-cat',
-						'title' => apply_filters( 'vk_blocks_prefix', 'VK ' ) . __( 'Blocks', 'vk-blocks' ),
+						'title' => apply_filters( 'vgjpm_blocks_prefix', 'VK ' ) . __( 'Blocks', 'vk-google-job-posting-manager' ),
 						'icon'  => '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0V0z" /><path d="M19 13H5v-2h14v2z" /></svg>',
 					),
 				)
@@ -125,9 +129,9 @@ if ( ! function_exists( 'vkblocks_blocks_categories' ) ) {
 	}
 	// ver5.8.0 block_categories_all
 	if ( function_exists( 'get_default_block_categories' ) && function_exists( 'get_block_editor_settings' ) ) {
-		add_filter( 'block_categories_all', 'vkblocks_blocks_categories', 10, 2 );
+		add_filter( 'block_categories_all', 'vgjpm_blocks_categories', 10, 2 );
 	} else {
-		add_filter( 'block_categories', 'vkblocks_blocks_categories', 10, 2 );
+		add_filter( 'block_categories', 'vgjpm_blocks_categories', 10, 2 );
 	}
 }
 

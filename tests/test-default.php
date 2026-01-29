@@ -1,4 +1,10 @@
 <?php
+if ( ! defined( 'ABSPATH' ) && ( getenv( 'WP_TESTS_DIR' ) || getenv( 'WP_PHPUNIT__DIR' ) ) ) {
+	define( 'ABSPATH', __DIR__ . '/' );
+}
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 /**
  * Class SampleTest
  *
