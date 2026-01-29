@@ -204,7 +204,26 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 						$post_value = $options[ $key ];
 					}
 
-					$form_html .= '<textarea class="form-control cf_textarea_wysiwyg" name="' . esc_attr( $key ) . '" cols="70" rows="3">' . wp_kses_post( $post_value ) . '</textarea>';
+					if ( isset( $value['wysiwyg'] ) && $value['wysiwyg'] ) {
+						ob_start();
+						wp_editor(
+							$post_value,
+							$key,
+							array(
+								'textarea_name' => $key,
+								'textarea_rows' => 10,
+								'media_buttons' => false,
+								'tinymce'       => false,
+								'teeny'         => true,
+								'quicktags'     => false,
+							)
+						);
+						$form_html .= ob_get_clean();
+					} else {
+						$textarea_value = wp_kses( $post_value, self::get_allowed_form_html() );
+						$textarea_value = str_ireplace( '</textarea>', '&lt;/textarea&gt;', $textarea_value );
+						$form_html .= '<textarea class="form-control cf_textarea_wysiwyg" name="' . esc_attr( $key ) . '" cols="70" rows="3">' . $textarea_value . '</textarea>';
+					}
 
 				} elseif ( $value['type'] == 'select' ) {
 					$form_html .= '<select id="' . esc_attr( $key ) . '" class="form-control" name="' . esc_attr( $key ) . '"  >';
@@ -395,35 +414,6 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				default:
 					return sanitize_text_field( $field_value );
 			}
-		}
-
-		private static function get_allowed_value_html() {
-			return array(
-				'div'    => array( 'class' => true, 'id' => true, 'style' => true ),
-				'h1'     => array(),
-				'h2'     => array(),
-				'h3'     => array(),
-				'h4'     => array(),
-				'h5'     => array(),
-				'h6'     => array(),
-				'p'      => array(),
-				'br'     => array(),
-				'strong' => array(),
-				'em'     => array(),
-				'table'  => array( 'class' => true ),
-				'thead'  => array(),
-				'tbody'  => array( 'class' => true ),
-				'tr'     => array( 'class' => true ),
-				'th'     => array( 'class' => true ),
-				'td'     => array( 'class' => true ),
-				'label'  => array(),
-				'ul'     => array(),
-				'li'     => array( 'style' => true ),
-				'span'   => array( 'class' => true ),
-				'button' => array( 'id' => true, 'class' => true ),
-				'img'    => array( 'src' => true, 'id' => true, 'alt' => true, 'class' => true, 'style' => true ),
-				'a'      => array( 'href' => true, 'target' => true, 'class' => true ),
-			);
 		}
 
 		private static function get_allowed_form_html() {
