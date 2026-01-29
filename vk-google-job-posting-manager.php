@@ -249,7 +249,7 @@ function vgjpm_render_form_input( $common_customfields ) {
 		} elseif ( $value['type'] == 'textarea' ) {
 
 			$stored = isset( $options[ $key ] ) ? $options[ $key ] : '';
-			$form  .= '<textarea class="form-control" class="cf_textarea_wysiwyg" name="' . $field_prefix . '[' . esc_attr( $key ) . ']' . '" cols="70" rows="3">' . esc_html( $stored ) . '</textarea>';
+			$form  .= '<textarea class="form-control cf_textarea_wysiwyg" name="' . $field_prefix . '[' . esc_attr( $key ) . ']' . '" cols="70" rows="3">' . esc_html( $stored ) . '</textarea>';
 
 		} elseif ( $value['type'] == 'datepicker' ) {
 
