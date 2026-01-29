@@ -204,7 +204,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 						$post_value = $options[ $key ];
 					}
 
-					$form_html .= '<textarea class="form-control cf_textarea_wysiwyg" name="' . esc_attr( $key ) . '" cols="70" rows="3">' . esc_textarea( $post_value ) . '</textarea>';
+					$form_html .= '<textarea class="form-control cf_textarea_wysiwyg" name="' . esc_attr( $key ) . '" cols="70" rows="3">' . wp_kses( $post_value, self::get_allowed_value_html() ) . '</textarea>';
 
 				} elseif ( $value['type'] == 'select' ) {
 					$form_html .= '<select id="' . esc_attr( $key ) . '" class="form-control" name="' . esc_attr( $key ) . '"  >';
@@ -389,7 +389,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 			switch ( $field_config['type'] ) {
 				case 'textarea':
-					return wp_kses( $field_value, self::get_allowed_form_html() );
+					return wp_kses( $field_value, self::get_allowed_value_html() );
 				case 'url':
 					return esc_url_raw( $field_value );
 				default:
@@ -397,7 +397,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 			}
 		}
 
-		private static function get_allowed_form_html() {
+		private static function get_allowed_value_html() {
 			return array(
 				'div'    => array( 'class' => true, 'id' => true, 'style' => true ),
 				'h1'     => array(),
@@ -406,6 +406,29 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				'h4'     => array(),
 				'h5'     => array(),
 				'h6'     => array(),
+				'p'      => array(),
+				'br'     => array(),
+				'strong' => array(),
+				'em'     => array(),
+				'table'  => array( 'class' => true ),
+				'thead'  => array(),
+				'tbody'  => array( 'class' => true ),
+				'tr'     => array( 'class' => true ),
+				'th'     => array( 'class' => true ),
+				'td'     => array( 'class' => true ),
+				'label'  => array(),
+				'ul'     => array(),
+				'li'     => array( 'style' => true ),
+				'span'   => array( 'class' => true ),
+				'button' => array( 'id' => true, 'class' => true ),
+				'img'    => array( 'src' => true, 'id' => true, 'alt' => true, 'class' => true, 'style' => true ),
+				'a'      => array( 'href' => true, 'target' => true, 'class' => true ),
+			);
+		}
+
+		private static function get_allowed_form_html() {
+			return array(
+				'div'    => array( 'class' => true, 'id' => true, 'style' => true ),
 				'p'      => array(),
 				'br'     => array(),
 				'strong' => array(),
