@@ -119,6 +119,14 @@ function vgjpm_get_common_field_options() {
 	return $options;
 }
 
+/**
+ * @deprecated Use vgjpm_get_common_field_options() instead.
+ */
+function vkjpm_get_common_field_options() {
+	_deprecated_function( __FUNCTION__, VGJPM_VERSION, 'vgjpm_get_common_field_options' );
+	return vgjpm_get_common_field_options();
+}
+
 function vgjpm_get_common_customfields_config() {
 	$VGJPM_Custom_Field_Job_Post = new VGJPM_Custom_Field_Job_Post();
 	$labels                      = $VGJPM_Custom_Field_Job_Post->custom_fields_array();
@@ -525,7 +533,10 @@ function vgjpm_generate_jsonLD( $custom_fields ) {
 	$custom_fields = vgjpm_use_common_values( $custom_fields, 'json' );
 
 	if ( ! empty( $custom_fields['vkjp_validThrough'] ) ) {
-		$custom_fields['vkjp_validThrough'] = gmdate( 'Y-m-d', strtotime( $custom_fields['vkjp_validThrough'] ) );
+		$valid_through_timestamp = strtotime( $custom_fields['vkjp_validThrough'] );
+		if ( false !== $valid_through_timestamp ) {
+			$custom_fields['vkjp_validThrough'] = wp_date( 'Y-m-d', $valid_through_timestamp, wp_timezone() );
+		}
 	}
 
 	$employment_types = array();

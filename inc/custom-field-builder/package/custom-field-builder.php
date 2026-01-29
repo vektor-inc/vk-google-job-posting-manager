@@ -41,6 +41,18 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 			// media_uploader.js は、メディアアップローダーを使うためのjs
 			// Post Author Display と干渉するのでプロフィール画面では読み込まない
 			$media_uploader_exclude = array( 'profile.php' );
+			if ( has_filter( 'cfb_media_uploader_exclude' ) ) {
+				if ( function_exists( 'apply_filters_deprecated' ) ) {
+					$media_uploader_exclude = apply_filters_deprecated(
+						'cfb_media_uploader_exclude',
+						array( $media_uploader_exclude ),
+						VGJPM_VERSION,
+						'vgjpm_cfb_media_uploader_exclude'
+					);
+				} else {
+					$media_uploader_exclude = apply_filters( 'cfb_media_uploader_exclude', $media_uploader_exclude );
+				}
+			}
 			$media_uploader_exclude = apply_filters( 'vgjpm_cfb_media_uploader_exclude', $media_uploader_exclude );
 			if ( ! in_array( $hook_suffix, $media_uploader_exclude, true ) ) {
 				wp_enqueue_script( 'vk_mediauploader', self::admin_directory_url() . 'js/mediauploader.js', array( 'jquery' ), self::$version, true );
@@ -55,6 +67,18 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 			// flexible-table の js が NestedPagesのjsと干渉して正常に動かなくなるので、NestedPagesのページで読み込まないように.
 			$cfb_flexible_table_excludes = array( 'toplevel_page_nestedpages' );
+			if ( has_filter( 'cfb_flexible_table_excludes' ) ) {
+				if ( function_exists( 'apply_filters_deprecated' ) ) {
+					$cfb_flexible_table_excludes = apply_filters_deprecated(
+						'cfb_flexible_table_excludes',
+						array( $cfb_flexible_table_excludes ),
+						VGJPM_VERSION,
+						'vgjpm_cfb_flexible_table_excludes'
+					);
+				} else {
+					$cfb_flexible_table_excludes = apply_filters( 'cfb_flexible_table_excludes', $cfb_flexible_table_excludes );
+				}
+			}
 			$cfb_flexible_table_excludes = apply_filters( 'vgjpm_cfb_flexible_table_excludes', $cfb_flexible_table_excludes );
 
 			if ( ! in_array( $hook_suffix, $cfb_flexible_table_excludes, true ) ) {
@@ -65,6 +89,18 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 			// Contact form 7　など jQuery ui のクラス名を使っていて干渉するので除外 .
 			$cfb_jquery_ui_excludes = array( 'toplevel_page_wpcf7', 'toplevel_page_gf_edit_forms' );
+			if ( has_filter( 'cfb_jquery_ui_excludes' ) ) {
+				if ( function_exists( 'apply_filters_deprecated' ) ) {
+					$cfb_jquery_ui_excludes = apply_filters_deprecated(
+						'cfb_jquery_ui_excludes',
+						array( $cfb_jquery_ui_excludes ),
+						VGJPM_VERSION,
+						'vgjpm_cfb_jquery_ui_excludes'
+					);
+				} else {
+					$cfb_jquery_ui_excludes = apply_filters( 'cfb_jquery_ui_excludes', $cfb_jquery_ui_excludes );
+				}
+			}
 			$cfb_jquery_ui_excludes = apply_filters( 'vgjpm_cfb_jquery_ui_excludes', $cfb_jquery_ui_excludes );
 			if ( ! in_array( $hook_suffix, $cfb_jquery_ui_excludes, true ) ) {
 				wp_enqueue_style( 'cf-builder-jquery-ui-style', self::admin_directory_url() . 'css/jquery-ui.css', array( 'cf-builder-style' ), self::$version, 'all' );
@@ -162,7 +198,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 						$post_value = $options[ $key ];
 					}
 
-					$form_html .= '<textarea class="form-control cf_textarea_wysiwyg" name="' . esc_attr( $key ) . '" cols="70" rows="3">' . wp_kses( $post_value, self::get_allowed_form_html() ) . '</textarea>';
+					$form_html .= '<textarea class="form-control cf_textarea_wysiwyg" name="' . esc_attr( $key ) . '" cols="70" rows="3">' . esc_textarea( $post_value ) . '</textarea>';
 
 				} elseif ( $value['type'] == 'select' ) {
 					$form_html .= '<select id="' . esc_attr( $key ) . '" class="form-control" name="' . esc_attr( $key ) . '"  >';
@@ -386,6 +422,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 					'value' => true,
 					'size'  => true,
 					'checked' => true,
+					'style' => true,
 				),
 				'textarea' => array(
 					'name'  => true,
