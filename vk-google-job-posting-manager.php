@@ -114,6 +114,7 @@ function vgjpm_get_common_field_options() {
 			delete_option( $vgjpm_prefix . esc_attr( $old_option ) );
 		}
 		update_option( 'vkjpm_common_fields', $new_options );
+		$options = $new_options;
 	}
 	return $options;
 }
