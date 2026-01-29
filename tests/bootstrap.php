@@ -1,4 +1,24 @@
 <?php
+if ( ! defined( 'ABSPATH' ) ) {
+	$maybe_core_dirs = array(
+		getenv( 'WP_CORE_DIR' ),
+		getenv( 'WP_ROOT_DIR' ),
+		dirname( __DIR__, 4 ),
+	);
+
+	foreach ( $maybe_core_dirs as $maybe_core_dir ) {
+		if ( empty( $maybe_core_dir ) ) {
+			continue;
+		}
+
+		$maybe_core_dir = rtrim( $maybe_core_dir, "/\\" );
+		if ( file_exists( $maybe_core_dir . '/wp-settings.php' ) ) {
+			define( 'ABSPATH', $maybe_core_dir . '/' );
+			break;
+		}
+	}
+}
+
 if ( ! defined( 'ABSPATH' ) && ( getenv( 'WP_TESTS_DIR' ) || getenv( 'WP_PHPUNIT__DIR' ) ) ) {
 	define( 'ABSPATH', __DIR__ . '/' );
 }
