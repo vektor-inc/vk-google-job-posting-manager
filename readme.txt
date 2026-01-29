@@ -4,7 +4,7 @@ Donate link:
 Tags: Google Job Posting, Recruitment, Gutenberg.
 Requires at least: 6.6
 Tested up to: 6.9
-Stable tag: 1.2.23
+Stable tag: 1.2.24
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -46,6 +46,7 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
+= 1.2.24 =
 [ Bug fix ] Compatible with the Plugin Checker
 
 = 1.2.23 =
