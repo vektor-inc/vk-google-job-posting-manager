@@ -334,7 +334,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 					$form_html .= '<input name="' . esc_attr( $key ) . '" id="' . esc_attr( $key ) . '" value="' . esc_attr( $post_value ) . '" style="width:60%;" />
 <button type="button" id="media_src_' . esc_attr( $key ) . '" class="cfb_media_btn btn btn-default button button-default">' . esc_html__( 'Select file', 'vk-google-job-posting-manager' ) . '</button> ';
 					if ( $post_value ) {
-						$form_html .= '<a href="' . esc_url( $post_value ) . '" target="_blank" class="btn btn-default button button-default">' . __( 'View file', 'vk-google-job-posting-manager' ) . '</a>';
+						$form_html .= '<a href="' . esc_url( $post_value ) . '" target="_blank" rel="noopener noreferrer" class="btn btn-default button button-default">' . esc_html__( 'View file', 'vk-google-job-posting-manager' ) . '</a>';
 					}
 				}
 				if ( $value['description'] ) {
@@ -451,9 +451,9 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				),
 				'select' => array( 'id' => true, 'name' => true, 'class' => true ),
 				'option' => array( 'value' => true, 'selected' => true ),
-				'button' => array( 'id' => true, 'class' => true ),
+				'button' => array( 'id' => true, 'class' => true, 'type' => true ),
 				'img'    => array( 'src' => true, 'id' => true, 'alt' => true, 'class' => true, 'style' => true ),
-				'a'      => array( 'href' => true, 'target' => true, 'class' => true ),
+				'a'      => array( 'href' => true, 'target' => true, 'class' => true, 'rel' => true ),
 			);
 		}
 	} // class Vk_custom_field_builder
