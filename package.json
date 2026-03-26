@@ -13,6 +13,7 @@
     "build:js": "webpack --config webpack2.config.js",
     "lint": "wp-scripts format && wp-scripts lint-js --fix",
     "dist": "composer install --no-dev && npx gulp dist",
+    "zip": "npm run dist && cd dist && zip -r vk-google-job-posting-manager.zip vk-google-job-posting-manager",
     "gulp": "npx gulp",
     "phpunit": "composer install && npx wp-env run tests-cli --env-cwd='wp-content/plugins/vk-google-job-posting-manager' vendor/bin/phpunit -c .phpunit.xml --verbose",
     "test": "bash bin/install-wp-tests.sh wordpress_test root 'wordpress' localhost latest && phpunit"
