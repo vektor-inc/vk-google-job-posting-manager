@@ -46,6 +46,8 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
+[ Other ] Add __back_compat_meta_box flag for WordPress 7.0 RTC compatibility
+
 = 1.2.24 =
 [ Bug fix ] Compatible with the Plugin Checker
 
