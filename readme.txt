@@ -46,6 +46,8 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
+[ Bug fix ] Fix meta box not displaying in block editor due to incorrect __back_compat_meta_box value
+
 = 1.2.24 =
 [ Bug fix ] Compatible with the Plugin Checker
 
