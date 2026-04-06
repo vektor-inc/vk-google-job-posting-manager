@@ -46,7 +46,7 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
-[ Bug fix ] Fix meta box not displaying in block editor due to incorrect __back_compat_meta_box value
+[ Specification change ] Add __back_compat_meta_box flag for WordPress 7.0 RTC (Real-Time Collaboration) compatibility.
 
 = 1.2.24 =
 [ Bug fix ] Compatible with the Plugin Checker
