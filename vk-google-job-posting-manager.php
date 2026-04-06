@@ -37,6 +37,7 @@ require_once __DIR__ . '/functions-tags.php';
 require_once __DIR__ . '/inc/custom-field-builder/package/custom-field-builder.php';
 require_once __DIR__ . '/inc/custom-field-builder/custom-field-builder-config.php';
 require_once __DIR__ . '/blocks/vk-google-job-posting-manager-block.php';
+require_once __DIR__ . '/inc/editor-panel.php';
 
 if ( ! function_exists( 'vgjpm_set_script_translations' ) ) {
 	/**

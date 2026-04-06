@@ -46,7 +46,7 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
-[ Specification change ] Add __back_compat_meta_box flag for WordPress 7.0 RTC (Real-Time Collaboration) compatibility.
+[ Specification change ] Migrate meta box to block editor native sidebar panel for WordPress 7.0 RTC (Real-Time Collaboration) compatibility.
 
 = 1.2.24 =
 [ Bug fix ] Compatible with the Plugin Checker
