@@ -51,7 +51,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 		$screen        = $key;
 		$context       = 'advanced';
 		$priority      = 'high';
-		$callback_args = array( '__back_compat_meta_box' => false );
+		$callback_args = array( '__back_compat_meta_box' => true );
 		add_meta_box( $id, $title, $callback, $screen, $context, $priority, $callback_args );
 	}
 
