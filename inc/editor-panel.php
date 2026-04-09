@@ -97,8 +97,8 @@ function vgjpm_register_panel_meta() {
 					'single'            => true,
 					'show_in_rest'      => true,
 					'sanitize_callback' => 'sanitize_text_field',
-					'auth_callback'     => function () {
-						return current_user_can( 'edit_posts' );
+					'auth_callback'     => function ( $allowed, $meta_key, $object_id ) {
+						return current_user_can( 'edit_post', $object_id );
 					},
 				)
 			);
@@ -114,8 +114,8 @@ function vgjpm_register_panel_meta() {
 				'single'            => true,
 				'show_in_rest'      => true,
 				'sanitize_callback' => 'wp_kses_post',
-				'auth_callback'     => function () {
-					return current_user_can( 'edit_posts' );
+				'auth_callback'     => function ( $allowed, $meta_key, $object_id ) {
+					return current_user_can( 'edit_post', $object_id );
 				},
 			)
 		);
@@ -130,8 +130,8 @@ function vgjpm_register_panel_meta() {
 					'single'            => true,
 					'show_in_rest'      => true,
 					'sanitize_callback' => 'sanitize_text_field',
-					'auth_callback'     => function () {
-						return current_user_can( 'edit_posts' );
+					'auth_callback'     => function ( $allowed, $meta_key, $object_id ) {
+						return current_user_can( 'edit_post', $object_id );
 					},
 				)
 			);
@@ -157,8 +157,8 @@ function vgjpm_register_panel_meta() {
 						}
 						return array_map( 'sanitize_text_field', $value );
 					},
-					'auth_callback'     => function () {
-						return current_user_can( 'edit_posts' );
+					'auth_callback'     => function ( $allowed, $meta_key, $object_id ) {
+						return current_user_can( 'edit_post', $object_id );
 					},
 				)
 			);
@@ -229,32 +229,32 @@ function vgjpm_enqueue_editor_panel() {
 				'jobInfo'             => __( 'Job Information', 'vk-google-job-posting-manager' ),
 				'salary'              => __( 'Salary', 'vk-google-job-posting-manager' ),
 				'employment'          => __( 'Employment', 'vk-google-job-posting-manager' ),
-				'organization'        => __( 'Hiring Organization', 'vk-google-job-posting-manager' ),
-				'location'            => __( 'Work Location', 'vk-google-job-posting-manager' ),
+				'hiringOrganization'  => __( 'Hiring Organization', 'vk-google-job-posting-manager' ),
+				'workLocation'        => __( 'Work Location', 'vk-google-job-posting-manager' ),
 				'other'               => __( 'Other', 'vk-google-job-posting-manager' ),
 				// Field labels / フィールドラベル
 				'jobTitle'            => __( 'Job Title', 'vk-google-job-posting-manager' ),
-				'description'         => __( 'Description', 'vk-google-job-posting-manager' ),
+				'jobDescription'      => __( 'Description', 'vk-google-job-posting-manager' ),
 				'minSalary'           => __( 'Minimum Value of Salary', 'vk-google-job-posting-manager' ),
 				'maxSalary'           => __( 'Max Value of Salary', 'vk-google-job-posting-manager' ),
 				'salaryCycle'         => __( 'The Cycle of Salary Payment', 'vk-google-job-posting-manager' ),
 				'currency'            => __( 'Currency', 'vk-google-job-posting-manager' ),
 				'employmentType'      => __( 'Employment Type', 'vk-google-job-posting-manager' ),
-				'remoteWork'          => __( 'Remote Work', 'vk-google-job-posting-manager' ),
-				'remoteCountries'     => __( 'Countries that allow remote work', 'vk-google-job-posting-manager' ),
-				'orgName'             => __( 'Hiring Organization Name', 'vk-google-job-posting-manager' ),
-				'orgWebsite'          => __( 'Hiring Organization Website', 'vk-google-job-posting-manager' ),
-				'orgLogo'             => __( 'Hiring Organization Logo', 'vk-google-job-posting-manager' ),
+				'telecommute'         => __( 'Remote Work', 'vk-google-job-posting-manager' ),
+				'applicantLocationRequirements' => __( 'Countries that allow remote work', 'vk-google-job-posting-manager' ),
+				'directApply'         => __( 'Direct Apply', 'vk-google-job-posting-manager' ),
+				'organizationName'    => __( 'Hiring Organization Name', 'vk-google-job-posting-manager' ),
+				'organizationUrl'     => __( 'Hiring Organization Website', 'vk-google-job-posting-manager' ),
+				'logo'                => __( 'Hiring Organization Logo', 'vk-google-job-posting-manager' ),
 				'postalCode'          => __( 'Postal Code of work Location', 'vk-google-job-posting-manager' ),
 				'country'             => __( 'Country of Work Location', 'vk-google-job-posting-manager' ),
 				'region'              => __( 'Address Region of Work Location', 'vk-google-job-posting-manager' ),
 				'locality'            => __( 'Address Locality of Work Location', 'vk-google-job-posting-manager' ),
-				'street'              => __( 'Street Address of Work Location', 'vk-google-job-posting-manager' ),
-				'expiryDate'          => __( 'Expiry Date', 'vk-google-job-posting-manager' ),
+				'streetAddress'       => __( 'Street Address of Work Location', 'vk-google-job-posting-manager' ),
+				'validThrough'        => __( 'Expiry Date', 'vk-google-job-posting-manager' ),
 				'identifier'          => __( 'Company Identifier Number', 'vk-google-job-posting-manager' ),
-				'directApply'         => __( 'Direct Apply', 'vk-google-job-posting-manager' ),
-				'directApplyLabel'    => __( 'You can apply from this page', 'vk-google-job-posting-manager' ),
 				'chooseImage'         => __( 'Choose Image', 'vk-google-job-posting-manager' ),
+				'changeImage'         => __( 'Change', 'vk-google-job-posting-manager' ),
 				'removeImage'         => __( 'Delete Image', 'vk-google-job-posting-manager' ),
 				// Unit text options / 給与サイクルの選択肢
 				'perHour'             => __( 'Per hour', 'vk-google-job-posting-manager' ),
@@ -271,7 +271,6 @@ function vgjpm_enqueue_editor_panel() {
 				'volunteer'           => __( 'VOLUNTEER', 'vk-google-job-posting-manager' ),
 				'perDiem'             => __( 'PER DIEM', 'vk-google-job-posting-manager' ),
 				'otherType'           => __( 'OTHER', 'vk-google-job-posting-manager' ),
-				'telecommute'         => __( 'Remote Work', 'vk-google-job-posting-manager' ),
 			),
 			'currencies' => $currencies,
 		)

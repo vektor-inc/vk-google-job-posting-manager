@@ -31,7 +31,7 @@ const employmentTypes = [
 	{ value: 'INTERN', label: i18n.intern || 'INTERN' },
 	{ value: 'VOLUNTEER', label: i18n.volunteer || 'VOLUNTEER' },
 	{ value: 'PER_DIEM', label: i18n.perDiem || 'PER DIEM' },
-	{ value: 'OTHER', label: i18n.other || 'OTHER' },
+	{ value: 'OTHER', label: i18n.otherType || 'OTHER' },
 ];
 
 /**
