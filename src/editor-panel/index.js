@@ -38,16 +38,31 @@ const employmentTypes = [
 ];
 
 /**
- * 求人情報サイドバーコンポーネント
- *
- * PluginSidebar 内に6つの PanelBody セクションを配置。
- * ツールバーのアイコンからアクセスし、各セクションは折りたたみ可能。
+ * 外側コンポーネント: postType を取得し、未定義なら何も描画しない。
+ * postType が確定してから内側コンポーネントに渡すことで
+ * useEntityProp のフック呼び出し順序を安定させる。
  */
 const JobPostingPanels = () => {
 	const postType = useSelect(
 		( s ) => s( 'core/editor' ).getCurrentPostType(),
 		[]
 	);
+
+	if ( ! postType ) {
+		return null;
+	}
+
+	return <JobPostingPanelsInner postType={ postType } />;
+};
+
+/**
+ * 内側コンポーネント: postType が確定した状態で useEntityProp を呼ぶ。
+ * PluginSidebar 内に6つの PanelBody セクションを配置。
+ *
+ * @param {Object} props          Component props.
+ * @param {string} props.postType 投稿タイプスラッグ
+ */
+const JobPostingPanelsInner = ( { postType } ) => {
 	const [ meta, setMeta ] = useEntityProp( 'postType', postType, 'meta' );
 
 	/**
