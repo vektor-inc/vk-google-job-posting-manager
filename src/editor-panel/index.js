@@ -1,17 +1,20 @@
 /**
  * VK Google Job Posting Manager - Editor Panel
  *
- * ブロックエディタのサイドバーに求人情報入力パネルを追加する
+ * ブロックエディタのサイドバーに求人情報入力パネルを追加する。
+ * PluginSidebar を使い、ツールバーに専用アイコンを表示。
+ * 各セクションは PanelBody で折りたたみ可能。
  */
 
 import { registerPlugin } from '@wordpress/plugins';
-import { PluginDocumentSettingPanel } from '@wordpress/editor';
+import { PluginSidebar } from '@wordpress/editor';
 import {
 	CheckboxControl,
 	TextControl,
 	TextareaControl,
 	SelectControl,
 	Button,
+	PanelBody,
 } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { useEntityProp } from '@wordpress/core-data';
@@ -35,10 +38,10 @@ const employmentTypes = [
 ];
 
 /**
- * 求人情報パネルコンポーネント
+ * 求人情報サイドバーコンポーネント
  *
- * 6つの独立した PluginDocumentSettingPanel で構成し、
- * 各パネルは個別に折りたたみ可能
+ * PluginSidebar 内に6つの PanelBody セクションを配置。
+ * ツールバーのアイコンからアクセスし、各セクションは折りたたみ可能。
  */
 const JobPostingPanels = () => {
 	const postType = useSelect(
@@ -91,11 +94,18 @@ const JobPostingPanels = () => {
 	);
 
 	return (
-		<>
-			{ /* Panel 1: 求人情報 */ }
-			<PluginDocumentSettingPanel
-				name="vgjpm-job-info"
+		<PluginSidebar
+			name="vgjpm-job-posting"
+			title={
+				i18n.sidebarTitle ||
+				'Google Job Posting Registration Information'
+			}
+			icon="businessman"
+		>
+			{ /* Section 1: 求人情報 */ }
+			<PanelBody
 				title={ i18n.jobInfo || 'Job Information' }
+				initialOpen={ true }
 			>
 				<TextControl
 					label={ ( i18n.jobTitle || 'Job Title' ) + ' *' }
@@ -110,13 +120,10 @@ const JobPostingPanels = () => {
 					onChange={ ( v ) => update( 'vkjp_description', v ) }
 					rows={ 6 }
 				/>
-			</PluginDocumentSettingPanel>
+			</PanelBody>
 
-			{ /* Panel 2: 給与 */ }
-			<PluginDocumentSettingPanel
-				name="vgjpm-salary"
-				title={ i18n.salary || 'Salary' }
-			>
+			{ /* Section 2: 給与 */ }
+			<PanelBody title={ i18n.salary || 'Salary' } initialOpen={ false }>
 				<TextControl
 					label={ i18n.minSalary || 'Minimum Salary' }
 					value={ meta?.vkjp_minValue || '' }
@@ -161,12 +168,12 @@ const JobPostingPanels = () => {
 					options={ currencies }
 					onChange={ ( v ) => update( 'vkjp_currency', v ) }
 				/>
-			</PluginDocumentSettingPanel>
+			</PanelBody>
 
-			{ /* Panel 3: 雇用 */ }
-			<PluginDocumentSettingPanel
-				name="vgjpm-employment"
+			{ /* Section 3: 雇用 */ }
+			<PanelBody
 				title={ i18n.employment || 'Employment' }
+				initialOpen={ false }
 			>
 				<p style={ { marginTop: 0, marginBottom: '8px' } }>
 					{ i18n.employmentType || 'Employment Type' }
@@ -229,12 +236,12 @@ const JobPostingPanels = () => {
 						}
 					/>
 				</div>
-			</PluginDocumentSettingPanel>
+			</PanelBody>
 
-			{ /* Panel 4: 採用組織 */ }
-			<PluginDocumentSettingPanel
-				name="vgjpm-organization"
+			{ /* Section 4: 採用組織 */ }
+			<PanelBody
 				title={ i18n.hiringOrganization || 'Hiring Organization' }
+				initialOpen={ false }
 			>
 				<TextControl
 					label={
@@ -305,12 +312,12 @@ const JobPostingPanels = () => {
 						) }
 					/>
 				</MediaUploadCheck>
-			</PluginDocumentSettingPanel>
+			</PanelBody>
 
-			{ /* Panel 5: 勤務地 */ }
-			<PluginDocumentSettingPanel
-				name="vgjpm-location"
+			{ /* Section 5: 勤務地 */ }
+			<PanelBody
 				title={ i18n.workLocation || 'Work Location' }
+				initialOpen={ false }
 			>
 				<TextControl
 					label={ i18n.postalCode || 'Postal Code' }
@@ -337,13 +344,10 @@ const JobPostingPanels = () => {
 					value={ meta?.vkjp_streetAddress || '' }
 					onChange={ ( v ) => update( 'vkjp_streetAddress', v ) }
 				/>
-			</PluginDocumentSettingPanel>
+			</PanelBody>
 
-			{ /* Panel 6: その他 */ }
-			<PluginDocumentSettingPanel
-				name="vgjpm-other"
-				title={ i18n.other || 'Other' }
-			>
+			{ /* Section 6: その他 */ }
+			<PanelBody title={ i18n.other || 'Other' } initialOpen={ false }>
 				<TextControl
 					label={ i18n.validThrough || 'Valid Through' }
 					value={ meta?.vkjp_validThrough || '' }
@@ -355,8 +359,8 @@ const JobPostingPanels = () => {
 					value={ meta?.vkjp_identifier || '' }
 					onChange={ ( v ) => update( 'vkjp_identifier', v ) }
 				/>
-			</PluginDocumentSettingPanel>
-		</>
+			</PanelBody>
+		</PluginSidebar>
 	);
 };
 

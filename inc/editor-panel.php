@@ -225,7 +225,9 @@ function vgjpm_enqueue_editor_panel() {
 		'vgjpmPanelData',
 		array(
 			'i18n'       => array(
-				// Panel titles / パネルタイトル
+				// Sidebar title / サイドバータイトル
+				'sidebarTitle'        => __( 'Google Job Posting Registration Information', 'vk-google-job-posting-manager' ),
+				// Section titles / セクションタイトル
 				'jobInfo'             => __( 'Job Information', 'vk-google-job-posting-manager' ),
 				'salary'              => __( 'Salary', 'vk-google-job-posting-manager' ),
 				'employment'          => __( 'Employment', 'vk-google-job-posting-manager' ),
