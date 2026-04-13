@@ -279,3 +279,23 @@ function vgjpm_enqueue_editor_panel() {
 	);
 }
 add_action( 'enqueue_block_editor_assets', 'vgjpm_enqueue_editor_panel' );
+
+/**
+ * Remove the legacy metabox on block editor screens.
+ * ブロックエディタ画面では旧メタボックスを非表示にする。
+ *
+ * The new sidebar panel replaces the metabox in the block editor.
+ * Classic Editor users will still see the original metabox.
+ * 新しいサイドバーパネルがブロックエディタでメタボックスの代わりになる。
+ * クラシックエディタのユーザーには従来のメタボックスがそのまま表示される。
+ *
+ * @return void
+ */
+function vgjpm_remove_legacy_metabox_on_block_editor() {
+	$screen = get_current_screen();
+	if ( ! $screen || ! $screen->is_block_editor ) {
+		return;
+	}
+	remove_meta_box( 'meta_box_job_posting', $screen->post_type, 'advanced' );
+}
+add_action( 'add_meta_boxes', 'vgjpm_remove_legacy_metabox_on_block_editor', 20 );
