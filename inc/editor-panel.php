@@ -54,6 +54,10 @@ function vgjpm_register_panel_meta() {
 		return;
 	}
 
+	$auth_callback = function ( $allowed, $meta_key, $object_id ) {
+		return current_user_can( 'edit_post', $object_id );
+	};
+
 	// String fields / 文字列フィールド
 	$string_fields = array(
 		'vkjp_title',
@@ -97,9 +101,7 @@ function vgjpm_register_panel_meta() {
 					'single'            => true,
 					'show_in_rest'      => true,
 					'sanitize_callback' => 'sanitize_text_field',
-					'auth_callback'     => function ( $allowed, $meta_key, $object_id ) {
-						return current_user_can( 'edit_post', $object_id );
-					},
+					'auth_callback'     => $auth_callback,
 				)
 			);
 		}
@@ -130,9 +132,7 @@ function vgjpm_register_panel_meta() {
 					'single'            => true,
 					'show_in_rest'      => true,
 					'sanitize_callback' => 'sanitize_text_field',
-					'auth_callback'     => function ( $allowed, $meta_key, $object_id ) {
-						return current_user_can( 'edit_post', $object_id );
-					},
+					'auth_callback'     => $auth_callback,
 				)
 			);
 		}
@@ -157,9 +157,7 @@ function vgjpm_register_panel_meta() {
 						}
 						return array_map( 'sanitize_text_field', $value );
 					},
-					'auth_callback'     => function ( $allowed, $meta_key, $object_id ) {
-						return current_user_can( 'edit_post', $object_id );
-					},
+					'auth_callback'     => $auth_callback,
 				)
 			);
 		}
