@@ -54,7 +54,7 @@ function vgjpm_register_panel_meta() {
 		return;
 	}
 
-	$auth_callback = function ( $allowed, $meta_key, $object_id ) {
+	$auth_callback = function ( $_allowed, $_meta_key, $object_id ) {
 		return current_user_can( 'edit_post', $object_id );
 	};
 
