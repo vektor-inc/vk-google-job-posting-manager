@@ -116,9 +116,7 @@ function vgjpm_register_panel_meta() {
 				'single'            => true,
 				'show_in_rest'      => true,
 				'sanitize_callback' => 'wp_kses_post',
-				'auth_callback'     => function ( $allowed, $meta_key, $object_id ) {
-					return current_user_can( 'edit_post', $object_id );
-				},
+				'auth_callback'     => $auth_callback,
 			)
 		);
 
