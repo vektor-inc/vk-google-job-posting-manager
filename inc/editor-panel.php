@@ -182,14 +182,10 @@ function vgjpm_enqueue_editor_panel() {
 		return;
 	}
 
-	// Check if this post type should show the metabox.
-	// この投稿タイプでメタボックスを表示すべきか確認する。
-	$post_type = $screen->post_type;
-	if ( 'job-posts' !== $post_type ) {
-		$show = get_option( 'vgjpm_post_type_display_customfields' . $post_type );
-		if ( 'true' !== $show ) {
-			return;
-		}
+	// Use the same source of truth as REST meta registration.
+	// REST メタ登録と同じ関数で対象投稿タイプを判定する。
+	if ( ! in_array( $screen->post_type, vgjpm_get_meta_post_types(), true ) ) {
+		return;
 	}
 
 	// Load the build asset file. / ビルドアセットファイルを読み込む。
@@ -293,7 +289,10 @@ add_action( 'enqueue_block_editor_assets', 'vgjpm_enqueue_editor_panel' );
  */
 function vgjpm_remove_legacy_metabox_on_block_editor() {
 	$screen = get_current_screen();
-	if ( ! $screen || ! $screen->is_block_editor ) {
+	if ( ! $screen || ! $screen->is_block_editor || empty( $screen->post_type ) ) {
+		return;
+	}
+	if ( ! in_array( $screen->post_type, vgjpm_get_meta_post_types(), true ) ) {
 		return;
 	}
 	remove_meta_box( 'meta_box_job_posting', $screen->post_type, 'advanced' );
