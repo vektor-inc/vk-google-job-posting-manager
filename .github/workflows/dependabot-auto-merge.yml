@@ -15,9 +15,10 @@ jobs:
         id: meta
         uses: dependabot/fetch-metadata@v2
 
-      - name: Enable auto-merge for devDeps minor/patch
+      - name: Enable auto-merge for devDeps/indirect minor/patch
         if: |
-          steps.meta.outputs.dependency-type == 'direct:development' &&
+          (steps.meta.outputs.dependency-type == 'direct:development' ||
+           steps.meta.outputs.dependency-type == 'indirect') &&
           (steps.meta.outputs.update-type == 'version-update:semver-minor' ||
            steps.meta.outputs.update-type == 'version-update:semver-patch')
         run: gh pr merge --auto --squash "$PR_URL"
