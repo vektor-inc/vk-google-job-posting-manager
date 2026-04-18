@@ -46,6 +46,8 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
+[ Spec Change ] Migrate post editor settings UI to block editor sidebar panel
+
 = 1.2.24 =
 [ Bug fix ] Compatible with the Plugin Checker
 
