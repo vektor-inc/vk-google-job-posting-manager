@@ -9,3 +9,4 @@ vendor/
 *.zip
 .wp-env.override.json
 .phpunit.result.cache
+.claude/settings.local.json
