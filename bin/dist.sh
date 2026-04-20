@@ -3,7 +3,8 @@
 set -ex
 
 PLUGIN_NAME='vk-google-job-posting-manager'
-PLUGIN_DIR=$(cd $(dirname $(dirname $0)); pwd)
+SCRIPT_DIR="$(cd -- "$(dirname -- "$0")" && pwd)"
+PLUGIN_DIR="$(cd -- "${SCRIPT_DIR}/.." && pwd)"
 
 dist_dir="${PLUGIN_DIR}/dist"
 src_dir="${dist_dir}/${PLUGIN_NAME}"
