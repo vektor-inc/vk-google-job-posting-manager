@@ -51,4 +51,30 @@
 			height:auto;
 		}
 	}
+	// 投稿タイプ選択とスクリーンショットを横並びにするレイアウト / Layout that places the post type checklist and sample screenshots side by side.
+	.vgjpm-posttype-section {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 2em;
+		align-items: flex-start;
+		&__checklist {
+			flex: 1 1 300px;
+			min-width: 0;
+		}
+		&__screenshots {
+			flex: 0 1 auto;
+			display: flex;
+			flex-wrap: wrap;
+			gap: 0.5em;
+			a {
+				display: inline-block;
+				line-height: 0;
+			}
+			img {
+				max-width: 160px;
+				height: auto;
+				border: 1px solid #ccc;
+			}
+		}
+	}
 }

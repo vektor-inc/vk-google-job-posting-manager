@@ -37,6 +37,7 @@ require_once __DIR__ . '/functions-tags.php';
 require_once __DIR__ . '/inc/custom-field-builder/package/custom-field-builder.php';
 require_once __DIR__ . '/inc/custom-field-builder/custom-field-builder-config.php';
 require_once __DIR__ . '/blocks/vk-google-job-posting-manager-block.php';
+require_once __DIR__ . '/inc/editor-panel.php';
 
 if ( ! function_exists( 'vgjpm_set_script_translations' ) ) {
 	/**
@@ -215,7 +216,22 @@ function vgjpm_create_common_form( $common_customfields ) {
 
 	$form .= '<h2>' . __( 'Choose the post type to display job posting custom fields', 'vk-google-job-posting-manager' ) . '</h2>';
 
-	$form .= vgjpm_post_type_check_list();
+	// チェックリストとスクリーンショットを横並びにする / Arrange the checklist and screenshots side by side.
+	$form .= '<div class="vgjpm-posttype-section">';
+	$form .= '<div class="vgjpm-posttype-section__checklist">' . vgjpm_post_type_check_list() . '</div>';
+
+	// 設定対象の投稿タイプでカスタムフィールドがどのように表示されるかを示すサンプル画像 / Sample images showing how the custom fields appear for the selected post types.
+	$image_url_sidebar = esc_url( plugin_dir_url( __FILE__ ) . 'assets/images/job-posting-side-panel-form.png' );
+	$image_url_metabox = esc_url( plugin_dir_url( __FILE__ ) . 'assets/images/job-posting-metabox-form.png' );
+	$form             .= '<div class="vgjpm-posttype-section__screenshots">';
+	$form             .= '<a href="' . $image_url_sidebar . '" target="_blank" rel="noopener noreferrer">';
+	$form             .= '<img src="' . $image_url_sidebar . '" alt="' . esc_attr__( 'Block editor sidebar panel example', 'vk-google-job-posting-manager' ) . '" />';
+	$form             .= '</a>';
+	$form             .= '<a href="' . $image_url_metabox . '" target="_blank" rel="noopener noreferrer">';
+	$form             .= '<img src="' . $image_url_metabox . '" alt="' . esc_attr__( 'Classic editor meta box example', 'vk-google-job-posting-manager' ) . '" />';
+	$form             .= '</a>';
+	$form             .= '</div>';
+	$form             .= '</div>';
 
 	$form .= '<h2>' . __( 'Common Fields', 'vk-google-job-posting-manager' ) . '</h2>';
 
