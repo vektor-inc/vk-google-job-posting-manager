@@ -21,7 +21,8 @@ jobs:
               with:
                   node-version: 20.x
             - name: Setup PHP
-              uses: shivammathur/setup-php@v2
+              # shivammathur/setup-php v2
+              uses: shivammathur/setup-php@728c6c6b8cf02c2e48117716a91ee48313958a19
               with:
                   php-version: 8.2
             - name: Install NPM Scripts
@@ -42,6 +43,7 @@ jobs:
               with:
                   name: dist
                   path: dist/
+                  retention-days: 7
 
     php_unit:
         name: PHP Unit Test on PHP ${{ matrix.php-versions }} / WP ${{ matrix.wp-versions }}
@@ -63,7 +65,8 @@ jobs:
                   path: vendor
                   key: ${{ runner.os }}-php${{ matrix.php-versions }}-${{ hashFiles('**/composer.lock') }}
             - name: Setup PHP ${{ matrix.php-versions }}
-              uses: shivammathur/setup-php@v2
+              # shivammathur/setup-php v2
+              uses: shivammathur/setup-php@728c6c6b8cf02c2e48117716a91ee48313958a19
               with:
                   php-version: ${{ matrix.php-versions }}
             - name: Install NPM Scripts
@@ -88,15 +91,12 @@ jobs:
                   echo '{"plugins":["./dist/${{ env.plugin_name }}"]}' > wp-env.override.json
             - name: Start wp-env
               run: |
-                  n=0
-                  until [ $n -ge 5 ]
-                  do
+                  for n in 1 2 3 4 5; do
                       WP_ENV_CORE=WordPress/WordPress#${{ matrix.wp-versions }} WP_ENV_PHP_VERSION=${{ matrix.php-versions }} npx wp-env start --update && break
-                      n=$((n+1))
+                      [ "$n" -lt 5 ] || exit 1
                       echo "Retrying wp-env start --update ($n)..."
                       sleep 15
                   done
-                  [ $n -lt 5 ] || exit 1
             - name: Run PHP Unit Test
               run: npm run phpunit
 
