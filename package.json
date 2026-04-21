@@ -4,7 +4,7 @@
   "main": "Gruntfile.js",
   "author": "Vektor,Inc.",
   "scripts": {
-    "update": "ncu -u -x 'gulp' && rm -rf node_modules package-lock.json && npm install",
+    "update": "ncu -u && rm -rf node_modules package-lock.json && npm install",
     "start": "npm install && npm run build && npm run watch && wp plugin activate vk-google-job-posting-manager && wp browse --wp-admin",
     "watch": "npx gulp watch",
     "build": "npx gulp replace_text_domain && npm run build:block && npm run build:panel && npm run build:css && npm run build:js && npx gulp replace_text_domain",
