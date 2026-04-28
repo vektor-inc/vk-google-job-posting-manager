@@ -326,14 +326,50 @@ class DefaultTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Title that is null or whitespace-only should not produce JSON-LD either.
-	 * null や空白のみのタイトルでも JSON-LD を出さないことを検証する。
+	 * Title that is null should not produce JSON-LD either.
+	 * null タイトルでも JSON-LD を出さないことを検証する。
 	 */
 	function test_generate_jsonLD_returns_null_when_title_is_null() {
 		$custom_fields = array(
 			'vkjp_title' => null,
 		);
 		$this->assertNull( vgjpm_generate_jsonLD( $custom_fields ) );
+	}
+
+	/**
+	 * Whitespace-only titles must not produce JSON-LD.
+	 *
+	 * Covers half-width space, tab, newline, and full-width space (U+3000)
+	 * which is a common copy-paste artifact in Japanese input.
+	 * 半角スペース・タブ・改行・全角スペース (U+3000) のみのタイトルでも
+	 * JSON-LD が出力されないことを検証する。
+	 *
+	 * @dataProvider provide_whitespace_titles
+	 *
+	 * @param string $title 検証するタイトル文字列。
+	 */
+	function test_generate_jsonLD_returns_null_when_title_is_whitespace_only( $title ) {
+		$custom_fields = array(
+			'vkjp_title' => $title,
+		);
+		$this->assertNull( vgjpm_generate_jsonLD( $custom_fields ) );
+	}
+
+	/**
+	 * Data provider for whitespace-only titles.
+	 * 空白のみタイトルのデータプロバイダ。
+	 *
+	 * @return array
+	 */
+	public function provide_whitespace_titles() {
+		return array(
+			'spaces only'         => array( '   ' ),
+			'tab only'            => array( "\t" ),
+			'newline only'        => array( "\n" ),
+			'mixed whitespace'    => array( " \t\n " ),
+			'full-width space'    => array( '　' ),
+			'mixed full and half' => array( " 　\t" ),
+		);
 	}
 
 	/**
