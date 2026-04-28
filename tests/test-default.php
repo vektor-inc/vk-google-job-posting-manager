@@ -301,6 +301,42 @@ class DefaultTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Empty title must suppress JSON-LD output entirely.
+	 *
+	 * Sidebar panel may persist empty-string post meta for vkjp_title via
+	 * REST. The generator must reject blank titles to avoid emitting
+	 * payload-less JSON-LD that triggers Search Console errors.
+	 * サイドバーパネル経由で REST に空文字の vkjp_title が保存され得るため、
+	 * 空タイトルでは JSON-LD を一切返さないことを検証する。
+	 */
+	function test_generate_jsonLD_returns_null_when_title_is_empty_string() {
+		$custom_fields = array(
+			'vkjp_title' => '',
+		);
+		$this->assertNull( vgjpm_generate_jsonLD( $custom_fields ) );
+	}
+
+	/**
+	 * Missing title must also suppress JSON-LD output (preserves prior behavior).
+	 * vkjp_title キーが存在しない場合も従来通り出力されないことを検証する。
+	 */
+	function test_generate_jsonLD_returns_null_when_title_is_missing() {
+		$custom_fields = array();
+		$this->assertNull( vgjpm_generate_jsonLD( $custom_fields ) );
+	}
+
+	/**
+	 * Title that is null or whitespace-only should not produce JSON-LD either.
+	 * null や空白のみのタイトルでも JSON-LD を出さないことを検証する。
+	 */
+	function test_generate_jsonLD_returns_null_when_title_is_null() {
+		$custom_fields = array(
+			'vkjp_title' => null,
+		);
+		$this->assertNull( vgjpm_generate_jsonLD( $custom_fields ) );
+	}
+
+	/**
 	 * employmentType should strip stray quotes.
 	 */
 	function test_generate_jsonLD_employmentType_strips_quotes() {
