@@ -301,6 +301,78 @@ class DefaultTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Empty title must suppress JSON-LD output entirely.
+	 *
+	 * Sidebar panel may persist empty-string post meta for vkjp_title via
+	 * REST. The generator must reject blank titles to avoid emitting
+	 * payload-less JSON-LD that triggers Search Console errors.
+	 * サイドバーパネル経由で REST に空文字の vkjp_title が保存され得るため、
+	 * 空タイトルでは JSON-LD を一切返さないことを検証する。
+	 */
+	function test_generate_jsonLD_returns_null_when_title_is_empty_string() {
+		$custom_fields = array(
+			'vkjp_title' => '',
+		);
+		$this->assertNull( vgjpm_generate_jsonLD( $custom_fields ) );
+	}
+
+	/**
+	 * Missing title must also suppress JSON-LD output (preserves prior behavior).
+	 * vkjp_title キーが存在しない場合も従来通り出力されないことを検証する。
+	 */
+	function test_generate_jsonLD_returns_null_when_title_is_missing() {
+		$custom_fields = array();
+		$this->assertNull( vgjpm_generate_jsonLD( $custom_fields ) );
+	}
+
+	/**
+	 * Title that is null should not produce JSON-LD either.
+	 * null タイトルでも JSON-LD を出さないことを検証する。
+	 */
+	function test_generate_jsonLD_returns_null_when_title_is_null() {
+		$custom_fields = array(
+			'vkjp_title' => null,
+		);
+		$this->assertNull( vgjpm_generate_jsonLD( $custom_fields ) );
+	}
+
+	/**
+	 * Whitespace-only titles must not produce JSON-LD.
+	 *
+	 * Covers half-width space, tab, newline, and full-width space (U+3000)
+	 * which is a common copy-paste artifact in Japanese input.
+	 * 半角スペース・タブ・改行・全角スペース (U+3000) のみのタイトルでも
+	 * JSON-LD が出力されないことを検証する。
+	 *
+	 * @dataProvider provide_whitespace_titles
+	 *
+	 * @param string $title 検証するタイトル文字列。
+	 */
+	function test_generate_jsonLD_returns_null_when_title_is_whitespace_only( $title ) {
+		$custom_fields = array(
+			'vkjp_title' => $title,
+		);
+		$this->assertNull( vgjpm_generate_jsonLD( $custom_fields ) );
+	}
+
+	/**
+	 * Data provider for whitespace-only titles.
+	 * 空白のみタイトルのデータプロバイダ。
+	 *
+	 * @return array
+	 */
+	public function provide_whitespace_titles() {
+		return array(
+			'spaces only'         => array( '   ' ),
+			'tab only'            => array( "\t" ),
+			'newline only'        => array( "\n" ),
+			'mixed whitespace'    => array( " \t\n " ),
+			'full-width space'    => array( '　' ),
+			'mixed full and half' => array( " 　\t" ),
+		);
+	}
+
+	/**
 	 * employmentType should strip stray quotes.
 	 */
 	function test_generate_jsonLD_employmentType_strips_quotes() {

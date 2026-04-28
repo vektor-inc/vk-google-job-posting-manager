@@ -461,10 +461,50 @@ function vgjpm_save_check_list() {
 	}
 }
 
+/**
+ * Print JobPosting JSON-LD on singular pages of supported post types.
+ * 対象投稿タイプの個別ページで JobPosting JSON-LD を出力する。
+ *
+ * Outputs nothing when the current view is not a singular post of a
+ * supported post type, or when required job-posting fields (title) are
+ * empty. This prevents bogus JSON-LD on archives, the front page, and
+ * empty drafts that could trigger Search Console errors.
+ * 対象投稿タイプの個別ページ以外、または求人情報の必須項目（title）が
+ * 空の場合は出力しない。アーカイブやトップページ、未入力の下書きで
+ * Search Console エラーの原因となる空の JSON-LD が出力されるのを防ぐ。
+ *
+ * @return void
+ */
 function vgjpm_print_jsonLD_in_footer() {
+	// Only emit JSON-LD on singular views; archives and the front page
+	// must never carry a JobPosting payload.
+	// 個別ページのみで出力する。アーカイブやフロントページに
+	// JobPosting の JSON-LD を出してはいけない。
+	if ( ! is_singular() ) {
+		return;
+	}
+
+	// Restrict output to post types that are explicitly enabled for the
+	// job posting metabox / sidebar panel. If the helper is unavailable
+	// (older include order, partial load, etc.) we cannot determine the
+	// allowlist, so we fail safe and skip output rather than risk
+	// emitting JSON-LD on unintended post types.
+	// 求人情報メタボックス/サイドバーパネルが有効な投稿タイプのみで
+	// 出力する。ヘルパー未定義時は許可リストを判定できないため、
+	// 意図しない投稿タイプで JSON-LD が出るのを避けて安全側に倒し、
+	// 出力をスキップする。
+	if ( ! function_exists( 'vgjpm_get_meta_post_types' ) ) {
+		return;
+	}
+	$post_type          = get_post_type();
+	$enabled_post_types = vgjpm_get_meta_post_types();
+	if ( empty( $post_type ) || ! in_array( $post_type, $enabled_post_types, true ) ) {
+		return;
+	}
+
 	$post_id       = get_the_ID();
 	$custom_fields = vgjpm_get_custom_fields( $post_id );
-	$json_ld = vgjpm_generate_jsonLD( $custom_fields );
+	$json_ld       = vgjpm_generate_jsonLD( $custom_fields );
 	if ( $json_ld ) {
 		echo wp_kses(
 			$json_ld,
@@ -542,7 +582,24 @@ function vgjpm_esc_newline( $html ) {
  *                     required data (title) is missing.
  ****/
 function vgjpm_generate_jsonLD( $custom_fields ) {
+	// Treat missing, empty, or whitespace-only job title as
+	// "no job posting on this page".
+	// Sidebar panel registers post meta via REST and may persist empty
+	// or whitespace-only strings, so `isset()` alone is insufficient —
+	// we must also reject blank strings (including space, tab, full-width
+	// space, etc.) to avoid emitting JSON-LD with no actual content.
+	// 必須項目である求人タイトルが未設定・空文字・空白のみの場合は
+	// 「このページに求人情報はない」とみなす。サイドバーパネルが
+	// REST 経由で空文字や空白のみのメタを保存し得るため、isset/empty
+	// だけでは不十分で、半角・全角スペースやタブのみのタイトルも
+	// 除外する必要がある（中身のない JSON-LD 出力を防ぐ）。
 	if ( ! isset( $custom_fields['vkjp_title'] ) ) {
+		return;
+	}
+	$title_raw = is_string( $custom_fields['vkjp_title'] ) ? $custom_fields['vkjp_title'] : '';
+	// Strip Unicode whitespace (handles full-width space U+3000 etc.) before checking.
+	// 全角スペース (U+3000) などの Unicode 空白も含めて判定する。
+	if ( '' === preg_replace( '/^[\s\x{3000}]+|[\s\x{3000}]+$/u', '', $title_raw ) ) {
 		return;
 	}
 

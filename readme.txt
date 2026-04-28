@@ -46,6 +46,8 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
+[ Bug Fix ] Fixed an issue where empty JSON-LD was output on pages with no job posting input, causing Search Console errors.
+
 = 1.3.0 =
 [ Spec Change ] Migrate post editor settings UI to block editor sidebar panel
 
