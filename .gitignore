@@ -10,3 +10,9 @@ vendor/
 .wp-env.override.json
 .phpunit.result.cache
 .claude/settings.local.json
+
+# Playwright e2e
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/blob-report/

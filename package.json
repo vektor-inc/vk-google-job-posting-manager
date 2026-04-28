@@ -16,7 +16,10 @@
     "dist": "composer install --optimize-autoloader --prefer-dist --no-dev && npm run build && bash bin/dist.sh && composer install",
     "gulp": "npx gulp",
     "phpunit": "composer install && npx wp-env run tests-cli --env-cwd='wp-content/plugins/vk-google-job-posting-manager' vendor/bin/phpunit -c .phpunit.xml --verbose",
-    "test": "bash bin/install-wp-tests.sh wordpress_test root 'wordpress' localhost latest && phpunit"
+    "test": "bash bin/install-wp-tests.sh wordpress_test root 'wordpress' localhost latest && phpunit",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:install": "playwright install --with-deps chromium"
   },
   "browserslist": [
     "last 2 version",
@@ -24,7 +27,9 @@
   ],
   "devDependencies": {
     "@emotion/babel-plugin": "^11.12.0",
+    "@playwright/test": "^1.48.0",
     "@wordpress/babel-plugin-makepot": "^6.7.0",
+    "@wordpress/e2e-test-utils-playwright": "^1.20.0",
     "@wordpress/env": "^10.33.0",
     "@wordpress/i18n": "^5.7.0",
     "@wordpress/scripts": "^31.6.0",
