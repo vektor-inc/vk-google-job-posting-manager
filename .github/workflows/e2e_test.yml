@@ -8,17 +8,15 @@ name: E2E Test
 # 既定の wp-env のポート（8889）を使うため、CI では http://localhost:8889 を渡す。
 
 on:
-    push:
-        branches:
-            - master
-            - develop
     pull_request:
         branches:
             - master
             - develop
+        types: [opened, reopened, labeled, synchronize]
 
 jobs:
     e2e:
+        if: contains(github.event.pull_request.labels.*.name, 'run-ci')
         name: Playwright e2e
         runs-on: ubuntu-latest
         steps:
