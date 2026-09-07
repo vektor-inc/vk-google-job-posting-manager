@@ -44,7 +44,7 @@
     "gulp-sass": "^5.1.0",
     "gulp-sourcemaps": "^3.0",
     "npm-check-updates": "^17.1.1",
-    "po2json": "^1.0.0-alpha",
+    "po2json": "^1.0.0-beta",
     "run-sequence": "^2.2.1"
   },
   "volta": {
