@@ -15,7 +15,7 @@ jobs:
         name: Smoke Test
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
@@ -54,7 +54,7 @@ jobs:
                 php-versions: ['7.4', '8.2']
                 wp-versions: ['6.6', '6.9']
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
@@ -105,7 +105,7 @@ jobs:
         runs-on: ubuntu-latest
         needs: [smoke_test, php_unit]
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
             - name: Download dist artifact
               uses: actions/download-artifact@v4
               with:
@@ -127,7 +127,7 @@ jobs:
         permissions:
             contents: write
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
             - name: Download dist artifact
               uses: actions/download-artifact@v4
               with:
