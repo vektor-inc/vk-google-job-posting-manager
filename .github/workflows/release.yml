@@ -39,7 +39,7 @@ jobs:
               # vektor-inc/wp-actions main as of 2026-03-18
               uses: vektor-inc/wp-actions/smoke-test@90f5a231bc956543bf235f36be4928d57af2edab
             - name: Upload dist artifact
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v7
               with:
                   name: dist
                   path: dist/
