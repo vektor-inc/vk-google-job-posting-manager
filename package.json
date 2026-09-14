@@ -43,7 +43,7 @@
     "gulp-replace": "^1.1.4",
     "gulp-sass": "^5.1.0",
     "gulp-sourcemaps": "^3.0",
-    "npm-check-updates": "^17.1.1",
+    "npm-check-updates": "^23.1.0",
     "po2json": "^1.0.0-beta",
     "run-sequence": "^2.2.1"
   },
