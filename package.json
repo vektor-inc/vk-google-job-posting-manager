@@ -41,7 +41,7 @@
     "gulp-notify": "^5.0.0",
     "gulp-plumber": "^1.2.1",
     "gulp-replace": "^1.1.4",
-    "gulp-sass": "^5.1.0",
+    "gulp-sass": "^6.0.1",
     "gulp-sourcemaps": "^3.0",
     "npm-check-updates": "^23.1.0",
     "po2json": "^1.0.0-beta",
