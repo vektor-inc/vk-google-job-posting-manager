@@ -27,10 +27,10 @@
   ],
   "devDependencies": {
     "@emotion/babel-plugin": "^11.13.5",
-    "@playwright/test": "^1.62.1",
-    "@wordpress/babel-plugin-makepot": "^6.54.0",
+    "@playwright/test": "^1.63.0",
+    "@wordpress/babel-plugin-makepot": "^6.55.0",
     "@wordpress/e2e-test-utils-playwright": "^1.54.0",
-    "@wordpress/env": "^11.14.0",
+    "@wordpress/env": "^11.15.0",
     "@wordpress/i18n": "^5.7.0",
     "@wordpress/scripts": "^34.2.0",
     "babel-plugin-inline-json-import": "^0.3.2",
