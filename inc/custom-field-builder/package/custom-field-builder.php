@@ -251,9 +251,14 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 					$form_html .= '<ul>';
 
 					// シリアライズして保存されてたら戻す
+					// Restore without creating PHP objects, and treat anything but an array as an empty array.
+					// 復元は PHP オブジェクトを生成しない方法で行い、配列以外は空配列として扱う
 					if ( $value['type'] == 'checkbox' ) {
 						if ( ! is_array( $field_value ) ) {
-							$field_value = unserialize( get_post_meta( $post->ID, $key, true ) );
+							$field_value = vgjpm_maybe_unserialize_without_object( get_post_meta( $post->ID, $key, true ) );
+						}
+						if ( ! is_array( $field_value ) ) {
+							$field_value = array();
 						}
 					}
 
