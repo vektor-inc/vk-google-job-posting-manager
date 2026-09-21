@@ -576,6 +576,65 @@ class DefaultTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * The same holds for a value that is serialized exactly once, which is how
+	 * an importer or a direct database write leaves it.
+	 * シリアライズが 1 回だけかかった値でも同じであること。
+	 * インポーターや DB への直接書き込みで残る状態がこれに当たる。
+	 */
+	function test_meta_box_form_does_not_instantiate_object_from_single_serialized_meta() {
+		global $post;
+
+		$post_id = self::factory()->post->create();
+		$post    = get_post( $post_id );
+
+		wp_cache_set(
+			$post_id,
+			array( 'vkjp_employmentType' => array( serialize( new VGJPM_Injection_Probe() ) ) ),
+			'post_meta'
+		);
+
+		VGJPM_Injection_Probe::$woken = false;
+
+		ob_start();
+		$form_html = VK_Custom_Field_Builder::form_table( VGJPM_Custom_Field_Job_Post::custom_fields_array(), '', false );
+		ob_end_clean();
+
+		$this->assertFalse( VGJPM_Injection_Probe::$woken );
+		$this->assertIsString( $form_html );
+	}
+
+	/**
+	 * A stored value is read without being restored, so no object is created.
+	 * 保存値は復元せずに取得されるため、オブジェクトは生成されない。
+	 */
+	function test_get_raw_post_meta_returns_stored_value_without_restoring_it() {
+		$post_id = self::factory()->post->create();
+		$payload = serialize( new VGJPM_Injection_Probe() );
+
+		wp_cache_set(
+			$post_id,
+			array( 'vkjp_employmentType' => array( $payload ) ),
+			'post_meta'
+		);
+
+		VGJPM_Injection_Probe::$woken = false;
+		$stored_value                 = vgjpm_get_raw_post_meta( $post_id, 'vkjp_employmentType' );
+
+		$this->assertFalse( VGJPM_Injection_Probe::$woken );
+		$this->assertSame( $payload, $stored_value );
+	}
+
+	/**
+	 * An unknown key gives an empty string rather than a notice.
+	 * 存在しないキーでは通知を出さず空文字を返す。
+	 */
+	function test_get_raw_post_meta_returns_empty_string_for_missing_key() {
+		$post_id = self::factory()->post->create();
+
+		$this->assertSame( '', vgjpm_get_raw_post_meta( $post_id, 'vkjp_does_not_exist' ) );
+	}
+
+	/**
 	 * Meta keys that do not belong to this plugin are excluded.
 	 * このプラグインのものではないメタキーは除外される。
 	 */

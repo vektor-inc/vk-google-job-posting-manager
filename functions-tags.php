@@ -3,6 +3,7 @@
 vgjpm_create_jobpost_posttype()
 vgjpm_post_type_check_list();
 vgjpm_get_custom_fields();
+vgjpm_get_raw_post_meta();
 vgjpm_maybe_unserialize_without_object();
 vgjpm_contains_object();
 vgjpm_use_common_values();
@@ -105,6 +106,35 @@ function vgjpm_get_custom_fields( $post_id ) {
 	}
 
 	return $custom_fields;
+}
+
+/**
+ * Get a post meta value exactly as it is stored, without restoring it.
+ * 投稿メタの値を、復元せず保存されているままの形で取得する。
+ *
+ * get_post_meta() restores a serialized value by itself, which creates a PHP
+ * object when a serialized object is stored. Reading the stored value first
+ * lets the caller restore it safely instead.
+ * get_post_meta() は保存値を自前で復元するため、シリアライズされたオブジェクトが
+ * 保存されていた場合は PHP オブジェクトを生成してしまう。保存値をそのまま取得して
+ * おけば、呼び出し側が安全に復元できる。
+ *
+ * @param int    $post_id  Post ID to read the value of.
+ * @param string $meta_key Meta key to read.
+ * @return string Stored value, or an empty string when the key holds no string value.
+ */
+function vgjpm_get_raw_post_meta( $post_id, $meta_key ) {
+	// get_post_custom() returns every value as stored, because it asks for all
+	// meta at once instead of a single key.
+	// get_post_custom() は単一キーではなく全メタをまとめて要求するため、
+	// どの値も保存されているまま返る。
+	$stored_all = get_post_custom( $post_id );
+
+	if ( ! isset( $stored_all[ $meta_key ][0] ) || ! is_string( $stored_all[ $meta_key ][0] ) ) {
+		return '';
+	}
+
+	return $stored_all[ $meta_key ][0];
 }
 
 /**
