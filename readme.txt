@@ -3,7 +3,7 @@ Contributors: vektor-inc,kurudrive,naoki0h,una9,rickaddison7634
 Donate link:
 Tags: Google Job Posting, Recruitment, Gutenberg.
 Requires at least: 6.6
-Tested up to: 6.9
+Tested up to: 7.1
 Stable tag: 1.3.1
 Requires PHP: 7.4
 License: GPLv2 or later
@@ -45,6 +45,8 @@ You can overwrite common fields value by fill out each post's custom fields.
 4. You can use common fields to omit to enter duplicated information.
 
 == Changelog ==
+
+[ Security Fix ] Strengthened the handling of saved job posting field values.
 
 = 1.3.1 =
 [ Bug Fix ] Fixed an issue where empty JSON-LD was output on pages with no job posting input, causing Search Console errors.

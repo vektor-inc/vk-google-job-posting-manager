@@ -242,19 +242,20 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 					$form_html .= '</select>';
 
 				} elseif ( $value['type'] == 'checkbox' || $value['type'] == 'radio' ) {
-					$field_value = array();
-					if ( ! empty( get_post_meta( $post->ID, $key, true ) ) ) {
-						$field_value = get_post_meta( $post->ID, $key, true );
-					} elseif ( ! empty( $options[ $key ] ) ) {
-						$field_value = $options[ $key ];
+					// 保存値はそのままの形で取得し、シリアライズして保存されてたら戻す
+					// get_post_meta() は保存値を自前で復元するため、ここでは使わない
+					// Take the stored value as it is and restore it here, because
+					// get_post_meta() would restore it on its own.
+					$field_value = vgjpm_maybe_unserialize_without_object( vgjpm_get_raw_post_meta( $post->ID, $key ) );
+					if ( empty( $field_value ) ) {
+						$field_value = ( ! empty( $options[ $key ] ) ) ? $options[ $key ] : array();
 					}
 					$form_html .= '<ul>';
 
-					// シリアライズして保存されてたら戻す
-					if ( $value['type'] == 'checkbox' ) {
-						if ( ! is_array( $field_value ) ) {
-							$field_value = unserialize( get_post_meta( $post->ID, $key, true ) );
-						}
+					// チェックボックスは配列としてしか扱えないため、配列以外は空配列にする
+					// A checkbox can only be handled as an array, so anything else becomes an empty array.
+					if ( $value['type'] == 'checkbox' && ! is_array( $field_value ) ) {
+						$field_value = array();
 					}
 
 					foreach ( $value['options'] as $option_value => $option_label ) {
