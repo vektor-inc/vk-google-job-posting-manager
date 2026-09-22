@@ -25,7 +25,6 @@ tests/
 .wp-env.json
 .wp-env.override.json
 babel.config.js
-composer.json
 composer.lock
 gulpfile.js
 package.json
