@@ -193,16 +193,29 @@ function vgjpm_maybe_unserialize_without_object( $value ) {
  * 値がオブジェクトか、あるいは何階層目かにオブジェクトを含む配列かを判定する。
  *
  * @param mixed $value Value to inspect.
- * @return bool True when an object is found.
+ * @param int   $depth Nesting level of the value being inspected, starting at 0 for the value passed in.
+ * @return bool True when an object is found, or when the nesting limit is exceeded.
  */
-function vgjpm_contains_object( $value ) {
+function vgjpm_contains_object( $value, $depth = 0 ) {
+	// An array that points at itself never ends the recursion and exhausts the
+	// memory limit, so the walk is cut off at a nesting limit.
+	// The value stored here is the array of selected checkbox values, which is
+	// nested only shallowly. A value deeper than the limit is not a normal
+	// stored value, so it is discarded just like a value holding an object.
+	// 自分自身を指す配列を渡されると再帰が止まらずメモリを使い切るため、階層の上限で打ち切る。
+	// ここで保存するのはチェックボックスの選択値の配列で、入れ子はごく浅い。
+	// 上限を超えた値は正常な保存値ではないので、オブジェクトを含む場合と同じく使わずに破棄する。
+	if ( 64 < $depth ) {
+		return true;
+	}
+
 	if ( is_object( $value ) ) {
 		return true;
 	}
 
 	if ( is_array( $value ) ) {
 		foreach ( $value as $item ) {
-			if ( vgjpm_contains_object( $item ) ) {
+			if ( vgjpm_contains_object( $item, $depth + 1 ) ) {
 				return true;
 			}
 		}

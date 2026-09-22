@@ -501,6 +501,36 @@ class DefaultTest extends WP_UnitTestCase {
 		$this->assertTrue( vgjpm_contains_object( array( 'a' => array( 'b' => new stdClass() ) ) ) );
 		$this->assertFalse( vgjpm_contains_object( array( 'a' => array( 'b' => 'c' ) ) ) );
 		$this->assertFalse( vgjpm_contains_object( 'string' ) );
+
+		// An array that points at itself is reported as unusable instead of
+		// being walked forever.
+		// 自分自身を指す配列は、たどり続けずに使えない値として報告される。
+		$self_referencing   = array();
+		$self_referencing[] = &$self_referencing;
+		$this->assertTrue( vgjpm_contains_object( $self_referencing ) );
+
+		// A nesting depth within the limit is still walked to the end.
+		// 上限内の入れ子は最後までたどられる。
+		$nested = 'leaf';
+		for ( $i = 0; $i < 60; $i++ ) {
+			$nested = array( $nested );
+		}
+		$this->assertFalse( vgjpm_contains_object( $nested ) );
+	}
+
+	/**
+	 * A stored value that points at itself is discarded without running out of
+	 * memory.
+	 * 自分自身を指す保存値は、メモリを使い切ることなく破棄される。
+	 */
+	function test_maybe_unserialize_without_object_discards_self_referencing_array() {
+		// A value serialized exactly once, as an importer or a direct database
+		// write leaves it, whose only element points back at the array itself.
+		// インポーターや DB への直接書き込みで残る、シリアライズが 1 回だけかかった値。
+		// 唯一の要素が配列自身を指し返している。
+		$payload = 'a:1:{i:0;R:1;}';
+
+		$this->assertSame( '', vgjpm_maybe_unserialize_without_object( $payload ) );
 	}
 
 	/**

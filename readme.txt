@@ -47,6 +47,7 @@ You can overwrite common fields value by fill out each post's custom fields.
 == Changelog ==
 
 [ Spec Change ] Raised the minimum required WordPress version to 6.7.
+[ Security Fix ] Added a limit to how deeply saved job posting field values are inspected.
 
 = 1.3.2 =
 [ Security Fix ] Strengthened the handling of saved job posting field values.
