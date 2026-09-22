@@ -52,7 +52,9 @@ jobs:
         strategy:
             matrix:
                 php-versions: ['7.4', '8.2']
-                wp-versions: ['6.6', '6.9']
+                # 最新の WordPress と、その 2 つ前までを対象にする。
+                # readme.txt の `Tested up to` を上げたら、ここも合わせて更新する。
+                wp-versions: ['6.9', '7.0', '7.1']
         steps:
             - uses: actions/checkout@v7
             - name: Setup Node.js
