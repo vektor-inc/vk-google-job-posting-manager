@@ -2,7 +2,7 @@
 Contributors: vektor-inc,kurudrive,naoki0h,una9,rickaddison7634
 Donate link:
 Tags: Google Job Posting, Recruitment, Gutenberg.
-Requires at least: 6.6
+Requires at least: 6.7
 Tested up to: 7.1
 Stable tag: 1.3.2
 Requires PHP: 7.4
@@ -45,6 +45,8 @@ You can overwrite common fields value by fill out each post's custom fields.
 4. You can use common fields to omit to enter duplicated information.
 
 == Changelog ==
+
+[ Spec Change ] Raised the minimum required WordPress version to 6.7.
 
 = 1.3.2 =
 [ Security Fix ] Strengthened the handling of saved job posting field values.
