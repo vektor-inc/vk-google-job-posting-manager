@@ -193,8 +193,8 @@ function vgjpm_maybe_unserialize_without_object( $value ) {
  * 値がオブジェクトか、あるいは何階層目かにオブジェクトを含む配列かを判定する。
  *
  * @param mixed $value Value to inspect.
- * @param int   $depth Nesting level of the value being inspected, starting at 0 for the value passed in.
- * @return bool True when an object is found, or when the nesting limit is exceeded.
+ * @param int   $depth Current recursion depth.
+ * @return bool True when an object is found, or when the value nests deeper than the limit.
  */
 function vgjpm_contains_object( $value, $depth = 0 ) {
 	// An array that points at itself never ends the recursion and exhausts the
