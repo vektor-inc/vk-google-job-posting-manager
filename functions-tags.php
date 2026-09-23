@@ -169,15 +169,26 @@ function vgjpm_maybe_unserialize_without_object( $value ) {
 
 	// allowed_classes => false stops PHP from instantiating any class while
 	// reading the data, so no class's magic methods can be reached.
+	// max_depth => 64 stops the restore itself at 64 levels: checking the depth
+	// only after the restore has finished still lets the restore spend stack and
+	// memory up to that point.
 	// The warning for malformed data is silenced on purpose: the value comes
 	// from the database and a broken one is handled right below, so it must not
 	// fill the error log every time the page is viewed.
 	// allowed_classes => false により、読み込み中に PHP がどのクラスもインスタンス化しないため、
-	// どのクラスのマジックメソッドにも到達できない。壊れたデータの警告は意図的に抑制している。
+	// どのクラスのマジックメソッドにも到達できない。max_depth => 64 は復元そのものを
+	// 64 階層で打ち切る。復元し終えてから階層を見るだけでは、打ち切るまでの復元に
+	// スタックとメモリを使うため、復元の時点で止める。壊れたデータの警告は意図的に抑制している。
 	// 値はデータベース由来であり、壊れていた場合は直後で処理するため、
 	// ページ表示のたびにエラーログを埋めてはならない。
 	// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- allowed_classes => false prevents PHP object injection, and a malformed value is handled below.
-	$restored = @unserialize( $value, array( 'allowed_classes' => false ) );
+	$restored = @unserialize(
+		$value,
+		array(
+			'allowed_classes' => false,
+			'max_depth'       => 64,
+		)
+	);
 
 	// Broken data, and data that still carries an object, are both unusable.
 	// 壊れたデータ、およびオブジェクトを含んだままのデータは、どちらも利用できない。
@@ -193,16 +204,29 @@ function vgjpm_maybe_unserialize_without_object( $value ) {
  * 値がオブジェクトか、あるいは何階層目かにオブジェクトを含む配列かを判定する。
  *
  * @param mixed $value Value to inspect.
- * @return bool True when an object is found.
+ * @param int   $depth Current recursion depth.
+ * @return bool True when an object is found, or when the value nests deeper than the limit.
  */
-function vgjpm_contains_object( $value ) {
+function vgjpm_contains_object( $value, $depth = 0 ) {
+	// An array that points at itself never ends the recursion and exhausts the
+	// memory limit, so the walk is cut off at a nesting limit.
+	// The value stored here is the array of selected checkbox values, which is
+	// nested only shallowly. A value deeper than the limit is not a normal
+	// stored value, so it is discarded just like a value holding an object.
+	// 自分自身を指す配列を渡されると再帰が止まらずメモリを使い切るため、階層の上限で打ち切る。
+	// ここで保存するのはチェックボックスの選択値の配列で、入れ子はごく浅い。
+	// 上限を超えた値は正常な保存値ではないので、オブジェクトを含む場合と同じく使わずに破棄する。
+	if ( 64 < $depth ) {
+		return true;
+	}
+
 	if ( is_object( $value ) ) {
 		return true;
 	}
 
 	if ( is_array( $value ) ) {
 		foreach ( $value as $item ) {
-			if ( vgjpm_contains_object( $item ) ) {
+			if ( vgjpm_contains_object( $item, $depth + 1 ) ) {
 				return true;
 			}
 		}
