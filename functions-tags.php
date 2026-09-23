@@ -169,15 +169,26 @@ function vgjpm_maybe_unserialize_without_object( $value ) {
 
 	// allowed_classes => false stops PHP from instantiating any class while
 	// reading the data, so no class's magic methods can be reached.
+	// max_depth => 64 stops the restore itself at 64 levels: checking the depth
+	// only after the restore has finished still lets the restore spend stack and
+	// memory up to that point.
 	// The warning for malformed data is silenced on purpose: the value comes
 	// from the database and a broken one is handled right below, so it must not
 	// fill the error log every time the page is viewed.
 	// allowed_classes => false により、読み込み中に PHP がどのクラスもインスタンス化しないため、
-	// どのクラスのマジックメソッドにも到達できない。壊れたデータの警告は意図的に抑制している。
+	// どのクラスのマジックメソッドにも到達できない。max_depth => 64 は復元そのものを
+	// 64 階層で打ち切る。復元し終えてから階層を見るだけでは、打ち切るまでの復元に
+	// スタックとメモリを使うため、復元の時点で止める。壊れたデータの警告は意図的に抑制している。
 	// 値はデータベース由来であり、壊れていた場合は直後で処理するため、
 	// ページ表示のたびにエラーログを埋めてはならない。
 	// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- allowed_classes => false prevents PHP object injection, and a malformed value is handled below.
-	$restored = @unserialize( $value, array( 'allowed_classes' => false ) );
+	$restored = @unserialize(
+		$value,
+		array(
+			'allowed_classes' => false,
+			'max_depth'       => 64,
+		)
+	);
 
 	// Broken data, and data that still carries an object, are both unusable.
 	// 壊れたデータ、およびオブジェクトを含んだままのデータは、どちらも利用できない。
