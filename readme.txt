@@ -4,7 +4,7 @@ Donate link:
 Tags: Google Job Posting, Recruitment, Gutenberg.
 Requires at least: 6.7
 Tested up to: 7.1
-Stable tag: 1.3.2
+Stable tag: 1.4.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -46,6 +46,7 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
+= 1.4.0 =
 [ Spec Change ] Raised the minimum required WordPress version to 6.7.
 [ Security Fix ] Added a limit to how deeply saved job posting field values are inspected.
 
