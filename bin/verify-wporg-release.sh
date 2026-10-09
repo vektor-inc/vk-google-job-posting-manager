@@ -14,7 +14,8 @@
 #   WPORG_VERIFY_TIMEOUT    Max seconds to wait (default: 1800) / 待つ上限（秒）
 #
 # Exit status / 終了ステータス:
-#   0  The expected version is published. / 期待したバージョンが公開されている。
+#   0  The expected version is published (HTTP 200). / 期待したバージョンが公開されている
+#      （HTTP 200 の応答で確認）。
 #   1  The API returned an error (e.g. "closed") with HTTP 200 / 404, or the version
 #      did not match before the timeout. / API が HTTP 200 / 404 で error を返した
 #      （closed など）、または上限までにバージョンが一致しなかった。
@@ -22,9 +23,10 @@
 #      / 引数が不正、または一時ファイルを作成できなかった。
 #
 # Transient network errors, responses that are not valid JSON, and "error" responses
-# with any HTTP status other than 200 / 404 (5xx, rate limiting, ...) are retried
-# until the timeout. / 一時的な通信エラー、JSON として読めない応答、HTTP 200 / 404
-# 以外（5xx やレート制限など）で返った error は上限まで再試行する。
+# with any HTTP status other than 200 / 404 (5xx, rate limiting, ...), and non-200
+# responses without "error" (even if the version matches) are retried until the timeout.
+# / 一時的な通信エラー、JSON として読めない応答、HTTP 200 / 404 以外（5xx やレート制限など）で
+# 返った error、error の無い HTTP 200 以外の応答（バージョンが一致していても）は上限まで再試行する。
 
 set -u
 
@@ -114,6 +116,11 @@ while true; do
 				# Other status codes (5xx, rate limiting, ...) may be temporary, so retry.
 				# それ以外（5xx やレート制限など）は一時的な可能性があるため再試行する。
 				last_state="API returned an error (HTTP ${http_code}): \"${api_error}\""
+			elif [[ "${http_code}" != "200" ]]; then
+				# Only a 200 response is trusted as the published state; others are retried
+				# even if the version matches.
+				# 公開状態として信用するのは HTTP 200 の応答だけ。それ以外はバージョンが一致していても再試行する。
+				last_state="unexpected HTTP ${http_code} (version ${published_version:-unknown})"
 			elif [[ "${published_version}" == "${expected_version}" ]]; then
 				# The expected version is published.
 				# 期待したバージョンが公開されている。
