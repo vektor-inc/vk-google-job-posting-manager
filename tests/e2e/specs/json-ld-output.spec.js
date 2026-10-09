@@ -188,6 +188,15 @@ test.describe( 'JSON-LD 出力（issue #123 / PR #124 回帰テスト）', () =>
 		// job-posts のアーカイブ（パーマリンク設定によっては /?post_type=job-posts でアクセス可）。
 		const html = await fetchHtml( request, '/?post_type=job-posts' );
 
+		// Make sure the page actually shows the post created above; otherwise the
+		// negative check below would also pass on a site without the test data.
+		// 上で作った投稿が実際に表示されていることを先に確認する。これが無いと、
+		// テストデータの無いサイトを見ていても下の否定の確認が通ってしまう。
+		expect(
+			html,
+			'アーカイブに作成した job-posts が表示されていること（テストデータのあるサイトを見ているか）'
+		).toContain( 'E2E: archive check posting' );
+
 		expect(
 			hasJobPostingJsonLd( html ),
 			'アーカイブページに JobPosting JSON-LD が出力されてはいけない'
@@ -212,6 +221,13 @@ test.describe( 'JSON-LD 出力（issue #123 / PR #124 回帰テスト）', () =>
 
 		const url = getPostPath( pageId );
 		const html = await fetchHtml( request, url );
+
+		// Make sure the created page is the one being shown (same reason as above).
+		// 作成した固定ページが表示されていることを先に確認する（理由はアーカイブのテストと同じ）。
+		expect(
+			html,
+			'作成した固定ページが表示されていること（テストデータのあるサイトを見ているか）'
+		).toContain( 'E2E: out-of-scope page' );
 
 		expect(
 			hasJobPostingJsonLd( html ),

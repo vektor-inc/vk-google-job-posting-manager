@@ -2,7 +2,8 @@
  * wp-env 経由で wp-cli コマンドを実行するユーティリティ。
  *
  * Playwright のテスト中で投稿作成・オプション操作・クリーンアップを
- * 手早く行いたい場合に使う。`npx wp-env run tests-cli wp ...` を子プロセスで実行する。
+ * 手早く行いたい場合に使う。`npx wp-env run tests-cli wp ...` を子プロセスで実行する
+ * （実行先は WP_ENV_CLI_CONTAINER で変更可）。
  *
  * Target site / 対象サイト:
  *  - Data is created on the wp-env *tests* site (tests-cli), because the CI
@@ -25,6 +26,14 @@ const path = require( 'path' );
 // プラグインルートを基準に wp-env を呼ぶ（package.json と .wp-env.json がある場所）。
 const PLUGIN_ROOT = path.resolve( __dirname, '../../..' );
 
+// wp-env container that runs wp-cli. Defaults to the tests site (tests-cli).
+// Override with WP_ENV_CLI_CONTAINER (e.g. `cli`), and set WP_BASE_URL to the
+// same site, otherwise requests go to a site without the test data.
+// wp-cli を実行する wp-env のコンテナ。既定はテスト用サイト（tests-cli）。
+// WP_ENV_CLI_CONTAINER（例: `cli`）で変更できるが、その場合は WP_BASE_URL も
+// 同じサイトに合わせること（合わないと、テストデータの無いサイトを開くことになる）。
+const WP_ENV_CLI_CONTAINER = process.env.WP_ENV_CLI_CONTAINER || 'tests-cli';
+
 /**
  * wp-cli コマンドを実行して標準出力を返す。
  *
@@ -44,13 +53,13 @@ function wpCli( args ) {
 		throw new TypeError( 'wpCli() requires an array of arguments.' );
 	}
 
-	// `npx wp-env run tests-cli wp <args...>` を引数配列で起動する。
+	// `npx wp-env run <container> wp <args...>` を引数配列で起動する（既定は tests-cli）。
 	// shell: false（既定）にすることで、引数ごとの境界が保たれる。
 	// Run against the tests site so that data matches baseURL (see file header).
 	// baseURL と同じテスト用サイトに対して実行する（ファイル冒頭のコメント参照）。
 	const result = spawnSync(
 		'npx',
-		[ 'wp-env', 'run', 'tests-cli', 'wp', ...args ],
+		[ 'wp-env', 'run', WP_ENV_CLI_CONTAINER, 'wp', ...args ],
 		{
 			cwd: PLUGIN_ROOT,
 			encoding: 'utf8',
@@ -117,7 +126,17 @@ function ensureJobPostsEnabled() {
  */
 function getPostPath( postId ) {
 	const permalink = wpCli( [ 'post', 'url', String( postId ) ] );
-	const parsed = new URL( permalink );
+
+	// Include the raw wp-cli output in the error so that a broken value is visible.
+	// 失敗時に原因が分かるよう、wp-cli の出力そのものをエラーメッセージに含める。
+	let parsed;
+	try {
+		parsed = new URL( permalink );
+	} catch ( err ) {
+		throw new Error(
+			`Failed to parse permalink of post ${ postId } (wp post url output: ${ JSON.stringify( permalink ) }): ${ err.message }`
+		);
+	}
 	return `${ parsed.pathname }${ parsed.search }`;
 }
 

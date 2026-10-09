@@ -2,9 +2,13 @@
  * Playwright 設定ファイル
  *
  * - baseURL は WP_BASE_URL 環境変数で上書き可能。
- *   ローカルでは .wp-env.override.json で 9151 ポートを指定しているため、
- *   デフォルトを http://localhost:9151 とする。
- *   CI 環境では GitHub Actions 側で WP_BASE_URL を渡すことを想定する。
+ *   baseURL must point at the wp-env *tests* site, because tests/e2e/utils/wp-cli.js
+ *   creates test data via `tests-cli`. Locally, set `testsPort` to 9151 in
+ *   .wp-env.override.json (the default below). CI passes WP_BASE_URL (8889).
+ *   baseURL は wp-env の「テスト用サイト」を指している前提とする
+ *   （tests/e2e/utils/wp-cli.js が tests-cli でテストデータを作るため）。
+ *   ローカルでは .wp-env.override.json で testsPort を 9151 にすること
+ *   （下記のデフォルト値）。CI 環境では GitHub Actions 側で WP_BASE_URL（8889）を渡す。
  * - テストファイル内で page.goto() に絶対 URL をハードコードしないこと
  *   （rules/testing/e2e.md のルール）。
  *
@@ -37,6 +41,7 @@ module.exports = defineConfig( {
 	// 各テスト共通の設定 / Shared test settings.
 	use: {
 		// ベース URL は環境変数で切替可能にする（CI とローカルでポートが異なるため）。
+		// Must be the wp-env tests site (testsPort). / wp-env のテスト用サイト（testsPort）を指すこと。
 		baseURL: process.env.WP_BASE_URL || 'http://localhost:9151',
 
 		// 失敗時のみトレース / Trace only on first retry to keep CI fast.
