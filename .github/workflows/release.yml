@@ -123,6 +123,29 @@ jobs:
                   SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
                   SLUG: ${{ env.plugin_name }}
 
+    # deploy は SVN への送信が成功すれば成功になり、プラグインが公開停止（closed）でも気づけない。
+    # そのため送信後に WordPress.org のプラグイン情報 API を確認し、配布が反映されたかを検証する。
+    verify_wporg:
+        name: Verify WordPress.org release
+        runs-on: ubuntu-latest
+        needs: [deploy]
+        # スクリプトの待ち上限（30分）＋ 最後の問い合わせ・準備の余裕
+        timeout-minutes: 35
+        permissions:
+            contents: read
+        steps:
+            - uses: actions/checkout@v7
+              with:
+                  persist-credentials: false
+            - name: Verify the release is published on WordPress.org
+              env:
+                  SLUG: ${{ env.plugin_name }}
+                  EXPECTED_VERSION: ${{ github.ref_name }}
+                  # SVN 送信後の反映待ち：60秒間隔で最大30分
+                  WPORG_VERIFY_INTERVAL: '60'
+                  WPORG_VERIFY_TIMEOUT: '1800'
+              run: bash bin/verify-wporg-release.sh
+
     release:
         name: Create GitHub Release
         runs-on: ubuntu-latest
