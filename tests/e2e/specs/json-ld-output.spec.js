@@ -24,7 +24,7 @@
  */
 
 const { test, expect } = require( '@playwright/test' );
-const { wpCli, ensureJobPostsEnabled, deletePost } = require( '../utils/wp-cli' );
+const { wpCli, ensureJobPostsEnabled, getPostPath, deletePost } = require( '../utils/wp-cli' );
 
 // 各テストで作成した投稿 ID を集めておき、afterEach で一括削除する。
 let createdPostIds = [];
@@ -101,7 +101,9 @@ test.describe( 'JSON-LD 出力（issue #123 / PR #124 回帰テスト）', () =>
 		wpCli( [ 'post', 'meta', 'update', postId, 'vkjp_title', '' ] );
 
 		// フロントの HTML を取得し JobPosting JSON-LD が無いことを確認する。
-		const url = wpCli( [ 'post', 'url', postId ] );
+		// Use a path relative to baseURL, not the absolute URL from wp-cli.
+		// wp-cli が返す絶対 URL ではなく、baseURL からの相対パスでアクセスする。
+		const url = getPostPath( postId );
 		const html = await fetchHtml( request, url );
 
 		expect(
@@ -126,7 +128,7 @@ test.describe( 'JSON-LD 出力（issue #123 / PR #124 回帰テスト）', () =>
 		// シェルエスケープを気にせず生の文字列を渡せる。
 		wpCli( [ 'post', 'meta', 'update', postId, 'vkjp_title', ' \t　' ] );
 
-		const url = wpCli( [ 'post', 'url', postId ] );
+		const url = getPostPath( postId );
 		const html = await fetchHtml( request, url );
 
 		expect(
@@ -155,7 +157,7 @@ test.describe( 'JSON-LD 出力（issue #123 / PR #124 回帰テスト）', () =>
 		wpCli( [ 'post', 'meta', 'update', postId, 'vkjp_validThrough', '2026-12-31' ] );
 		wpCli( [ 'post', 'meta', 'update', postId, 'vkjp_name', 'Vektor, Inc.' ] );
 
-		const url = wpCli( [ 'post', 'url', postId ] );
+		const url = getPostPath( postId );
 		const html = await fetchHtml( request, url );
 
 		expect(
@@ -208,7 +210,7 @@ test.describe( 'JSON-LD 出力（issue #123 / PR #124 回帰テスト）', () =>
 		// （`vgjpm_print_jsonLD_in_footer` の post type ガードがあるため出力されないはず）。
 		wpCli( [ 'post', 'meta', 'update', pageId, 'vkjp_title', 'Should not output JSON-LD' ] );
 
-		const url = wpCli( [ 'post', 'url', pageId ] );
+		const url = getPostPath( pageId );
 		const html = await fetchHtml( request, url );
 
 		expect(

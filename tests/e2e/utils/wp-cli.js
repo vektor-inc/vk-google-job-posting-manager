@@ -2,7 +2,16 @@
  * wp-env 経由で wp-cli コマンドを実行するユーティリティ。
  *
  * Playwright のテスト中で投稿作成・オプション操作・クリーンアップを
- * 手早く行いたい場合に使う。`npx wp-env run cli wp ...` を子プロセスで実行する。
+ * 手早く行いたい場合に使う。`npx wp-env run tests-cli wp ...` を子プロセスで実行する。
+ *
+ * Target site / 対象サイト:
+ *  - Data is created on the wp-env *tests* site (tests-cli), because the CI
+ *    workflow points Playwright's baseURL (WP_BASE_URL) at the tests site (8889).
+ *    Creating data on the development site (cli, 8888) while baseURL points at
+ *    the tests site makes relative-path requests hit a site without that data.
+ *  - CI のワークフローは baseURL（WP_BASE_URL）を wp-env のテスト用サイト（8889）に
+ *    向けているため、データもテスト用サイト（tests-cli）に作る。開発用サイト（cli / 8888）
+ *    にデータを作ると、相対パスでのアクセス先（baseURL）にデータが無い状態になるため。
  *
  * 実装メモ:
  *  - 文字列連結 + execSync は引用符・空白・特殊文字でシェルが壊れる可能性が
@@ -35,11 +44,13 @@ function wpCli( args ) {
 		throw new TypeError( 'wpCli() requires an array of arguments.' );
 	}
 
-	// `npx wp-env run cli wp <args...>` を引数配列で起動する。
+	// `npx wp-env run tests-cli wp <args...>` を引数配列で起動する。
 	// shell: false（既定）にすることで、引数ごとの境界が保たれる。
+	// Run against the tests site so that data matches baseURL (see file header).
+	// baseURL と同じテスト用サイトに対して実行する（ファイル冒頭のコメント参照）。
 	const result = spawnSync(
 		'npx',
-		[ 'wp-env', 'run', 'cli', 'wp', ...args ],
+		[ 'wp-env', 'run', 'tests-cli', 'wp', ...args ],
 		{
 			cwd: PLUGIN_ROOT,
 			encoding: 'utf8',
@@ -69,9 +80,45 @@ function wpCli( args ) {
 /**
  * 求人情報投稿タイプ（job-posts）が有効になっていることを保証する。
  * デフォルト有効だが、テスト独立性のため明示的に on にしておく。
+ *
+ * Why the rewrite flush is needed / rewrite flush が必要な理由:
+ *  - On a fresh wp-env, `wp core install` enables pretty permalinks and stores
+ *    the rewrite rules *before* the plugin is activated. The activation hook only
+ *    sets the option, and `job-posts` is registered on `init` only when that option
+ *    was already 'true' at load time, so its rules are never written. As a result
+ *    `/job-posts/<slug>/` returns 404 until the rules are regenerated.
+ *  - 新しい wp-env では `wp core install` の時点でパーマリンク（URL ルール）が作られ、
+ *    その後にプラグインが有効化される。有効化処理はオプションを保存するだけで、
+ *    `job-posts` はオプションが読み込み時点で 'true' のときにしか `init` で登録されない
+ *    ため、job-posts の URL ルールが作られず `/job-posts/<slug>/` が 404 になる。
+ *  - The flush runs in a separate wp-cli process after the option update, so the
+ *    post type is registered when the rules are rebuilt.
+ *    オプション更新とは別の wp-cli プロセスで flush するため、作り直しの時点で
+ *    job-posts が登録済みになり、URL ルールに含まれる。
  */
 function ensureJobPostsEnabled() {
 	wpCli( [ 'option', 'update', 'vgjpm_create_jobpost_posttype', 'true' ] );
+	wpCli( [ 'rewrite', 'flush' ] );
+}
+
+/**
+ * 投稿の個別ページ URL を、baseURL からの相対パス（パス + クエリ）で返す。
+ *
+ * Returns the permalink of a post as a path relative to baseURL.
+ * `wp post url` returns an absolute URL built from the site's WP_SITEURL, whose
+ * port may differ from baseURL (CI and local use different ports). Requests must
+ * go through baseURL (rules/testing/e2e.md), so only the path and query are kept.
+ * `wp post url` はサイトの WP_SITEURL を元にした絶対 URL を返し、そのポートは
+ * baseURL と一致するとは限らない（CI とローカルでポートが異なる）。アクセスは
+ * baseURL 経由で行う決まりのため、パスとクエリだけを取り出して返す。
+ *
+ * @param {number|string} postId
+ * @returns {string} 例: `/job-posts/e2e-empty-job-posting/`
+ */
+function getPostPath( postId ) {
+	const permalink = wpCli( [ 'post', 'url', String( postId ) ] );
+	const parsed = new URL( permalink );
+	return `${ parsed.pathname }${ parsed.search }`;
 }
 
 /**
@@ -104,4 +151,4 @@ function deletePost( postId ) {
 	}
 }
 
-module.exports = { wpCli, ensureJobPostsEnabled, deletePost };
+module.exports = { wpCli, ensureJobPostsEnabled, getPostPath, deletePost };
