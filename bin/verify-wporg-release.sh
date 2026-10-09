@@ -15,13 +15,16 @@
 #
 # Exit status / 終了ステータス:
 #   0  The expected version is published. / 期待したバージョンが公開されている。
-#   1  The API returned an error (e.g. "closed"), or the version did not match
-#      before the timeout. / API が error を返した（closed など）、または上限までに
-#      バージョンが一致しなかった。
-#   2  Invalid arguments. / 引数が不正。
+#   1  The API returned an error (e.g. "closed") with HTTP 200 / 404, or the version
+#      did not match before the timeout. / API が HTTP 200 / 404 で error を返した
+#      （closed など）、または上限までにバージョンが一致しなかった。
+#   2  Invalid arguments, or a temporary file could not be created.
+#      / 引数が不正、または一時ファイルを作成できなかった。
 #
-# Transient network errors and responses that are not valid JSON are retried
-# until the timeout. / 一時的な通信エラーや JSON として読めない応答は上限まで再試行する。
+# Transient network errors, responses that are not valid JSON, and "error" responses
+# with any HTTP status other than 200 / 404 (5xx, rate limiting, ...) are retried
+# until the timeout. / 一時的な通信エラー、JSON として読めない応答、HTTP 200 / 404
+# 以外（5xx やレート制限など）で返った error は上限まで再試行する。
 
 set -u
 
@@ -60,7 +63,9 @@ last_state="no response yet"
 
 # Temporary file that receives curl's error messages, removed on exit.
 # curl のエラーメッセージを受け取る一時ファイル。終了時に削除する。
-curl_stderr=$(mktemp)
+# Without it curl could never run and the script would just wait until the timeout.
+# 作成できないと curl が一度も実行されず上限まで待つだけになるため、すぐ止める。
+curl_stderr=$(mktemp) || { echo "::error::Failed to create a temporary file."; exit 2; }
 trap 'rm -f "${curl_stderr}"' EXIT
 
 # jq filter that makes an API string safe to print: control characters (including
