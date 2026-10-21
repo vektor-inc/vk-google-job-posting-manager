@@ -20,6 +20,7 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: 24.x
+                  check-latest: true
             - name: Setup PHP
               # shivammathur/setup-php v2
               uses: shivammathur/setup-php@728c6c6b8cf02c2e48117716a91ee48313958a19
@@ -62,6 +63,7 @@ jobs:
               uses: actions/setup-node@v4
               with:
                   node-version: 24.x
+                  check-latest: true
             - name: Cache vendor
               uses: actions/cache@v6
               with:

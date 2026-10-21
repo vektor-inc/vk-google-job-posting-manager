@@ -28,9 +28,10 @@ jobs:
                     MYSQL_PASSWORD: wordpress
         steps:
             - uses: actions/checkout@v7
-            - uses: actions/setup-node@v1
+            - uses: actions/setup-node@v4
               with:
                   node-version: 24.x
+                  check-latest: true
             - name: Cache multiple paths
               uses: actions/cache@v6
               with:
