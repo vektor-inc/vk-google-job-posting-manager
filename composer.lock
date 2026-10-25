@@ -8,23 +8,23 @@
     "packages": [
         {
             "name": "alcohol/iso4217",
-            "version": "4.2.0",
+            "version": "4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/alcohol/iso4217.git",
-                "reference": "3ce6e02fbc0501f949ffdad327f5851c04367f4b"
+                "reference": "9ea65a1ce6979f2b973948982cba7e3c5f0edea3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alcohol/iso4217/zipball/3ce6e02fbc0501f949ffdad327f5851c04367f4b",
-                "reference": "3ce6e02fbc0501f949ffdad327f5851c04367f4b",
+                "url": "https://api.github.com/repos/alcohol/iso4217/zipball/9ea65a1ce6979f2b973948982cba7e3c5f0edea3",
+                "reference": "9ea65a1ce6979f2b973948982cba7e3c5f0edea3",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9.5"
+                "phpunit/phpunit": "^9.5.28 || ^10.5.58 || ^11.5.43 || ^12.4.2"
             },
             "type": "library",
             "extra": {
@@ -66,7 +66,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-07-01T09:50:00+00:00"
+            "time": "2026-01-02T09:46:17+00:00"
         }
     ],
     "packages-dev": [
