@@ -28,7 +28,7 @@
   "devDependencies": {
     "@emotion/babel-plugin": "^11.13.5",
     "@playwright/test": "^1.64.1",
-    "@wordpress/babel-plugin-makepot": "^6.57.0",
+    "@wordpress/babel-plugin-makepot": "^7.0.0",
     "@wordpress/e2e-test-utils-playwright": "^3.1.0",
     "@wordpress/env": "^12.0.0",
     "@wordpress/i18n": "^7.0.0",
