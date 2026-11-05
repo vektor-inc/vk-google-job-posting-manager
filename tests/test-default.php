@@ -855,7 +855,22 @@ class DefaultTest extends WP_UnitTestCase {
 		update_option( 'vgjpm_post_type_display_customfieldspost', 'true' );
 
 		$this->set_job_post_viewer( $viewer );
-		$this->go_to( get_permalink( $post_id ) );
+
+		// A post the viewer cannot read becomes a 404 with go_to(), so build the
+		// singular view by hand to reach the output code.
+		// 読めない投稿は go_to() だと 404 になるため、出力処理に到達するよう単一表示を手で作る。
+		global $wp_query;
+		$post                         = get_post( $post_id );
+		$GLOBALS['post']              = $post;
+		$wp_query                     = new WP_Query();
+		$wp_query->is_singular        = true;
+		$wp_query->is_single          = true;
+		$wp_query->queried_object     = $post;
+		$wp_query->queried_object_id  = $post_id;
+		$wp_query->posts              = array( $post );
+		$wp_query->post               = $post;
+		$wp_query->post_count         = 1;
+		$this->assertTrue( is_singular() );
 
 		ob_start();
 		vgjpm_print_jsonLD_in_footer();
