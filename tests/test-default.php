@@ -881,4 +881,88 @@ class DefaultTest extends WP_UnitTestCase {
 		unset( $_COOKIE[ 'wp-postpass_' . COOKIEHASH ] );
 		wp_set_current_user( 0 );
 	}
+
+	/**
+	 * The REST response keeps job posting fields only for viewers who may see the post.
+	 * REST 応答の求人情報フィールドは、投稿を見られる閲覧者にだけ返る。
+	 *
+	 * @dataProvider provide_rest_job_meta_cases
+	 *
+	 * @param array  $post_args Post arguments. 投稿の引数。
+	 * @param string $viewer    Viewer type. 閲覧者の種類。
+	 * @param bool   $expected  Whether vkjp_ fields are returned. vkjp_ 項目が返るか。
+	 */
+	function test_filter_rest_job_meta( $post_args, $viewer, $expected ) {
+		update_option( 'vgjpm_post_type_display_customfieldspost', 'true' );
+		vgjpm_register_panel_meta();
+		register_post_meta(
+			'post',
+			'vgjpm_test_other_meta',
+			array(
+				'type'         => 'string',
+				'single'       => true,
+				'show_in_rest' => true,
+			)
+		);
+
+		$post_args['post_author'] = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$post_id                  = self::factory()->post->create( $post_args );
+		add_post_meta( $post_id, 'vkjp_title', 'Secret job title' );
+		add_post_meta( $post_id, 'vgjpm_test_other_meta', 'other value' );
+
+		$this->set_job_post_viewer( $viewer );
+
+		global $wp_rest_server;
+		$wp_rest_server = new WP_REST_Server();
+		do_action( 'rest_api_init' );
+
+		foreach ( array( 'view', 'edit' ) as $context ) {
+			$request = new WP_REST_Request( 'GET', '/wp/v2/posts/' . $post_id );
+			$request->set_param( 'context', $context );
+			$data = $wp_rest_server->dispatch( $request )->get_data();
+
+			// A viewer without edit rights cannot use the edit context at all.
+			// 編集権限のない閲覧者は edit コンテキストを使えない。
+			if ( 'edit' === $context && 'editor' !== $viewer ) {
+				$this->assertArrayNotHasKey( 'meta', $data );
+				continue;
+			}
+
+			$has_field = isset( $data['meta']['vkjp_title'] ) && 'Secret job title' === $data['meta']['vkjp_title'];
+			$this->assertSame( $expected, $has_field, $context );
+
+			// Other meta stays in the response.
+			// 求人情報以外の meta は応答に残る。
+			if ( isset( $data['meta'] ) ) {
+				$this->assertSame( 'other value', $data['meta']['vgjpm_test_other_meta'] );
+			}
+		}
+
+		unset( $_COOKIE[ 'wp-postpass_' . COOKIEHASH ] );
+		delete_option( 'vgjpm_post_type_display_customfieldspost' );
+		wp_set_current_user( 0 );
+	}
+
+	/**
+	 * Cases for the REST response: post state x viewer.
+	 * REST 応答の確認用ケース（投稿の状態 × 閲覧者）。
+	 *
+	 * @return array
+	 */
+	public function provide_rest_job_meta_cases() {
+		$password = array(
+			'post_status'   => 'publish',
+			'post_password' => 'secret',
+		);
+		$publish  = array( 'post_status' => 'publish' );
+		return array(
+			'publish / guest'           => array( $publish, 'guest', true ),
+			'publish / subscriber'      => array( $publish, 'subscriber', true ),
+			'publish / editor'          => array( $publish, 'editor', true ),
+			'password / guest'          => array( $password, 'guest', false ),
+			'password / subscriber'     => array( $password, 'subscriber', false ),
+			'password / editor'         => array( $password, 'editor', true ),
+			'password / unlocked guest' => array( $password, 'unlocked', true ),
+		);
+	}
 }
