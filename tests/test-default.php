@@ -815,4 +815,285 @@ class DefaultTest extends WP_UnitTestCase {
 
 		$this->assertSame( array( 'FULL_TIME', 'PART_TIME' ), $custom_fields['vkjp_employmentType'] );
 	}
+
+	/**
+	 * Cases for the viewer visibility check: post state x viewer role.
+	 * 閲覧可否の確認用ケース（投稿の状態 × 閲覧者の権限）。
+	 *
+	 * @return array
+	 */
+	public function provide_job_post_visibility_cases() {
+		return array(
+			'publish / guest'           => array(
+				array( 'post_status' => 'publish' ),
+				'guest',
+				true,
+			),
+			'publish / subscriber'      => array(
+				array( 'post_status' => 'publish' ),
+				'subscriber',
+				true,
+			),
+			'draft / guest'             => array(
+				array( 'post_status' => 'draft' ),
+				'guest',
+				false,
+			),
+			'draft / subscriber'        => array(
+				array( 'post_status' => 'draft' ),
+				'subscriber',
+				false,
+			),
+			'draft / editor'            => array(
+				array( 'post_status' => 'draft' ),
+				'editor',
+				true,
+			),
+			'private / guest'           => array(
+				array( 'post_status' => 'private' ),
+				'guest',
+				false,
+			),
+			'private / subscriber'      => array(
+				array( 'post_status' => 'private' ),
+				'subscriber',
+				false,
+			),
+			'private / editor'          => array(
+				array( 'post_status' => 'private' ),
+				'editor',
+				true,
+			),
+			'password / guest'          => array(
+				array(
+					'post_status'   => 'publish',
+					'post_password' => 'secret',
+				),
+				'guest',
+				false,
+			),
+			'password / subscriber'     => array(
+				array(
+					'post_status'   => 'publish',
+					'post_password' => 'secret',
+				),
+				'subscriber',
+				false,
+			),
+			'password / unlocked guest' => array(
+				array(
+					'post_status'   => 'publish',
+					'post_password' => 'secret',
+				),
+				'unlocked',
+				true,
+			),
+			'draft + password / editor' => array(
+				array(
+					'post_status'   => 'draft',
+					'post_password' => 'secret',
+				),
+				'editor',
+				false,
+			),
+		);
+	}
+
+	/**
+	 * Prepare the viewer for the visibility cases.
+	 * 閲覧可否のケース用に閲覧者を用意する。
+	 *
+	 * @param string $viewer guest | subscriber | editor | unlocked.
+	 */
+	private function set_job_post_viewer( $viewer ) {
+		if ( in_array( $viewer, array( 'subscriber', 'editor' ), true ) ) {
+			wp_set_current_user( self::factory()->user->create( array( 'role' => $viewer ) ) );
+		} else {
+			wp_set_current_user( 0 );
+		}
+		if ( 'unlocked' === $viewer ) {
+			// Simulate the cookie set after the correct password was entered.
+			// 正しいパスワード入力後に設定される Cookie を再現する。
+			require_once ABSPATH . WPINC . '/class-phpass.php';
+			$hasher                                 = new PasswordHash( 8, true );
+			$_COOKIE[ 'wp-postpass_' . COOKIEHASH ] = $hasher->HashPassword( 'secret' );
+		}
+	}
+
+	/**
+	 * Visibility check of a job post, and the block output that uses it.
+	 * 求人投稿の閲覧可否の確認と、それを使うブロック出力の確認。
+	 *
+	 * @dataProvider provide_job_post_visibility_cases
+	 *
+	 * @param array  $post_args Post arguments. 投稿の引数。
+	 * @param string $viewer    Viewer type. 閲覧者の種類。
+	 * @param bool   $expected  Expected result. 期待する結果。
+	 */
+	function test_can_view_job_post( $post_args, $viewer, $expected ) {
+		$post_args['post_author'] = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$post_id                  = self::factory()->post->create( $post_args );
+		add_post_meta( $post_id, 'vkjp_title', 'Secret job title' );
+
+		$this->set_job_post_viewer( $viewer );
+
+		$this->assertSame( $expected, vgjpm_can_view_job_post( $post_id ) );
+
+		// The block output follows the same result.
+		// ブロックの出力も同じ結果に従う。
+		$html = vgjpm_render_job_posting_info( $post_id, 'default', '' );
+		$this->assertSame( $expected, false !== strpos( $html, 'Secret job title' ) );
+
+		// post_id 0 points to the current post.
+		// post_id 0 は現在の投稿を指す。
+		$GLOBALS['post'] = get_post( $post_id );
+		$this->assertSame( $expected, vgjpm_can_view_job_post( 0 ) );
+		$this->assertSame( $expected, false !== strpos( vgjpm_render_job_posting_info( 0, 'default', '' ), 'Secret job title' ) );
+
+		unset( $_COOKIE[ 'wp-postpass_' . COOKIEHASH ] );
+		wp_set_current_user( 0 );
+	}
+
+	/**
+	 * A missing post is not visible.
+	 * 存在しない投稿は閲覧できない。
+	 */
+	function test_can_view_job_post_returns_false_for_missing_post() {
+		$this->assertFalse( vgjpm_can_view_job_post( 99999999 ) );
+	}
+
+	/**
+	 * The JSON-LD in the head follows the same visibility check.
+	 * head の JSON-LD も同じ閲覧可否の確認に従う。
+	 *
+	 * @dataProvider provide_job_post_visibility_cases
+	 *
+	 * @param array  $post_args Post arguments. 投稿の引数。
+	 * @param string $viewer    Viewer type. 閲覧者の種類。
+	 * @param bool   $expected  Expected result. 期待する結果。
+	 */
+	function test_print_jsonLD_in_footer_follows_visibility( $post_args, $viewer, $expected ) {
+		$post_args['post_author'] = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$post_id                  = self::factory()->post->create( $post_args );
+		add_post_meta( $post_id, 'vkjp_title', 'Secret job title' );
+		update_option( 'vgjpm_post_type_display_customfieldspost', 'true' );
+
+		$this->set_job_post_viewer( $viewer );
+
+		// A post the viewer cannot read becomes a 404 with go_to(), so build the
+		// singular view by hand to reach the output code.
+		// 読めない投稿は go_to() だと 404 になるため、出力処理に到達するよう単一表示を手で作る。
+		global $wp_query;
+		$post                         = get_post( $post_id );
+		$GLOBALS['post']              = $post;
+		$wp_query                     = new WP_Query();
+		$wp_query->is_singular        = true;
+		$wp_query->is_single          = true;
+		$wp_query->queried_object     = $post;
+		$wp_query->queried_object_id  = $post_id;
+		$wp_query->posts              = array( $post );
+		$wp_query->post               = $post;
+		$wp_query->post_count         = 1;
+		$this->assertTrue( is_singular() );
+
+		ob_start();
+		vgjpm_print_jsonLD_in_footer();
+		$output = ob_get_clean();
+
+		$this->assertSame( $expected, false !== strpos( $output, 'Secret job title' ) );
+
+		unset( $_COOKIE[ 'wp-postpass_' . COOKIEHASH ] );
+		wp_set_current_user( 0 );
+	}
+
+	/**
+	 * The REST response keeps job posting fields only for viewers who may see the post.
+	 * REST 応答の求人情報フィールドは、投稿を見られる閲覧者にだけ返る。
+	 *
+	 * @dataProvider provide_rest_job_meta_cases
+	 *
+	 * @param array  $post_args Post arguments. 投稿の引数。
+	 * @param string $viewer    Viewer type. 閲覧者の種類。
+	 * @param bool   $expected  Whether vkjp_ fields are returned. vkjp_ 項目が返るか。
+	 * @param mixed  $password  Password sent with the request. リクエストで送るパスワード。
+	 */
+	function test_filter_rest_job_meta( $post_args, $viewer, $expected, $password = null ) {
+		update_option( 'vgjpm_post_type_display_customfieldspost', 'true' );
+		vgjpm_register_panel_meta();
+		register_post_meta(
+			'post',
+			'vgjpm_test_other_meta',
+			array(
+				'type'         => 'string',
+				'single'       => true,
+				'show_in_rest' => true,
+			)
+		);
+
+		$post_args['post_author'] = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$post_id                  = self::factory()->post->create( $post_args );
+		add_post_meta( $post_id, 'vkjp_title', 'Secret job title' );
+		add_post_meta( $post_id, 'vgjpm_test_other_meta', 'other value' );
+
+		$this->set_job_post_viewer( $viewer );
+
+		global $wp_rest_server;
+		$wp_rest_server = new WP_REST_Server();
+		do_action( 'rest_api_init' );
+
+		foreach ( array( 'view', 'edit' ) as $context ) {
+			$request = new WP_REST_Request( 'GET', '/wp/v2/posts/' . $post_id );
+			$request->set_param( 'context', $context );
+			if ( null !== $password ) {
+				$request->set_param( 'password', $password );
+			}
+			$data = $wp_rest_server->dispatch( $request )->get_data();
+
+			// A viewer without edit rights cannot use the edit context at all.
+			// 編集権限のない閲覧者は edit コンテキストを使えない。
+			if ( 'edit' === $context && 'editor' !== $viewer ) {
+				$this->assertArrayNotHasKey( 'meta', $data );
+				continue;
+			}
+
+			$has_field = isset( $data['meta']['vkjp_title'] ) && 'Secret job title' === $data['meta']['vkjp_title'];
+			$this->assertSame( $expected, $has_field, $context );
+
+			// Other meta stays in the response.
+			// 求人情報以外の meta は応答に残る。
+			if ( isset( $data['meta'] ) ) {
+				$this->assertSame( 'other value', $data['meta']['vgjpm_test_other_meta'] );
+			}
+		}
+
+		unset( $_COOKIE[ 'wp-postpass_' . COOKIEHASH ] );
+		delete_option( 'vgjpm_post_type_display_customfieldspost' );
+		wp_set_current_user( 0 );
+	}
+
+	/**
+	 * Cases for the REST response: post state x viewer.
+	 * REST 応答の確認用ケース（投稿の状態 × 閲覧者）。
+	 *
+	 * @return array
+	 */
+	public function provide_rest_job_meta_cases() {
+		$password = array(
+			'post_status'   => 'publish',
+			'post_password' => 'secret',
+		);
+		$publish  = array( 'post_status' => 'publish' );
+		return array(
+			'publish / guest'               => array( $publish, 'guest', true ),
+			'publish / subscriber'          => array( $publish, 'subscriber', true ),
+			'publish / editor'              => array( $publish, 'editor', true ),
+			'password / guest'              => array( $password, 'guest', false ),
+			'password / subscriber'         => array( $password, 'subscriber', false ),
+			'password / editor'             => array( $password, 'editor', true ),
+			'password / unlocked guest'     => array( $password, 'unlocked', true ),
+			'password / guest + correct pw' => array( $password, 'guest', true, 'secret' ),
+			'password / guest + wrong pw'   => array( $password, 'guest', false, 'wrong' ),
+			'password / guest + array pw'   => array( $password, 'guest', false, array( 'secret' ) ),
+		);
+	}
 }

@@ -3,6 +3,7 @@
 vgjpm_create_jobpost_posttype()
 vgjpm_post_type_check_list();
 vgjpm_get_custom_fields();
+vgjpm_can_view_job_post();
 vgjpm_get_raw_post_meta();
 vgjpm_maybe_unserialize_without_object();
 vgjpm_contains_object();
@@ -106,6 +107,41 @@ function vgjpm_get_custom_fields( $post_id ) {
 	}
 
 	return $custom_fields;
+}
+
+/**
+ * Check whether the current viewer may see the job posting info of a post.
+ * 現在の閲覧者が、投稿の求人情報を見てよいかを判定する。
+ *
+ * A post that needs a password the viewer has not entered is never allowed.
+ * A published post is allowed. Any other status (draft, private, etc.) is
+ * allowed only for a viewer who has the permission to read that post.
+ * 閲覧者がまだ入力していないパスワードが必要な投稿は許可しない。
+ * 公開済みの投稿は許可する。それ以外のステータス（下書き・非公開など）は、
+ * その投稿を読む権限を持つ閲覧者のみ許可する。
+ *
+ * @param int $post_id Post ID. 0 means the current post. 投稿 ID。0 のときは現在の投稿。
+ * @return bool True when the viewer may see it. 閲覧してよい場合は true。
+ */
+function vgjpm_can_view_job_post( $post_id ) {
+	// 0 points to the current post, the same as the field reading functions.
+	// 0 は現在の投稿を指す（求人項目の取得関数と同じ扱い）。
+	$post = get_post( absint( $post_id ) ? absint( $post_id ) : null );
+	if ( ! $post ) {
+		return false;
+	}
+
+	// Password protected posts are hidden until the password is entered.
+	// パスワード保護の投稿は、パスワードが入力されるまで出さない。
+	if ( post_password_required( $post ) ) {
+		return false;
+	}
+
+	if ( 'publish' === $post->post_status ) {
+		return true;
+	}
+
+	return current_user_can( 'read_post', $post->ID );
 }
 
 /**

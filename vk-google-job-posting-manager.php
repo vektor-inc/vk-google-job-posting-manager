@@ -502,7 +502,14 @@ function vgjpm_print_jsonLD_in_footer() {
 		return;
 	}
 
-	$post_id       = get_the_ID();
+	$post_id = get_the_ID();
+
+	// Skip output unless the viewer may see this post (status / password).
+	// 閲覧者がこの投稿を見られない場合（ステータス・パスワード）は出力しない。
+	if ( ! vgjpm_can_view_job_post( $post_id ) ) {
+		return;
+	}
+
 	$custom_fields = vgjpm_get_custom_fields( $post_id );
 	$json_ld       = vgjpm_generate_jsonLD( $custom_fields );
 	if ( $json_ld ) {
