@@ -4,7 +4,7 @@ Donate link:
 Tags: Google Job Posting, Recruitment, Gutenberg.
 Requires at least: 6.7
 Tested up to: 7.1
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -46,6 +46,7 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
+= 1.4.1 =
 [ Bug Fix ] Fixed an issue where the Job Posting sidebar panel showed empty fields for existing posts of custom post types registered by other plugins or themes.
 [ Security Fix ] Added a visibility check when outputting job posting info.
 
