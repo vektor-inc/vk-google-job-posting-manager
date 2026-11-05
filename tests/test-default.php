@@ -1012,16 +1012,41 @@ class DefaultTest extends WP_UnitTestCase {
 	 *
 	 * @dataProvider provide_rest_job_meta_cases
 	 *
-	 * @param array  $post_args Post arguments. 投稿の引数。
-	 * @param string $viewer    Viewer type. 閲覧者の種類。
-	 * @param bool   $expected  Whether vkjp_ fields are returned. vkjp_ 項目が返るか。
-	 * @param mixed  $password  Password sent with the request. リクエストで送るパスワード。
+	 * @param array  $post_args   Post arguments. 投稿の引数。
+	 * @param string $viewer      Viewer type. 閲覧者の種類。
+	 * @param bool   $expected    Whether vkjp_ fields are returned. vkjp_ 項目が返るか。
+	 * @param mixed  $password    Password sent with the request. リクエストで送るパスワード。
+	 * @param string $post_type   Post type. 投稿タイプ。
+	 * @param int    $view_status Expected status of the view context. view コンテキストで期待するステータス。
 	 */
-	function test_filter_rest_job_meta( $post_args, $viewer, $expected, $password = null ) {
-		update_option( 'vgjpm_post_type_display_customfieldspost', 'true' );
+	function test_filter_rest_job_meta( $post_args, $viewer, $expected, $password = null, $post_type = 'post', $view_status = 200 ) {
+		global $wp_rest_server, $_wp_post_type_features;
+
+		$features_backup = $_wp_post_type_features;
+
+		// 投稿タイプを登録して対象にする。
+		// Register the post type and make it a target.
+		if ( 'job-posts' === $post_type ) {
+			update_option( 'vgjpm_create_jobpost_posttype', 'true' );
+			require_once dirname( __DIR__ ) . '/inc/custom-posttype-builder.php';
+			vgjpm_job_post_init();
+		} elseif ( 'job_offer' === $post_type ) {
+			// custom-fields 非対応の他所で登録された投稿タイプ。
+			// A post type registered elsewhere without `custom-fields` support.
+			register_post_type(
+				$post_type,
+				array(
+					'public'       => true,
+					'show_in_rest' => true,
+					'rest_base'    => $post_type,
+					'supports'     => array( 'title', 'editor' ),
+				)
+			);
+		}
+		update_option( 'vgjpm_post_type_display_customfields' . $post_type, 'true' );
 		vgjpm_register_panel_meta();
 		register_post_meta(
-			'post',
+			$post_type,
 			'vgjpm_test_other_meta',
 			array(
 				'type'         => 'string',
@@ -1030,6 +1055,7 @@ class DefaultTest extends WP_UnitTestCase {
 			)
 		);
 
+		$post_args['post_type']   = $post_type;
 		$post_args['post_author'] = self::factory()->user->create( array( 'role' => 'administrator' ) );
 		$post_id                  = self::factory()->post->create( $post_args );
 		add_post_meta( $post_id, 'vkjp_title', 'Secret job title' );
@@ -1037,17 +1063,26 @@ class DefaultTest extends WP_UnitTestCase {
 
 		$this->set_job_post_viewer( $viewer );
 
-		global $wp_rest_server;
 		$wp_rest_server = new WP_REST_Server();
 		do_action( 'rest_api_init' );
 
+		$rest_base = get_post_type_object( $post_type )->rest_base;
+		$this->assertNotEmpty( $rest_base );
+
 		foreach ( array( 'view', 'edit' ) as $context ) {
-			$request = new WP_REST_Request( 'GET', '/wp/v2/posts/' . $post_id );
+			$request = new WP_REST_Request( 'GET', '/wp/v2/' . $rest_base . '/' . $post_id );
 			$request->set_param( 'context', $context );
 			if ( null !== $password ) {
 				$request->set_param( 'password', $password );
 			}
-			$data = $wp_rest_server->dispatch( $request )->get_data();
+			$response = $wp_rest_server->dispatch( $request );
+			$data     = $response->get_data();
+
+			// Pin the status code so an error response cannot pass by accident.
+			// エラー応答で偶然通らないよう、ステータスコードを固定する。
+			if ( 'view' === $context ) {
+				$this->assertSame( $view_status, $response->get_status(), $context . ' status' );
+			}
 
 			// A viewer without edit rights cannot use the edit context at all.
 			// 編集権限のない閲覧者は edit コンテキストを使えない。
@@ -1056,187 +1091,43 @@ class DefaultTest extends WP_UnitTestCase {
 				continue;
 			}
 
+			// An error response (e.g. a draft for a guest) has no meta to check.
+			// エラー応答（ゲストへの下書き等）は確認する meta を持たない。
+			if ( 200 !== $view_status ) {
+				$this->assertArrayNotHasKey( 'meta', $data );
+				continue;
+			}
+
+			$this->assertArrayHasKey( 'meta', $data, $context );
 			$has_field = isset( $data['meta']['vkjp_title'] ) && 'Secret job title' === $data['meta']['vkjp_title'];
 			$this->assertSame( $expected, $has_field, $context );
 
 			// Other meta stays in the response.
 			// 求人情報以外の meta は応答に残る。
-			if ( isset( $data['meta'] ) ) {
-				$this->assertSame( 'other value', $data['meta']['vgjpm_test_other_meta'] );
-			}
+			$this->assertSame( 'other value', $data['meta']['vgjpm_test_other_meta'] );
 		}
 
+		// Clean up.
+		// 後片付け。
 		unset( $_COOKIE[ 'wp-postpass_' . COOKIEHASH ] );
-		delete_option( 'vgjpm_post_type_display_customfieldspost' );
 		wp_set_current_user( 0 );
-	}
-
-	/**
-	 * The REST response of each target post type (including one without `custom-fields` support)
-	 * keeps job posting fields only for viewers who may see the post.
-	 * 各対象投稿タイプ（`custom-fields` 非対応のものを含む）の REST 応答は、
-	 * 投稿を見られる閲覧者にだけ求人情報フィールドを返す。
-	 */
-	public function test_vgjpm_filter_rest_job_meta() {
-		global $wp_rest_server, $_wp_post_type_features;
-
-		$features_backup = $_wp_post_type_features;
-		$meta_keys       = array( 'vkjp_title', 'vkjp_description' );
-		$original_user   = self::factory()->user->create( array( 'role' => 'administrator' ) );
-		$editor_user     = self::factory()->user->create( array( 'role' => 'editor' ) );
-		wp_set_current_user( $original_user );
-
-		$post_types = array(
-			array(
-				'post_type'     => 'post',
-				'register_args' => null,
-			),
-			array(
-				'post_type'     => 'job-posts',
-				'register_args' => 'builtin',
-			),
-			array(
-				'post_type'     => 'job_offer',
-				'register_args' => array( 'supports' => array( 'title', 'editor' ) ),
-			),
-		);
-
-		$test_cases = array(
-			array(
-				'test_condition_name' => '公開済み × ゲスト => 200 で vkjp_title が返る',
-				'post_args'           => array( 'post_status' => 'publish' ),
-				'viewer'              => 'guest',
-				'context'             => 'view',
-				'password'            => null,
-				'expected_status'     => 200,
-				'expected_has_field'  => true,
-			),
-			array(
-				'test_condition_name' => '下書き × ゲスト => 認可エラー（401）',
-				'post_args'           => array( 'post_status' => 'draft' ),
-				'viewer'              => 'guest',
-				'context'             => 'view',
-				'password'            => null,
-				'expected_status'     => 401,
-				'expected_has_field'  => null,
-			),
-			array(
-				'test_condition_name' => 'パスワード付き公開 × ゲスト（パスワード未送信） => 200 で meta はあるが vkjp_title は返らない',
-				'post_args'           => array(
-					'post_status'   => 'publish',
-					'post_password' => 'secret',
-				),
-				'viewer'              => 'guest',
-				'context'             => 'view',
-				'password'            => null,
-				'expected_status'     => 200,
-				'expected_has_field'  => false,
-			),
-			array(
-				'test_condition_name' => 'パスワード付き公開 × ゲスト（正しいパスワードを送信） => 200 で vkjp_title が返る',
-				'post_args'           => array(
-					'post_status'   => 'publish',
-					'post_password' => 'secret',
-				),
-				'viewer'              => 'guest',
-				'context'             => 'view',
-				'password'            => 'secret',
-				'expected_status'     => 200,
-				'expected_has_field'  => true,
-			),
-			array(
-				'test_condition_name' => '下書き × 編集権限のあるユーザー（edit） => 200 で vkjp_title が返る',
-				'post_args'           => array( 'post_status' => 'draft' ),
-				'viewer'              => 'editor',
-				'context'             => 'edit',
-				'password'            => null,
-				'expected_status'     => 200,
-				'expected_has_field'  => true,
-			),
-		);
-
-		foreach ( $post_types as $type_case ) {
-			$post_type = $type_case['post_type'];
-
-			// 投稿タイプを登録して対象にする。
-			// Register the post type and make it a target.
-			if ( 'builtin' === $type_case['register_args'] ) {
-				update_option( 'vgjpm_create_jobpost_posttype', 'true' );
-				require_once dirname( __DIR__ ) . '/inc/custom-posttype-builder.php';
-				vgjpm_job_post_init();
-			} elseif ( is_array( $type_case['register_args'] ) ) {
-				register_post_type(
-					$post_type,
-					array_merge(
-						array(
-							'public'       => true,
-							'show_in_rest' => true,
-							'rest_base'    => $post_type,
-						),
-						$type_case['register_args']
-					)
-				);
-			}
-			update_option( 'vgjpm_post_type_display_customfields' . $post_type, 'true' );
-			vgjpm_register_panel_meta();
-
-			// REST サーバーを作り直す。
-			// Rebuild the REST server.
-			$wp_rest_server = null;
-			rest_get_server();
-
-			$rest_base = get_post_type_object( $post_type )->rest_base;
-			$this->assertNotEmpty( $rest_base, $post_type . ' の rest_base' );
-
-			foreach ( $test_cases as $case ) {
-				$label   = $post_type . ' / ' . $case['test_condition_name'];
-				$post_id = self::factory()->post->create( array_merge( $case['post_args'], array( 'post_type' => $post_type ) ) );
-				add_post_meta( $post_id, 'vkjp_title', 'Secret job title' );
-
-				wp_set_current_user( 'editor' === $case['viewer'] ? $editor_user : 0 );
-
-				$request = new WP_REST_Request( 'GET', '/wp/v2/' . $rest_base . '/' . $post_id );
-				$request->set_param( 'context', $case['context'] );
-				if ( null !== $case['password'] ) {
-					$request->set_param( 'password', $case['password'] );
-				}
-				$response = rest_do_request( $request );
-				$data     = $response->get_data();
-
-				// ステータスコードを先に固定する（エラー応答で偶然通らないように）。
-				// Pin the status code first so an error response cannot pass by accident.
-				$this->assertSame( $case['expected_status'], $response->get_status(), $label . '（ステータス）' );
-
-				if ( null !== $case['expected_has_field'] ) {
-					$this->assertArrayHasKey( 'meta', $data, $label . '（meta キー）' );
-					$has_field = isset( $data['meta']['vkjp_title'] ) && 'Secret job title' === $data['meta']['vkjp_title'];
-					$this->assertSame( $case['expected_has_field'], $has_field, $label . '（vkjp_title）' );
-				}
-
-				// 後片付け: 投稿を削除し、元のユーザーへ戻す。
-				// Clean up: delete the post and switch back to the original user.
-				wp_set_current_user( $original_user );
-				wp_delete_post( $post_id, true );
-			}
-
-			remove_filter( 'rest_prepare_' . $post_type, 'vgjpm_filter_rest_job_meta', 10 );
-			foreach ( $meta_keys as $meta_key ) {
-				unregister_meta_key( 'post', $meta_key, $post_type );
-			}
-			delete_option( 'vgjpm_post_type_display_customfields' . $post_type );
-			delete_option( 'vgjpm_create_jobpost_posttype' );
-			if ( 'post' !== $post_type ) {
-				unregister_post_type( $post_type );
-			}
-			$_wp_post_type_features = $features_backup;
+		wp_delete_post( $post_id, true );
+		remove_filter( 'rest_prepare_' . $post_type, 'vgjpm_filter_rest_job_meta', 10 );
+		foreach ( array( 'vkjp_title', 'vkjp_description', 'vgjpm_test_other_meta' ) as $meta_key ) {
+			unregister_meta_key( 'post', $meta_key, $post_type );
 		}
-
-		$wp_rest_server = null;
+		delete_option( 'vgjpm_post_type_display_customfields' . $post_type );
+		delete_option( 'vgjpm_create_jobpost_posttype' );
+		if ( 'post' !== $post_type ) {
+			unregister_post_type( $post_type );
+		}
+		$_wp_post_type_features = $features_backup;
+		$wp_rest_server         = null;
 	}
 
 	/**
-	 * Cases for the REST response: post state x viewer.
-	 * REST 応答の確認用ケース（投稿の状態 × 閲覧者）。
+	 * Cases for the REST response: post type x post state x viewer.
+	 * REST 応答の確認用ケース（投稿タイプ × 投稿の状態 × 閲覧者）。
 	 *
 	 * @return array
 	 */
@@ -1246,17 +1137,24 @@ class DefaultTest extends WP_UnitTestCase {
 			'post_password' => 'secret',
 		);
 		$publish  = array( 'post_status' => 'publish' );
-		return array(
-			'publish / guest'               => array( $publish, 'guest', true ),
-			'publish / subscriber'          => array( $publish, 'subscriber', true ),
-			'publish / editor'              => array( $publish, 'editor', true ),
-			'password / guest'              => array( $password, 'guest', false ),
-			'password / subscriber'         => array( $password, 'subscriber', false ),
-			'password / editor'             => array( $password, 'editor', true ),
-			'password / unlocked guest'     => array( $password, 'unlocked', true ),
-			'password / guest + correct pw' => array( $password, 'guest', true, 'secret' ),
-			'password / guest + wrong pw'   => array( $password, 'guest', false, 'wrong' ),
-			'password / guest + array pw'   => array( $password, 'guest', false, array( 'secret' ) ),
-		);
+		$draft    = array( 'post_status' => 'draft' );
+		$cases    = array();
+
+		foreach ( array( 'post', 'job-posts', 'job_offer' ) as $post_type ) {
+			$cases[ $post_type . ' / publish / guest' ]               = array( $publish, 'guest', true, null, $post_type );
+			$cases[ $post_type . ' / publish / subscriber' ]          = array( $publish, 'subscriber', true, null, $post_type );
+			$cases[ $post_type . ' / publish / editor' ]              = array( $publish, 'editor', true, null, $post_type );
+			$cases[ $post_type . ' / draft / guest' ]                 = array( $draft, 'guest', false, null, $post_type, 401 );
+			$cases[ $post_type . ' / draft / editor' ]                = array( $draft, 'editor', true, null, $post_type );
+			$cases[ $post_type . ' / password / guest' ]              = array( $password, 'guest', false, null, $post_type );
+			$cases[ $post_type . ' / password / subscriber' ]         = array( $password, 'subscriber', false, null, $post_type );
+			$cases[ $post_type . ' / password / editor' ]             = array( $password, 'editor', true, null, $post_type );
+			$cases[ $post_type . ' / password / unlocked guest' ]     = array( $password, 'unlocked', true, null, $post_type );
+			$cases[ $post_type . ' / password / guest + correct pw' ] = array( $password, 'guest', true, 'secret', $post_type );
+			$cases[ $post_type . ' / password / guest + wrong pw' ]   = array( $password, 'guest', false, 'wrong', $post_type, 403 );
+			$cases[ $post_type . ' / password / guest + array pw' ]   = array( $password, 'guest', false, array( 'secret' ), $post_type, 400 );
+		}
+
+		return $cases;
 	}
 }
