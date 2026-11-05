@@ -46,7 +46,7 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
-[ Bug fix ] Fixed an issue where the Job Posting sidebar panel showed empty fields for existing posts of custom post types registered by other plugins or themes.
+[ Bug Fix ] Fixed an issue where the Job Posting sidebar panel showed empty fields for existing posts of custom post types registered by other plugins or themes.
 
 = 1.4.0 =
 [ Spec Change ] Raised the minimum required WordPress version to 6.7.
