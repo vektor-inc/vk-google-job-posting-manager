@@ -43,6 +43,30 @@ function vgjpm_get_meta_post_types() {
 }
 
 /**
+ * Make REST responses of the target post types include `meta`.
+ * 対象の投稿タイプの REST レスポンスに `meta` を含める。
+ *
+ * WordPress core only exposes `meta` for post types that support `custom-fields`.
+ * Post types registered by other plugins or themes may not declare it, so the editor panel would load empty values.
+ * The support is added only while the REST API is built, so the classic editor does not get an extra "Custom Fields" meta box.
+ * WordPress コアは `custom-fields` をサポートする投稿タイプにだけ `meta` を出す。
+ * 他のプラグインやテーマが登録した投稿タイプは宣言していないことがあり、その場合エディターパネルが空欄になる。
+ * クラシックエディターに標準の「カスタムフィールド」メタボックスが増えないよう、REST API を組み立てる間だけ追加する。
+ *
+ * @return void
+ */
+function vgjpm_add_rest_custom_fields_support() {
+	foreach ( vgjpm_get_meta_post_types() as $post_type ) {
+		if ( ! post_type_supports( $post_type, 'custom-fields' ) ) {
+			add_post_type_support( $post_type, 'custom-fields' );
+		}
+	}
+}
+// Run before the REST routes are created from the post type settings (priority 10).
+// 投稿タイプの設定から REST ルートが作られる（優先度 10）より前に実行する。
+add_action( 'rest_api_init', 'vgjpm_add_rest_custom_fields_support', 5 );
+
+/**
  * Register post meta for all job posting fields so they are available via REST API.
  * すべての求人情報フィールドのポストメタを登録し、REST API経由でアクセス可能にする。
  *
@@ -161,7 +185,9 @@ function vgjpm_register_panel_meta() {
 		}
 	}
 }
-add_action( 'init', 'vgjpm_register_panel_meta' );
+// Run late so that post types registered by other plugins or themes on `init` already exist.
+// 他のプラグインやテーマが `init` で登録する投稿タイプが出そろってから実行する。
+add_action( 'init', 'vgjpm_register_panel_meta', 100 );
 
 /**
  * Enqueue the block editor panel script for job posting fields.

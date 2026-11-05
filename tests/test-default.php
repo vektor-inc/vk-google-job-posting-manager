@@ -534,6 +534,130 @@ class DefaultTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Job posting meta must be readable and writable through REST for every target
+	 * post type, even when the post type does not declare `custom-fields` support.
+	 * 求人情報のメタは、`custom-fields` サポートを宣言していない投稿タイプを含め、
+	 * すべての対象投稿タイプで REST から読み書きできなければならない。
+	 */
+	function test_vgjpm_register_panel_meta() {
+		global $wp_rest_server, $_wp_post_type_features;
+
+		$features_backup = $_wp_post_type_features;
+		$meta_keys       = array( 'vkjp_title', 'vkjp_description' );
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+
+		// 他所の投稿タイプ登録（init 優先度 10〜99）より後に実行されること。
+		// It must run after other plugins register their post types on init (priority 10 to 99).
+		$this->assertGreaterThan( 99, has_action( 'init', 'vgjpm_register_panel_meta' ) );
+
+		$test_cases = array(
+			array(
+				'test_condition_name' => '投稿（標準で custom-fields 対応）の場合 => meta が出て保存できる',
+				'post_type'           => 'post',
+				'register_args'       => null,
+				'expected_read'       => 'タイトル',
+				'expected_saved'      => 'saved',
+			),
+			array(
+				'test_condition_name' => '固定ページ（標準で custom-fields 対応）の場合 => meta が出て保存できる',
+				'post_type'           => 'page',
+				'register_args'       => null,
+				'expected_read'       => 'タイトル',
+				'expected_saved'      => 'saved',
+			),
+			array(
+				'test_condition_name' => '組み込みの job-posts（custom-fields 対応）の場合 => meta が出て保存できる',
+				'post_type'           => 'job-posts',
+				'register_args'       => 'builtin',
+				'expected_read'       => 'タイトル',
+				'expected_saved'      => 'saved',
+			),
+			array(
+				'test_condition_name' => 'custom-fields 非対応の他所で登録された投稿タイプの場合 => meta が出て保存できる',
+				'post_type'           => 'job_offer',
+				'register_args'       => array( 'supports' => array( 'title', 'editor' ) ),
+				'expected_read'       => 'タイトル',
+				'expected_saved'      => 'saved',
+			),
+			array(
+				'test_condition_name' => 'custom-fields 対応の他所で登録された投稿タイプの場合 => meta が出て保存できる',
+				'post_type'           => 'job_offer_cf',
+				'register_args'       => array( 'supports' => array( 'title', 'editor', 'custom-fields' ) ),
+				'expected_read'       => 'タイトル',
+				'expected_saved'      => 'saved',
+			),
+		);
+
+		foreach ( $test_cases as $case ) {
+			$post_type = $case['post_type'];
+
+			// 投稿タイプを登録して対象にする。
+			// Register the post type and make it a target.
+			if ( 'builtin' === $case['register_args'] ) {
+				update_option( 'vgjpm_create_jobpost_posttype', 'true' );
+				require_once dirname( __DIR__ ) . '/inc/custom-posttype-builder.php';
+				vgjpm_job_post_init();
+			} elseif ( is_array( $case['register_args'] ) ) {
+				register_post_type(
+					$post_type,
+					array_merge(
+						array(
+							'public'       => true,
+							'show_in_rest' => true,
+							'rest_base'    => $post_type,
+						),
+						$case['register_args']
+					)
+				);
+				update_option( 'vgjpm_post_type_display_customfields' . $post_type, 'true' );
+			} else {
+				update_option( 'vgjpm_post_type_display_customfields' . $post_type, 'true' );
+			}
+
+			vgjpm_register_panel_meta();
+
+			// REST サーバーを作り直す。
+			// Rebuild the REST server.
+			$wp_rest_server = null;
+			rest_get_server();
+
+			$post_id = self::factory()->post->create( array( 'post_type' => $post_type ) );
+			update_post_meta( $post_id, 'vkjp_title', $case['expected_read'] );
+			$route = '/wp/v2/' . get_post_type_object( $post_type )->rest_base . '/' . $post_id;
+
+			// 読み出し: meta に求人情報が含まれる。
+			// Read: the job posting meta is included.
+			$request = new WP_REST_Request( 'GET', $route );
+			$request->set_param( 'context', 'edit' );
+			$data = rest_do_request( $request )->get_data();
+			$this->assertArrayHasKey( 'meta', $data, $case['test_condition_name'] . '（meta キー）' );
+			$this->assertSame( $case['expected_read'], isset( $data['meta']['vkjp_title'] ) ? $data['meta']['vkjp_title'] : null, $case['test_condition_name'] . '（読み出し）' );
+
+			// 保存: meta を送るとサニタイズされて保存される。
+			// Save: meta sent in the request is sanitized and stored.
+			$request = new WP_REST_Request( 'POST', $route );
+			$request->set_body_params( array( 'meta' => array( 'vkjp_title' => '<b>saved</b>' ) ) );
+			rest_do_request( $request );
+			$this->assertSame( $case['expected_saved'], get_post_meta( $post_id, 'vkjp_title', true ), $case['test_condition_name'] . '（保存）' );
+
+			// 後片付け。
+			// Clean up.
+			foreach ( $meta_keys as $meta_key ) {
+				unregister_meta_key( 'post', $meta_key, $post_type );
+			}
+			wp_delete_post( $post_id, true );
+			delete_option( 'vgjpm_post_type_display_customfields' . $post_type );
+			delete_option( 'vgjpm_create_jobpost_posttype' );
+			if ( ! in_array( $post_type, array( 'post', 'page' ), true ) ) {
+				unregister_post_type( $post_type );
+			}
+			$_wp_post_type_features = $features_backup;
+		}
+
+		$wp_rest_server = null;
+	}
+
+	/**
 	 * A serialized object written straight into the database stays out of the
 	 * returned fields.
 	 * データベースに直接書き込まれたシリアライズ済みオブジェクトは、返り値に入らない。
