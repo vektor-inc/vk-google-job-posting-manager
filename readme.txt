@@ -46,6 +46,8 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
+[ Security Fix ] Added a visibility check when outputting job posting info.
+
 = 1.4.0 =
 [ Spec Change ] Raised the minimum required WordPress version to 6.7.
 [ Security Fix ] Added a limit to how deeply saved job posting field values are inspected.

@@ -220,7 +220,24 @@ function vgjpm_salary_and_currency( $args ) {
 	return apply_filters( 'vgjpm_salary_and_currency', $return );
 }
 
+/**
+ * Render the job posting info table of a post.
+ * 投稿の求人情報テーブルを出力する。
+ *
+ * Returns an empty string when the viewer may not see the post.
+ * 閲覧者がその投稿を見られない場合は空文字を返す。
+ *
+ * @param int    $post_id   Post ID. 0 means the current post. 投稿 ID。0 のときは現在の投稿。
+ * @param string $style     Block style. ブロックのスタイル。
+ * @param string $className Additional class name. 追加クラス名。
+ * @return string HTML of the table. テーブルの HTML。
+ */
 function vgjpm_render_job_posting_info( $post_id, $style, $className ) {
+	// Show nothing unless the viewer may see this post (status / password).
+	// 閲覧者がこの投稿を見られない場合（ステータス・パスワード）は何も出さない。
+	if ( ! vgjpm_can_view_job_post( $post_id ) ) {
+		return '';
+	}
 	$custom_fields = vgjpm_get_custom_fields( $post_id );
 
 	if ( ! isset( $custom_fields['vkjp_title'] ) ) {
