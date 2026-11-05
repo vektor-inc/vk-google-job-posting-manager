@@ -891,8 +891,9 @@ class DefaultTest extends WP_UnitTestCase {
 	 * @param array  $post_args Post arguments. 投稿の引数。
 	 * @param string $viewer    Viewer type. 閲覧者の種類。
 	 * @param bool   $expected  Whether vkjp_ fields are returned. vkjp_ 項目が返るか。
+	 * @param mixed  $password  Password sent with the request. リクエストで送るパスワード。
 	 */
-	function test_filter_rest_job_meta( $post_args, $viewer, $expected ) {
+	function test_filter_rest_job_meta( $post_args, $viewer, $expected, $password = null ) {
 		update_option( 'vgjpm_post_type_display_customfieldspost', 'true' );
 		vgjpm_register_panel_meta();
 		register_post_meta(
@@ -919,6 +920,9 @@ class DefaultTest extends WP_UnitTestCase {
 		foreach ( array( 'view', 'edit' ) as $context ) {
 			$request = new WP_REST_Request( 'GET', '/wp/v2/posts/' . $post_id );
 			$request->set_param( 'context', $context );
+			if ( null !== $password ) {
+				$request->set_param( 'password', $password );
+			}
 			$data = $wp_rest_server->dispatch( $request )->get_data();
 
 			// A viewer without edit rights cannot use the edit context at all.
@@ -956,13 +960,16 @@ class DefaultTest extends WP_UnitTestCase {
 		);
 		$publish  = array( 'post_status' => 'publish' );
 		return array(
-			'publish / guest'           => array( $publish, 'guest', true ),
-			'publish / subscriber'      => array( $publish, 'subscriber', true ),
-			'publish / editor'          => array( $publish, 'editor', true ),
-			'password / guest'          => array( $password, 'guest', false ),
-			'password / subscriber'     => array( $password, 'subscriber', false ),
-			'password / editor'         => array( $password, 'editor', true ),
-			'password / unlocked guest' => array( $password, 'unlocked', true ),
+			'publish / guest'               => array( $publish, 'guest', true ),
+			'publish / subscriber'          => array( $publish, 'subscriber', true ),
+			'publish / editor'              => array( $publish, 'editor', true ),
+			'password / guest'              => array( $password, 'guest', false ),
+			'password / subscriber'         => array( $password, 'subscriber', false ),
+			'password / editor'             => array( $password, 'editor', true ),
+			'password / unlocked guest'     => array( $password, 'unlocked', true ),
+			'password / guest + correct pw' => array( $password, 'guest', true, 'secret' ),
+			'password / guest + wrong pw'   => array( $password, 'guest', false, 'wrong' ),
+			'password / guest + array pw'   => array( $password, 'guest', false, array( 'secret' ) ),
 		);
 	}
 }

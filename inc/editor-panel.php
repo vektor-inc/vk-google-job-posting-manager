@@ -93,7 +93,7 @@ function vgjpm_register_panel_meta() {
 
 		// Strip job posting fields from the REST response for viewers who may not see the post.
 		// 閲覧できない閲覧者への REST 応答から求人情報フィールドを取り除く。
-		add_filter( 'rest_prepare_' . $post_type, 'vgjpm_filter_rest_job_meta', 10, 2 );
+		add_filter( 'rest_prepare_' . $post_type, 'vgjpm_filter_rest_job_meta', 10, 3 );
 
 		// Register string fields / 文字列フィールドの登録
 		foreach ( $string_fields as $key ) {
@@ -175,10 +175,15 @@ add_action( 'init', 'vgjpm_register_panel_meta' );
  * 投稿を編集できるユーザーには常に返すため、エディターパネルは従来どおり動作する。
  *
  * @param WP_REST_Response $response REST response. REST 応答。
+ * Viewers who send the correct post password with the request also keep the fields.
+ * リクエストで正しい投稿パスワードを送った閲覧者にも項目を残す。
+ *
+ * @param WP_REST_Response $response REST response. REST 応答。
  * @param WP_Post          $post     Post object. 投稿オブジェクト。
+ * @param WP_REST_Request  $request  REST request. REST リクエスト。
  * @return WP_REST_Response REST response. REST 応答。
  */
-function vgjpm_filter_rest_job_meta( $response, $post ) {
+function vgjpm_filter_rest_job_meta( $response, $post, $request ) {
 	// Editors keep every field.
 	// 編集権限のあるユーザーは全項目を取得できる。
 	if ( current_user_can( 'edit_post', $post->ID ) ) {
@@ -188,6 +193,13 @@ function vgjpm_filter_rest_job_meta( $response, $post ) {
 	// Viewers who may see the post keep every field.
 	// 閲覧できる閲覧者は全項目を取得できる。
 	if ( vgjpm_can_view_job_post( $post->ID ) ) {
+		return $response;
+	}
+
+	// Viewers who sent the correct post password keep every field.
+	// 正しい投稿パスワードを送った閲覧者は全項目を取得できる。
+	$request_password = $request['password'];
+	if ( '' !== $post->post_password && is_string( $request_password ) && hash_equals( $post->post_password, $request_password ) ) {
 		return $response;
 	}
 
