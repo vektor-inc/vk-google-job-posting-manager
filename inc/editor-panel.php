@@ -174,7 +174,6 @@ add_action( 'init', 'vgjpm_register_panel_meta' );
  * Users who can edit the post always get the fields, so the editor panel keeps working.
  * 投稿を編集できるユーザーには常に返すため、エディターパネルは従来どおり動作する。
  *
- * @param WP_REST_Response $response REST response. REST 応答。
  * Viewers who send the correct post password with the request also keep the fields.
  * リクエストで正しい投稿パスワードを送った閲覧者にも項目を残す。
  *
