@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class VK_Custom_Field_Builder_Flexible_Table {
 
-	public static $version = '0.1.0';
+	public static $version = '0.1.1';
 
 	/**
 	 * 入力フォームの生成
@@ -31,7 +31,9 @@ class VK_Custom_Field_Builder_Flexible_Table {
 		// print '</pre>';
 
 		$nonce_name = 'noncename__' . $custom_fields_array['field_name'];
-		wp_nonce_field( wp_create_nonce( __FILE__ ), $nonce_name );
+		// アクション名は save_cf_value() の wp_verify_nonce() と同じ固定文字列にすること。
+		// 時刻で変わる値をアクション名にすると、発行から 12 時間の区切りを跨いだ保存が通らなくなる.
+		wp_nonce_field( 'vk_custom_field_flexible_table', $nonce_name );
 
 		global $post;
 		// 既に保存されている値を取得
@@ -149,12 +151,21 @@ class VK_Custom_Field_Builder_Flexible_Table {
 		$noncename__bill_fields = isset( $_POST[ $nonce_name ] ) ? sanitize_text_field( wp_unslash( $_POST[ $nonce_name ] ) ) : null;
 
 		// nonce を確認し、値が書き換えられていれば、何もしない（CSRF対策）
-		if ( ! wp_verify_nonce( $noncename__bill_fields, wp_create_nonce( __FILE__ ) ) ) {
+		if ( ! wp_verify_nonce( $noncename__bill_fields, 'vk_custom_field_flexible_table' ) ) {
 			return;
 		}
 
 		// 自動保存ルーチンかどうかチェック。そうだった場合は何もしない（記事の自動保存処理として呼び出された場合の対策）
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return;
+		}
+
+		if ( ! $post instanceof WP_Post ) {
+			return;
+		}
+
+		// 権限の確認（この投稿を編集できるユーザーだけが保存できる）.
+		if ( ! current_user_can( 'edit_post', $post->ID ) ) {
 			return;
 		}
 

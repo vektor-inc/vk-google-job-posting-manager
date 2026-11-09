@@ -46,6 +46,7 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
+[ Security Fix ] Added a permission check when saving job posting fields from the editor.
 = 1.4.1 =
 [ Bug Fix ] Fixed an issue where the Job Posting sidebar panel showed empty fields for existing posts of custom post types registered by other plugins or themes.
 [ Security Fix ] Added a visibility check when outputting job posting info.
