@@ -8,23 +8,23 @@
     "packages": [
         {
             "name": "alcohol/iso4217",
-            "version": "4.2.0",
+            "version": "4.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/alcohol/iso4217.git",
-                "reference": "3ce6e02fbc0501f949ffdad327f5851c04367f4b"
+                "reference": "833d8d4fc07a1a1ab8f5dcb616fd5111d23d0687"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alcohol/iso4217/zipball/3ce6e02fbc0501f949ffdad327f5851c04367f4b",
-                "reference": "3ce6e02fbc0501f949ffdad327f5851c04367f4b",
+                "url": "https://api.github.com/repos/alcohol/iso4217/zipball/833d8d4fc07a1a1ab8f5dcb616fd5111d23d0687",
+                "reference": "833d8d4fc07a1a1ab8f5dcb616fd5111d23d0687",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9.5"
+                "phpunit/phpunit": "^9.5.28 || ^10.5.58 || ^11.5.43 || ^12.4.2 || ^13.4.5"
             },
             "type": "library",
             "extra": {
@@ -35,7 +35,11 @@
             "autoload": {
                 "psr-4": {
                     "Alcohol\\": "."
-                }
+                },
+                "exclude-from-classmap": [
+                    "/tests/",
+                    "/tools/"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -48,7 +52,7 @@
                 }
             ],
             "description": "ISO 4217 PHP Library",
-            "homepage": "http://alcohol.github.io/iso4217/",
+            "homepage": "https://alcohol.github.io/iso4217/",
             "keywords": [
                 "4217",
                 "ISO 4217",
@@ -66,7 +70,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-07-01T09:50:00+00:00"
+            "time": "2026-11-02T15:26:35+00:00"
         }
     ],
     "packages-dev": [
