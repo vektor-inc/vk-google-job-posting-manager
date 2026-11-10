@@ -15,7 +15,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 	class VK_Custom_Field_Builder {
 
-		public static $version = '0.2.4';
+		public static $version = '0.2.5';
 
 		// define( 'Bill_URL', get_template_directory_uri() );
 		public static function init() {
@@ -124,7 +124,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 			}
 			if ( isset( $_POST['noncename__fields'] ) && null !== $posted_value ) {
 				$noncename__fields = sanitize_text_field( wp_unslash( $_POST['noncename__fields'] ) );
-				if ( ! wp_verify_nonce( $noncename__fields, wp_create_nonce( __FILE__ ) ) ) {
+				if ( ! wp_verify_nonce( $noncename__fields, 'vk_custom_field_builder' ) ) {
 					return $value;
 				}
 				if ( isset( $type ) && $type == 'textarea' ) {
@@ -149,7 +149,9 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 		*/
 		public static function form_table( $custom_fields_array, $befor_items = '', $echo = true, $options = array() ) {
 
-			wp_nonce_field( wp_create_nonce( __FILE__ ), 'noncename__fields' );
+			// アクション名は save_cf_value() の wp_verify_nonce() と同じ固定文字列にすること。
+			// 時刻で変わる値をアクション名にすると、発行から 12 時間の区切りを跨いだ保存が通らなくなる.
+			wp_nonce_field( 'vk_custom_field_builder', 'noncename__fields' );
 
 			global $post;
 			global $vgjpm_custom_field_builder_url;
@@ -367,7 +369,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 			$noncename__fields = isset( $_POST['noncename__fields'] ) ? sanitize_text_field( wp_unslash( $_POST['noncename__fields'] ) ) : null;
 
 			// nonce を確認し、値が書き換えられていれば、何もしない（CSRF対策）
-			if ( ! wp_verify_nonce( $noncename__fields, wp_create_nonce( __FILE__ ) ) ) {
+			if ( ! wp_verify_nonce( $noncename__fields, 'vk_custom_field_builder' ) ) {
 				return;
 			}
 
@@ -376,9 +378,18 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				return;
 			}
 
+			if ( ! $post instanceof WP_Post ) {
+				return;
+			}
+
+			// 権限の確認（この投稿を編集できるユーザーだけが保存できる）.
+			if ( ! current_user_can( 'edit_post', $post->ID ) ) {
+				return;
+			}
+
 			foreach ( $custom_fields_array as $key => $value ) {
 
-				$field_value = null;
+				$field_value = '';
 				// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Value is sanitized below.
 				if ( isset( $_POST[ $key ] ) ) {
 					$field_value = wp_unslash( $_POST[ $key ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below.
@@ -387,10 +398,10 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 				// データが空だったら入れる
 				if ( get_post_meta( $post->ID, $key ) == '' ) {
-					add_post_meta( $post->ID, $key, $field_value, true );
+					add_post_meta( $post->ID, $key, wp_slash( $field_value ), true );
 					// 今入ってる値と違ってたらアップデートする
 				} elseif ( $field_value != get_post_meta( $post->ID, $key, true ) ) {
-					update_post_meta( $post->ID, $key, $field_value );
+					update_post_meta( $post->ID, $key, wp_slash( $field_value ) );
 					// 入力がなかったら消す
 				} elseif ( $field_value == '' ) {
 					delete_post_meta( $post->ID, $key, get_post_meta( $post->ID, $key, true ) );
@@ -412,6 +423,12 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 					return wp_kses_post( $field_value );
 				case 'url':
 					return esc_url_raw( $field_value );
+				case 'image':
+					if ( ! is_numeric( $field_value ) ) {
+						return '';
+					}
+					$image_id = absint( $field_value );
+					return $image_id ? (string) $image_id : '';
 				default:
 					return sanitize_text_field( $field_value );
 			}
