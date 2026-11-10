@@ -314,6 +314,11 @@ function vgjpm_render_form_input( $common_customfields ) {
 
 				$saved = isset( $options[ $key ] ) ? $options[ $key ] : '';
 
+				// 通貨が未保存のときだけ、言語に応じた初期値を選択状態にする。
+				if ( 'vkjp_currency' === $key && empty( $saved ) ) {
+					$saved = vgjpm_get_initial_currency( '', $saved, $value['options'] );
+				}
+
 				if ( $saved == $option_value ) {
 					$selected = ' selected="selected"';
 				} else {

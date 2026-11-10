@@ -290,6 +290,16 @@ function vgjpm_enqueue_editor_panel() {
 		);
 	}
 
+	// 通貨が未設定のときの初期値（言語に対応する通貨）と、共通設定の通貨。
+	// Default currency for unset state, and the common-settings currency.
+	$currency_map = array();
+	foreach ( $currencies as $c ) {
+		$currency_map[ $c['value'] ] = $c['label'];
+	}
+	$common_options   = vgjpm_get_common_field_options();
+	$common_currency  = isset( $common_options['vkjp_currency'] ) ? $common_options['vkjp_currency'] : '';
+	$default_currency = vgjpm_get_default_currency( apply_filters( 'vgjpm_currency_options', $currency_map ) );
+
 	// Pass i18n strings and field options to JavaScript.
 	// i18n文字列とフィールドオプションをJavaScriptに渡す。
 	wp_localize_script(
@@ -347,6 +357,8 @@ function vgjpm_enqueue_editor_panel() {
 				'otherType'           => __( 'OTHER', 'vk-google-job-posting-manager' ),
 			),
 			'currencies' => $currencies,
+			'defaultCurrency' => $default_currency,
+			'commonCurrency'  => is_string( $common_currency ) ? $common_currency : '',
 		)
 	);
 }
