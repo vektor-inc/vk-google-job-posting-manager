@@ -297,8 +297,24 @@ function vgjpm_enqueue_editor_panel() {
 		$currency_map[ $c['value'] ] = $c['label'];
 	}
 	$common_options   = vgjpm_get_common_field_options();
-	$common_currency  = isset( $common_options['vkjp_currency'] ) ? $common_options['vkjp_currency'] : '';
+	$common_currency  = isset( $common_options['vkjp_currency'] ) && is_string( $common_options['vkjp_currency'] ) ? $common_options['vkjp_currency'] : '';
 	$default_currency = vgjpm_get_default_currency( apply_filters( 'vgjpm_currency_options', $currency_map ) );
+
+	// Add an empty choice when an unset currency is shown as empty; without it, the first currency (UAE Dirham) is shown although nothing is saved.
+	// It is not added when the language default (JPY) is shown, because choosing it would switch back to JPY.
+	// Keep this condition in line with the shown value in src/editor-panel/index.js ( commonCurrency ? '' : defaultCurrency ).
+	// 未設定の通貨を空として表示する場合だけ、空の選択肢を足す（無いと、何も保存されていないのに先頭の通貨 UAE Dirham が表示される）。
+	// 言語に応じた初期値（JPY）を表示する場合は足さない（選んでも JPY の表示に戻るため）。
+	// この条件は src/editor-panel/index.js の表示値の式（commonCurrency ? '' : defaultCurrency）とそろえること。
+	if ( '' !== $common_currency || '' === $default_currency ) {
+		array_unshift(
+			$currencies,
+			array(
+				'value' => '',
+				'label' => '—',
+			)
+		);
+	}
 
 	// Pass i18n strings and field options to JavaScript.
 	// i18n文字列とフィールドオプションをJavaScriptに渡す。
@@ -358,7 +374,7 @@ function vgjpm_enqueue_editor_panel() {
 			),
 			'currencies' => $currencies,
 			'defaultCurrency' => $default_currency,
-			'commonCurrency'  => is_string( $common_currency ) ? $common_currency : '',
+			'commonCurrency'  => $common_currency,
 		)
 	);
 }

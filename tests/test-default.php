@@ -1234,6 +1234,8 @@ class DefaultTest extends WP_UnitTestCase {
 	 * Provide locale x post value x common value cases.
 	 * 言語 × 投稿の保存値 × 共通設定の保存値の組み合わせ表を返す。
 	 * 期待値: 初期値が入るのは「日本語・投稿も共通設定も通貨が空」のときだけ。
+	 * ブロックエディターのサイドバーに空の選択肢が無いのは「日本語・共通設定が空」のときだけ（初期値の JPY を表示するため）。
+	 * Expected: the block editor sidebar has no empty choice only on Japanese sites without a common currency, because JPY is shown.
 	 *
 	 * @return array
 	 */
@@ -1248,6 +1250,7 @@ class DefaultTest extends WP_UnitTestCase {
 						$post_value,
 						$common_value,
 						( 'ja' === $locale && $is_empty_both ) ? 'JPY' : '',
+						! ( 'ja' === $locale && 'unsaved' === $common_value ),
 					);
 				}
 			}
@@ -1256,8 +1259,10 @@ class DefaultTest extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Test vgjpm_get_initial_currency() and the three screens' selected currency.
+	 * Test vgjpm_get_initial_currency() and the selected currency on four screens.
+	 * The four screens are the common settings page, the classic editor, the block editor sidebar, and the public output.
 	 * 初期値が入るのは日本語かつ両方空のときだけで、保存済みの値・他の言語・公開側の出力は変わらないこと。
+	 * 4 画面（共通設定ページ・クラシックエディター・ブロックエディターのサイドバー・公開側の出力）で確かめる。
 	 *
 	 * @dataProvider provide_currency_combination_cases
 	 *
@@ -1265,8 +1270,9 @@ class DefaultTest extends WP_UnitTestCase {
 	 * @param string $post_value   投稿の保存値（unsaved は未保存）。
 	 * @param string $common_value 共通設定の保存値（unsaved は未保存）。
 	 * @param string $expected_initial 期待する初期値。
+	 * @param bool   $expected_has_empty_option Whether the sidebar currency field has an empty choice. サイドバーの通貨欄に空の選択肢があるか。
 	 */
-	public function test_vgjpm_get_initial_currency( $locale, $post_value, $common_value, $expected_initial ) {
+	public function test_vgjpm_get_initial_currency( $locale, $post_value, $common_value, $expected_initial, $expected_has_empty_option ) {
 		$this->set_site_locale( $locale );
 
 		// 共通設定（unsaved のときは通貨以外の項目だけ保存して、旧形式の移行を避ける）。
@@ -1312,10 +1318,74 @@ class DefaultTest extends WP_UnitTestCase {
 		sort( $classic_selected );
 		$this->assertSame( $classic_expected, $classic_selected );
 
+		// ブロックエディター: 空の選択肢の有無と、JS と同じ式で求めた表示値が選択肢にあること（無いと先頭の通貨が表示される）。
+		// Block editor: whether the empty choice exists, and that the value shown by the same expression as JS is one of the choices.
+		$panel_data = $this->get_editor_panel_data();
+		$this->assertArrayHasKey( 'currencies', $panel_data );
+		$panel_values = wp_list_pluck( $panel_data['currencies'], 'value' );
+		$panel_shown  = '' !== $post_currency ? $post_currency : ( '' !== $panel_data['commonCurrency'] ? '' : $panel_data['defaultCurrency'] );
+		$this->assertSame( $expected_has_empty_option, in_array( '', $panel_values, true ) );
+		$this->assertContains( $panel_shown, $panel_values );
+		if ( $expected_has_empty_option ) {
+			// 空の選択肢は、給与サイクルと同じ表記で先頭に 1 つだけ置く。
+			// The empty choice is placed only once at the top, with the same label as the salary cycle.
+			$this->assertSame(
+				array(
+					'value' => '',
+					'label' => '—',
+				),
+				$panel_data['currencies'][0]
+			);
+			$this->assertSame( 1, count( array_keys( $panel_values, '', true ) ) );
+		}
+
 		// 公開側の出力は変わらない（両方空のとき通貨は空のまま）。
 		$output = vgjpm_use_common_values( vgjpm_get_custom_fields( $post_id ), 'json' );
 		// 投稿に空文字が保存されているときは、従来どおり空文字が出力される（共通設定は使われない）。
 		$this->assertSame( 'unsaved' === $post_value ? $common_currency : $post_value, $output['vkjp_currency'] );
+	}
+
+	/**
+	 * Run vgjpm_enqueue_editor_panel() on the block editor screen for posts and return the data passed to JavaScript.
+	 * 投稿のブロックエディター画面で vgjpm_enqueue_editor_panel() を実行し、JavaScript に渡すデータを返す。
+	 *
+	 * The registered script and the current screen are restored before returning, so that other tests are not affected.
+	 * 他のテストに影響しないよう、登録したスクリプトと現在の画面は戻してから返す。
+	 *
+	 * @return array Data passed to JavaScript (vgjpmPanelData), or an empty array if it is not found. JavaScript に渡すデータ（vgjpmPanelData）。見つからなければ空の配列。
+	 */
+	private function get_editor_panel_data() {
+		// 現在の画面を退避して、投稿のブロックエディター画面にする。
+		// Back up the current screen and switch to the block editor screen for posts.
+		$screen_backup = array(
+			'current_screen' => isset( $GLOBALS['current_screen'] ) ? $GLOBALS['current_screen'] : null,
+			'typenow'        => isset( $GLOBALS['typenow'] ) ? $GLOBALS['typenow'] : null,
+			'taxnow'         => isset( $GLOBALS['taxnow'] ) ? $GLOBALS['taxnow'] : null,
+		);
+		set_current_screen( 'post' );
+		get_current_screen()->is_block_editor( true );
+		update_option( 'vgjpm_post_type_display_customfieldspost', 'true' );
+
+		// パネルのスクリプトを読み込み、JavaScript に渡すデータを取り出す。
+		// Enqueue the panel script and read the data passed to JavaScript.
+		vgjpm_enqueue_editor_panel();
+		$script = wp_scripts()->get_data( 'vgjpm-editor-panel', 'data' );
+
+		// 登録したスクリプトと現在の画面を戻す（スクリプトが残ると、次のテストでデータが追記されるため）。
+		// Restore the registered script and the current screen; a left script would get its data appended in the next test.
+		wp_dequeue_script( 'vgjpm-editor-panel' );
+		wp_deregister_script( 'vgjpm-editor-panel' );
+		foreach ( $screen_backup as $name => $value ) {
+			$GLOBALS[ $name ] = $value; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Restores the screen globals changed by set_current_screen().
+		}
+
+		// 「var vgjpmPanelData = {...};」から JSON を取り出して配列に戻す。
+		// Extract the JSON from "var vgjpmPanelData = {...};" and decode it.
+		if ( ! is_string( $script ) || ! preg_match( '/^var vgjpmPanelData = (.*);$/s', $script, $matches ) ) {
+			return array();
+		}
+		$data = json_decode( $matches[1], true );
+		return is_array( $data ) ? $data : array();
 	}
 
 	/**
