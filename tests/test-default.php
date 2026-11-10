@@ -1157,4 +1157,181 @@ class DefaultTest extends WP_UnitTestCase {
 
 		return $cases;
 	}
+
+	/**
+	 * Set the site locale for a test (reset automatically by WP_UnitTestCase, which restores $wp_filter).
+	 * テスト用にサイトの言語を設定する（WP_UnitTestCase が $wp_filter を自動復元する）。
+	 *
+	 * @param string $locale ロケール。
+	 * @return void
+	 */
+	private function set_site_locale( $locale ) {
+		add_filter(
+			'locale',
+			function () use ( $locale ) {
+				return $locale;
+			}
+		);
+	}
+
+	/**
+	 * Provide locale x options cases for the default currency.
+	 * 言語 × 選択肢の組み合わせ表を返す。
+	 *
+	 * @return array
+	 */
+	public function provide_default_currency_cases() {
+		$full    = array(
+			'AED' => 'UAE Dirham',
+			'JPY' => 'Japanese Yen',
+			'USD' => 'US Dollar',
+		);
+		$no_jpy  = array(
+			'AED' => 'UAE Dirham',
+			'USD' => 'US Dollar',
+		);
+		$cases   = array();
+		$locales = array(
+			'ja'    => 'JPY',
+			'ja_JP' => 'JPY',
+			'en_US' => '',
+			'fr_FR' => '',
+			'de_DE' => '',
+		);
+		foreach ( $locales as $locale => $expected ) {
+			$cases[ $locale . ' / full options' ]   = array( $locale, $full, $expected );
+			$cases[ $locale . ' / options w/o JPY' ] = array( $locale, $no_jpy, '' );
+			$cases[ $locale . ' / empty options' ]   = array( $locale, array(), '' );
+		}
+		return $cases;
+	}
+
+	/**
+	 * Test vgjpm_get_default_currency() maps the site language to a currency.
+	 * サイトの言語から通貨の初期値が引けること（ja のみ JPY・選択肢に無ければ空）。
+	 *
+	 * @dataProvider provide_default_currency_cases
+	 *
+	 * @param string $locale   ロケール。
+	 * @param array  $options  選択肢。
+	 * @param string $expected 期待する通貨コード。
+	 */
+	public function test_vgjpm_get_default_currency( $locale, $options, $expected ) {
+		$this->set_site_locale( $locale );
+		$this->assertSame( $expected, vgjpm_get_default_currency( $options ) );
+
+		// 対応表はフィルターで書き換えられる。
+		add_filter(
+			'vgjpm_default_currency_map',
+			function () {
+				return array( 'fr' => 'USD' );
+			}
+		);
+		$this->assertSame( 0 === strpos( $locale, 'fr' ) && isset( $options['USD'] ) ? 'USD' : '', vgjpm_get_default_currency( $options ) );
+	}
+
+	/**
+	 * Provide locale x post value x common value cases.
+	 * 言語 × 投稿の保存値 × 共通設定の保存値の組み合わせ表を返す。
+	 * 期待値: 初期値が入るのは「日本語・投稿も共通設定も通貨が空」のときだけ。
+	 *
+	 * @return array
+	 */
+	public function provide_currency_combination_cases() {
+		$cases = array();
+		foreach ( array( 'ja', 'en_US' ) as $locale ) {
+			foreach ( array( 'unsaved', '', 'AED', 'USD' ) as $post_value ) {
+				foreach ( array( 'unsaved', 'AED', 'USD' ) as $common_value ) {
+					$is_empty_both = ( 'unsaved' === $post_value || '' === $post_value ) && 'unsaved' === $common_value;
+					$cases[ "$locale / post:$post_value / common:$common_value" ] = array(
+						$locale,
+						$post_value,
+						$common_value,
+						( 'ja' === $locale && $is_empty_both ) ? 'JPY' : '',
+					);
+				}
+			}
+		}
+		return $cases;
+	}
+
+	/**
+	 * Test vgjpm_get_initial_currency() and the three screens' selected currency.
+	 * 初期値が入るのは日本語かつ両方空のときだけで、保存済みの値・他の言語・公開側の出力は変わらないこと。
+	 *
+	 * @dataProvider provide_currency_combination_cases
+	 *
+	 * @param string $locale   ロケール。
+	 * @param string $post_value   投稿の保存値（unsaved は未保存）。
+	 * @param string $common_value 共通設定の保存値（unsaved は未保存）。
+	 * @param string $expected_initial 期待する初期値。
+	 */
+	public function test_vgjpm_get_initial_currency( $locale, $post_value, $common_value, $expected_initial ) {
+		$this->set_site_locale( $locale );
+
+		// 共通設定（unsaved のときは通貨以外の項目だけ保存して、旧形式の移行を避ける）。
+		$common = array( 'vkjp_name' => 'Company' );
+		if ( 'unsaved' !== $common_value ) {
+			$common['vkjp_currency'] = $common_value;
+		}
+		update_option( 'vkjpm_common_fields', $common );
+
+		// 投稿。
+		$post_id = $this->factory->post->create( array( 'post_type' => 'post' ) );
+		if ( 'unsaved' !== $post_value ) {
+			update_post_meta( $post_id, 'vkjp_currency', $post_value );
+		}
+
+		$options = array(
+			'AED' => 'UAE Dirham',
+			'JPY' => 'Japanese Yen',
+			'USD' => 'US Dollar',
+		);
+		$post_currency   = get_post_meta( $post_id, 'vkjp_currency', true );
+		$common_currency = isset( $common['vkjp_currency'] ) ? $common['vkjp_currency'] : '';
+		$this->assertSame( $expected_initial, vgjpm_get_initial_currency( $post_currency, $common_currency, $options ) );
+
+		// 共通設定ページ: 選択状態は、保存値があればその値、無ければ初期値。
+		$common_fields = vgjpm_get_common_customfields_config();
+		$common_html   = vgjpm_render_form_input( array( 'vkjp_currency' => $common_fields['vkjp_currency'] ) );
+		$common_expected = '' !== $common_currency ? array( $common_currency ) : ( 'ja' === $locale ? array( 'JPY' ) : array() );
+		$this->assertSame( $common_expected, $this->get_selected_values( $common_html, 'name="vkjpm_common_fields[vkjp_currency]"' ) );
+
+		// クラシックエディター: 保存済みの値は変えず、両方空のときだけ初期値が選択状態になる。
+		global $post;
+		$post = get_post( $post_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		ob_start();
+		VGJPM_Custom_Field_Job_Post::fields_form();
+		$classic_html = ob_get_clean();
+		$classic_expected = array_values( array_unique( array_filter( array( $post_currency, $common_currency ) ) ) );
+		if ( '' !== $expected_initial ) {
+			$classic_expected = array( $expected_initial );
+		}
+		sort( $classic_expected );
+		$classic_selected = $this->get_selected_values( $classic_html, 'id="vkjp_currency"' );
+		sort( $classic_selected );
+		$this->assertSame( $classic_expected, $classic_selected );
+
+		// 公開側の出力は変わらない（両方空のとき通貨は空のまま）。
+		$output = vgjpm_use_common_values( vgjpm_get_custom_fields( $post_id ), 'json' );
+		// 投稿に空文字が保存されているときは、従来どおり空文字が出力される（共通設定は使われない）。
+		$this->assertSame( 'unsaved' === $post_value ? $common_currency : $post_value, $output['vkjp_currency'] );
+	}
+
+	/**
+	 * Get the selected option values of the select that contains the given attribute.
+	 * 指定した属性を持つ select の、選択状態の option の値を返す。
+	 *
+	 * @param string $html      HTML。
+	 * @param string $select_attr select タグに含まれる属性。
+	 * @return array 選択状態の値。
+	 */
+	private function get_selected_values( $html, $select_attr ) {
+		$selected = array();
+		if ( ! preg_match( '/<select[^>]*' . preg_quote( $select_attr, '/' ) . '[^>]*>(.*?)<\/select>/s', $html, $m ) ) {
+			return $selected;
+		}
+		preg_match_all( '/<option value="([^"]*)"[^>]*selected/', $m[1], $opts );
+		return $opts[1];
+	}
 }

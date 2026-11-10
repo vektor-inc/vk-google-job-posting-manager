@@ -24,6 +24,9 @@ import { MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
 const data = window.vgjpmPanelData || {};
 const i18n = data.i18n || {};
 const currencies = data.currencies || [];
+// 言語に対応する通貨の初期値と、共通設定の通貨
+const defaultCurrency = data.defaultCurrency || '';
+const commonCurrency = data.commonCurrency || '';
 
 // 雇用形態の選択肢一覧
 const employmentTypes = [
@@ -71,7 +74,19 @@ const JobPostingPanelsInner = ( { postType } ) => {
 	 * @param {string} key   メタキー
 	 * @param {*}      value 設定する値
 	 */
-	const update = ( key, value ) => setMeta( { ...meta, [ key ]: value } );
+	const update = ( key, value ) => {
+		const next = { ...meta, [ key ]: value };
+		// 投稿にも共通設定にも通貨が無いときだけ、画面に表示している初期値も一緒に保存する
+		if (
+			key !== 'vkjp_currency' &&
+			defaultCurrency &&
+			! meta?.vkjp_currency &&
+			! commonCurrency
+		) {
+			next.vkjp_currency = defaultCurrency;
+		}
+		setMeta( next );
+	};
 
 	/**
 	 * 配列型メタデータの値をトグルする
@@ -179,7 +194,10 @@ const JobPostingPanelsInner = ( { postType } ) => {
 				/>
 				<SelectControl
 					label={ i18n.currency || 'Currency' }
-					value={ meta?.vkjp_currency || '' }
+					value={
+						meta?.vkjp_currency ||
+						( commonCurrency ? '' : defaultCurrency )
+					}
 					options={ currencies }
 					onChange={ ( v ) => update( 'vkjp_currency', v ) }
 				/>

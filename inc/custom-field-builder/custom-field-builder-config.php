@@ -60,6 +60,15 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 		$custom_fields_array = self::custom_fields_array();
 		$befor_custom_fields = '';
 		$field_options = vgjpm_get_common_field_options();
+
+		// 投稿にも共通設定にも通貨が無いときだけ、言語に応じた初期値を選択状態にする。
+		$post_currency    = get_post_meta( get_the_ID(), 'vkjp_currency', true );
+		$common_currency  = isset( $field_options['vkjp_currency'] ) ? $field_options['vkjp_currency'] : '';
+		$initial_currency = vgjpm_get_initial_currency( $post_currency, $common_currency, $custom_fields_array['vkjp_currency']['options'] );
+		if ( '' !== $initial_currency ) {
+			$field_options['vkjp_currency'] = $initial_currency;
+		}
+
 		echo '<ul>';
 		echo '<li>' . esc_html__( 'Please fill in recruitment information for Google Job Posting.', 'vk-google-job-posting-manager' ) . '</li>';
 		echo '<li>' . esc_html__( 'If you do not fill in this form that, common settings will apply.', 'vk-google-job-posting-manager' ) . ' [ <a href="' . esc_url( admin_url( 'options-general.php?page=vgjpm_settings' ) ) . '" target="_blank" rel="noopener noreferrer">' . esc_html__( 'Common Settings', 'vk-google-job-posting-manager' ) . '</a> ]</li>';

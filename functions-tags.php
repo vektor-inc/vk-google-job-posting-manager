@@ -8,6 +8,8 @@ vgjpm_get_raw_post_meta();
 vgjpm_maybe_unserialize_without_object();
 vgjpm_contains_object();
 vgjpm_use_common_values();
+vgjpm_get_default_currency();
+vgjpm_get_initial_currency();
 vgjpm_array_to_string();
 vgjpm_image_filter_id_to_url();
 vgjpm_sanitize_arr();
@@ -299,6 +301,58 @@ function vgjpm_use_common_values( $custom_fields, $output_type ) {
 	}
 
 	return $custom_fields;
+}
+
+
+/**
+ * サイトの言語に対応する通貨コードの初期値を返す。
+ * 対応表は ja → JPY のみ。他の言語は空文字（従来どおり）。
+ * サイトの言語は get_locale() を使う（ユーザーのプロフィール言語ではない）。
+ *
+ * @param array $currency_options 選択肢（通貨コード => 通貨名。vgjpm_currency_options フィルター適用後のもの）。
+ * @return string 通貨コード。対応が無い・選択肢に無い場合は空文字。
+ */
+function vgjpm_get_default_currency( $currency_options ) {
+	// 言語コード（ja_JP → ja）に直し、対応表から引く。
+	$locale   = get_locale();
+	$language = strtolower( strtok( str_replace( '-', '_', $locale ), '_' ) );
+
+	/**
+	 * 言語から通貨コードの初期値を引く対応表。
+	 *
+	 * @param array $map 言語コード => 通貨コード。
+	 */
+	$map = apply_filters( 'vgjpm_default_currency_map', array( 'ja' => 'JPY' ) );
+
+	if ( ! is_array( $map ) || empty( $map[ $language ] ) || ! is_string( $map[ $language ] ) ) {
+		return '';
+	}
+	$currency = $map[ $language ];
+
+	// 選択肢に無い通貨は初期値にしない。
+	if ( ! is_array( $currency_options ) || ! array_key_exists( $currency, $currency_options ) ) {
+		return '';
+	}
+
+	return $currency;
+}
+
+/**
+ * 投稿にも共通設定にも通貨が入っていないときだけ、初期選択する通貨コードを返す。
+ * 保存済みの値がある場合は空文字を返し、既存の動作を変えない。
+ *
+ * @param mixed $post_currency   投稿に保存されている通貨（未保存は空文字・null）。
+ * @param mixed $common_currency 共通設定に保存されている通貨（未保存は空文字・null）。
+ * @param array $currency_options 選択肢（通貨コード => 通貨名）。
+ * @return string 初期選択する通貨コード。該当しなければ空文字。
+ */
+function vgjpm_get_initial_currency( $post_currency, $common_currency, $currency_options ) {
+	// どちらかに値があるときは何もしない（AED など保存済みの値を変えない）。
+	if ( ! empty( $post_currency ) || ! empty( $common_currency ) ) {
+		return '';
+	}
+
+	return vgjpm_get_default_currency( $currency_options );
 }
 
 
