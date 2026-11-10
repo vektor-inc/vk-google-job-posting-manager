@@ -758,6 +758,125 @@ class DefaultTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Test that save_cf_value() keeps an attachment ID or an http / https URL in the image field, and saves nothing else.
+	 * save_cf_value() が、画像フィールド（会社ロゴ）の添付 ID と http / https の URL は保存し、それ以外は保存しないこと。
+	 *
+	 * @return void
+	 */
+	public function test_save_cf_value() {
+		$admin_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$old_url  = 'https://example.com/old-logo.png';
+
+		// 会社ロゴの項目だけを、プラグインの設定のまま保存対象にする。
+		// Save only the logo field, using the plugin's own field settings.
+		$all_fields = VGJPM_Custom_Field_Job_Post::custom_fields_array();
+		$fields     = array( 'vkjp_logo' => $all_fields['vkjp_logo'] );
+
+		$test_cases = array(
+			array(
+				'test_condition_name' => 'URL が保存済みの投稿を、同じ URL のまま更新 => URL が残る',
+				'saved'               => 'https://example.com/logo.png',
+				'posted'              => 'https://example.com/logo.png',
+				'expected'            => 'https://example.com/logo.png',
+			),
+			array(
+				'test_condition_name' => 'http の URL を送信 => そのまま保存される',
+				'saved'               => '',
+				'posted'              => 'http://example.com/logo.png',
+				'expected'            => 'http://example.com/logo.png',
+			),
+			array(
+				'test_condition_name' => '前後に空白がある URL を送信 => 空白を除いて保存される',
+				'saved'               => '',
+				'posted'              => ' https://example.com/logo.png ',
+				'expected'            => 'https://example.com/logo.png',
+			),
+			array(
+				'test_condition_name' => '添付 ID が保存済みの投稿を、同じ ID のまま更新 => ID が残る',
+				'saved'               => '4',
+				'posted'              => '4',
+				'expected'            => '4',
+			),
+			array(
+				'test_condition_name' => '添付 ID を送信 => ID が保存される',
+				'saved'               => $old_url,
+				'posted'              => '12',
+				'expected'            => '12',
+			),
+			array(
+				'test_condition_name' => '添付 ID に 0 を送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => '0',
+				'expected'            => '',
+			),
+			array(
+				'test_condition_name' => 'script タグを送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => '<script>alert(1)</script>',
+				'expected'            => '',
+			),
+			array(
+				'test_condition_name' => 'javascript: で始まる値を送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => 'javascript:alert(1)',
+				'expected'            => '',
+			),
+			array(
+				'test_condition_name' => 'http / https 以外のスキームの URL を送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => 'ftp://example.com/logo.png',
+				'expected'            => '',
+			),
+			array(
+				'test_condition_name' => 'スキームの無い URL を送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => '//example.com/logo.png',
+				'expected'            => '',
+			),
+			array(
+				'test_condition_name' => 'URL でも添付 ID でもない文字列を送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => 'not-a-logo',
+				'expected'            => '',
+			),
+			array(
+				'test_condition_name' => '空で送信 => 空になる',
+				'saved'               => $old_url,
+				'posted'              => '',
+				'expected'            => '',
+			),
+		);
+
+		foreach ( $test_cases as $case ) {
+			// 保存済みの値を入れた投稿を用意する。
+			// Prepare a post that already has the saved value.
+			$post_id = self::factory()->post->create( array( 'post_author' => $admin_id ) );
+			if ( '' !== $case['saved'] ) {
+				update_post_meta( $post_id, 'vkjp_logo', $case['saved'] );
+			}
+
+			global $post;
+			$post = get_post( $post_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
+			// クラシックエディターの「更新」と同じく、nonce 付きで値を送信して保存する。
+			// Submit the value with the nonce, as the classic editor does when the post is updated.
+			wp_set_current_user( $admin_id );
+			$_POST = array(
+				'noncename__fields' => wp_create_nonce( 'vk_custom_field_builder' ),
+				'vkjp_logo'         => wp_slash( $case['posted'] ),
+			);
+			VK_Custom_Field_Builder::save_cf_value( $fields );
+
+			$this->assertSame( $case['expected'], get_post_meta( $post_id, 'vkjp_logo', true ), $case['test_condition_name'] );
+		}
+
+		// 送信値と現在のユーザーを戻す。
+		// Restore the submitted values and the current user.
+		$_POST = array();
+		wp_set_current_user( 0 );
+	}
+
+	/**
 	 * A stored value is read without being restored, so no object is created.
 	 * 保存値は復元せずに取得されるため、オブジェクトは生成されない。
 	 */

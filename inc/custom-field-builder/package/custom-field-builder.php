@@ -424,14 +424,38 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				case 'url':
 					return esc_url_raw( $field_value );
 				case 'image':
-					if ( ! is_numeric( $field_value ) ) {
-						return '';
+					if ( is_numeric( $field_value ) ) {
+						$image_id = absint( $field_value );
+						return $image_id ? (string) $image_id : '';
 					}
-					$image_id = absint( $field_value );
-					return $image_id ? (string) $image_id : '';
+					return self::sanitize_image_url( $field_value );
 				default:
 					return sanitize_text_field( $field_value );
 			}
+		}
+
+		/**
+		 * 画像フィールドに送信された、添付 ID ではない値を URL として整える.
+		 *
+		 * 画面から画像を選ぶと添付 ID が保存されるが、REST API やインポートで画像の URL を保存している投稿もある.
+		 * その投稿を更新しても値が消えないよう、http / https の URL だけを残す.
+		 *
+		 * @param string $field_value 送信された値.
+		 * @return string 整えた URL. http / https の URL でなければ空文字.
+		 */
+		private static function sanitize_image_url( $field_value ) {
+			$image_url = trim( (string) $field_value );
+
+			// スキームが http / https で、ホスト名がある URL だけを受け付ける（javascript: や、ただの文字列は保存しない）.
+			$url_parts = wp_parse_url( $image_url );
+			if ( ! is_array( $url_parts ) || empty( $url_parts['host'] ) || empty( $url_parts['scheme'] ) ) {
+				return '';
+			}
+			if ( ! in_array( strtolower( $url_parts['scheme'] ), array( 'http', 'https' ), true ) ) {
+				return '';
+			}
+
+			return esc_url_raw( $image_url, array( 'http', 'https' ) );
 		}
 
 		private static function get_allowed_form_html() {
