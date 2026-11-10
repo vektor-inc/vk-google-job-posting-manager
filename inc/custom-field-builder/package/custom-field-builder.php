@@ -409,6 +409,13 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 			} // foreach ($custom_fields_all_array as $key => $value) {
 		}
 
+		/**
+		 * 送信された値を、項目の種類（type）に合わせて整える.
+		 *
+		 * @param string|array $field_value  送信された値（チェックボックスは配列）.
+		 * @param array        $field_config 項目の設定（type などを持つ配列）.
+		 * @return string|array 整えた値（配列で送信された場合は配列）.
+		 */
 		private static function sanitize_field_value( $field_value, $field_config ) {
 			if ( is_array( $field_value ) ) {
 				return array_map( 'sanitize_text_field', $field_value );
@@ -441,10 +448,15 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 		 * その投稿を更新しても値が消えないよう、http / https の URL だけを残す.
 		 *
 		 * @param string $field_value 送信された値.
-		 * @return string 整えた URL. http / https の URL でなければ空文字.
+		 * @return string 整えた URL. http / https の URL でない値と、制御文字を含む値は空文字.
 		 */
 		private static function sanitize_image_url( $field_value ) {
 			$image_url = trim( (string) $field_value );
+
+			// 制御文字を含む値は保存しない（esc_url_raw が取り除くため、検査した URL と保存される URL がずれる）.
+			if ( preg_match( '/[\x00-\x1F\x7F]/', $image_url ) ) {
+				return '';
+			}
 
 			// スキームが http / https で、ホスト名がある URL だけを受け付ける（javascript: や、ただの文字列は保存しない）.
 			$url_parts = wp_parse_url( $image_url );
@@ -455,7 +467,14 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				return '';
 			}
 
-			return esc_url_raw( $image_url, array( 'http', 'https' ) );
+			// 整えたあとの URL にもホスト名が残っていることを確かめる（esc_url_raw が取り除く文字だけのホスト名は保存しない）.
+			$sanitized_url   = esc_url_raw( $image_url, array( 'http', 'https' ) );
+			$sanitized_parts = wp_parse_url( $sanitized_url );
+			if ( ! is_array( $sanitized_parts ) || empty( $sanitized_parts['host'] ) ) {
+				return '';
+			}
+
+			return $sanitized_url;
 		}
 
 		private static function get_allowed_form_html() {

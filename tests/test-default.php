@@ -792,6 +792,30 @@ class DefaultTest extends WP_UnitTestCase {
 				'expected'            => 'https://example.com/logo.png',
 			),
 			array(
+				'test_condition_name' => '前後にタブや改行がある URL を送信 => タブと改行を除いて保存される',
+				'saved'               => '',
+				'posted'              => "\thttps://example.com/a.png\n",
+				'expected'            => 'https://example.com/a.png',
+			),
+			array(
+				'test_condition_name' => 'ホスト名が制御文字（0x7F）だけの URL を送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => "https://\x7f/logo.png",
+				'expected'            => '',
+			),
+			array(
+				'test_condition_name' => 'ホスト名の途中にタブを含む URL を送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => "https://exa\tmple.com/logo.png",
+				'expected'            => '',
+			),
+			array(
+				'test_condition_name' => 'ホスト名が整えると消える記号だけの URL を送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => 'https://<>/logo.png',
+				'expected'            => '',
+			),
+			array(
 				'test_condition_name' => '添付 ID が保存済みの投稿を、同じ ID のまま更新 => ID が残る',
 				'saved'               => '4',
 				'posted'              => '4',
