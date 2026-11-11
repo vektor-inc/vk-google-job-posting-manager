@@ -4,7 +4,7 @@ Donate link:
 Tags: Google Job Posting, Recruitment, Gutenberg.
 Requires at least: 6.7
 Tested up to: 7.1
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -46,6 +46,8 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
+= 1.4.3 =
+[ Spec Change ] Updated the currency list to the latest ISO 4217 data. Obsolete currencies (ANG, BGN, CUC, HRK, LVL, SLL) were removed and new currencies (VED, XCG) were added.
 = 1.4.2 =
 [ Spec Change ] On Japanese sites, the currency field now defaults to Japanese Yen instead of UAE Dirham when no currency has been set.
 [ Bug Fix ] Fixed an issue where the Job Posting sidebar panel in the block editor showed UAE Dirham as the currency even when no currency was set.
