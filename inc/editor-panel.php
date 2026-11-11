@@ -90,7 +90,6 @@ function vgjpm_register_panel_meta() {
 		'vkjp_applicantLocationRequirements_name',
 		'vkjp_name',
 		'vkjp_sameAs',
-		'vkjp_logo',
 		'vkjp_postalCode',
 		'vkjp_addressCountry',
 		'vkjp_addressRegion',
@@ -113,6 +112,16 @@ function vgjpm_register_panel_meta() {
 		'vkjp_directApply',
 	);
 
+	// 会社ロゴは、クラシックエディターの画像欄と同じ規則（添付 ID か http / https の URL）で整える。
+	// update_post_meta() の中でも走るため、sanitize_text_field だと URL の「%20」などが消える。
+	// 他のプラグインが、このメソッドの無い古いクラスを先に読み込んでいる場合は、従来の整え方にする。
+	// The logo uses the same rule as the image field of the classic editor (attachment ID or http / https URL).
+	// sanitize_text_field would remove "%20" and other percent-encoded characters from URLs, because the callback also runs inside update_post_meta().
+	// Another plugin may have loaded an older copy of the class without this method, so fall back to the previous callback in that case.
+	$logo_sanitize_callback = method_exists( 'VK_Custom_Field_Builder', 'sanitize_image_value' )
+		? array( 'VK_Custom_Field_Builder', 'sanitize_image_value' )
+		: 'sanitize_text_field';
+
 	foreach ( $post_types as $post_type ) {
 
 		// Strip job posting fields from the REST response for viewers who may not see the post.
@@ -133,6 +142,20 @@ function vgjpm_register_panel_meta() {
 				)
 			);
 		}
+
+		// 会社ロゴを、画像欄と同じ規則で登録する。
+		// Register the logo field with the same rule as the image field.
+		register_post_meta(
+			$post_type,
+			'vkjp_logo',
+			array(
+				'type'              => 'string',
+				'single'            => true,
+				'show_in_rest'      => true,
+				'sanitize_callback' => $logo_sanitize_callback,
+				'auth_callback'     => $auth_callback,
+			)
+		);
 
 		// Register description field with wp_kses_post sanitizer.
 		// description フィールドは HTML を許可するため wp_kses_post でサニタイズする。

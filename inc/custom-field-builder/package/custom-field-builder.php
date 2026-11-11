@@ -431,14 +431,34 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				case 'url':
 					return esc_url_raw( $field_value );
 				case 'image':
-					if ( is_numeric( $field_value ) ) {
-						$image_id = absint( $field_value );
-						return $image_id ? (string) $image_id : '';
-					}
-					return self::sanitize_image_url( $field_value );
+					return self::sanitize_image_value( $field_value );
 				default:
 					return sanitize_text_field( $field_value );
 			}
+		}
+
+		/**
+		 * 画像フィールドの値を整える.
+		 *
+		 * 数値は添付 ID として、http / https の URL は esc_url_raw で整えて残し、それ以外は空文字にする.
+		 * 投稿メタの登録（register_post_meta）の sanitize_callback からも呼ばれ、保存時に重ねて通るため、整えた値をもう一度通しても変わらないこと.
+		 *
+		 * @param mixed $value 整える値.
+		 * @return string 添付 ID（正の整数の文字列）か URL. どちらでもなければ空文字.
+		 */
+		public static function sanitize_image_value( $value ) {
+			// 配列などの文字列にできない値は保存しない.
+			if ( ! is_scalar( $value ) ) {
+				return '';
+			}
+
+			// 数値は添付 ID として保存する（0 は空）.
+			if ( is_numeric( $value ) ) {
+				$image_id = absint( $value );
+				return $image_id ? (string) $image_id : '';
+			}
+
+			return self::sanitize_image_url( $value );
 		}
 
 		/**

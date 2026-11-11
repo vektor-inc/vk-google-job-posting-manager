@@ -50,7 +50,7 @@ You can overwrite common fields value by fill out each post's custom fields.
 [ Spec Change ] On Japanese sites, the currency field now defaults to Japanese Yen instead of UAE Dirham when no currency has been set.
 [ Bug Fix ] Fixed an issue where the Job Posting sidebar panel in the block editor showed UAE Dirham as the currency even when no currency was set.
 [ Bug Fix ] Fixed an issue where backslashes in custom field values were removed when saving from the classic editor.
-[ Bug Fix ] Fixed an issue where image fields in the job posting fields could save values other than an attachment ID or an image URL.
+[ Bug Fix ] Fixed an issue where image fields in the job posting fields could save values other than an attachment ID or an image URL, and where characters such as "%20" were removed from image URLs.
 [ Bug Fix ] Fixed a PHP 8.1 warning shown when saving custom fields that were not submitted.
 [ Security Fix ] Added a permission check when saving job posting fields from the editor.
 = 1.4.1 =

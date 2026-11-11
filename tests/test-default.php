@@ -51,6 +51,81 @@ class VGJPM_Injection_Probe {
 class DefaultTest extends WP_UnitTestCase {
 
 	/**
+	 * Post meta keys that a test registered for posts, to be unregistered in tear_down().
+	 * テストが投稿（post）に新しく登録し、tear_down() で外すメタキー。
+	 *
+	 * @var array
+	 */
+	private $registered_post_meta_keys = array();
+
+	/**
+	 * Previous value of the option that enables the job posting fields for posts, or false if it did not exist.
+	 * 投稿（post）で求人情報の入力を有効にするオプションの元の値。無かったときは false。
+	 *
+	 * @var string|false|null
+	 */
+	private $post_fields_option_backup = null;
+
+	/**
+	 * Undo what register_panel_meta_for_posts() changed, even when a test fails.
+	 * テストが失敗しても、register_panel_meta_for_posts() で変えたものを元に戻す。
+	 *
+	 * Registered meta is not restored by WP_UnitTestCase, so it is unregistered here.
+	 * 登録したメタは WP_UnitTestCase が自動で戻さないため、ここで外す。
+	 *
+	 * @return void
+	 */
+	public function tear_down() {
+		// このテストで新しく登録したメタだけを外す。
+		// Unregister only the meta that this test newly registered.
+		foreach ( $this->registered_post_meta_keys as $meta_key ) {
+			unregister_post_meta( 'post', $meta_key );
+		}
+		$this->registered_post_meta_keys = array();
+
+		// オプションを元の値に戻す。
+		// Restore the option.
+		if ( null !== $this->post_fields_option_backup ) {
+			if ( false === $this->post_fields_option_backup ) {
+				delete_option( 'vgjpm_post_type_display_customfieldspost' );
+			} else {
+				update_option( 'vgjpm_post_type_display_customfieldspost', $this->post_fields_option_backup );
+			}
+			$this->post_fields_option_backup = null;
+		}
+
+		parent::tear_down();
+	}
+
+	/**
+	 * Enable the job posting fields for posts and register their post meta, as on real sites.
+	 * 実際のサイトと同じく、投稿（post）で求人情報の入力を有効にして投稿メタを登録する。
+	 *
+	 * What is changed here is undone in tear_down().
+	 * ここで変えたものは tear_down() で元に戻す。
+	 *
+	 * @return void
+	 */
+	private function register_panel_meta_for_posts() {
+		global $wp_meta_keys;
+
+		// 登録前のメタキーとオプションを控える。
+		// Keep the meta keys and the option before registering.
+		$before = isset( $wp_meta_keys['post']['post'] ) ? array_keys( $wp_meta_keys['post']['post'] ) : array();
+		if ( null === $this->post_fields_option_backup ) {
+			$this->post_fields_option_backup = get_option( 'vgjpm_post_type_display_customfieldspost' );
+		}
+
+		update_option( 'vgjpm_post_type_display_customfieldspost', 'true' );
+		vgjpm_register_panel_meta();
+
+		// 新しく登録されたメタキーを、tear_down() で外す対象にする。
+		// Mark the newly registered meta keys to be unregistered in tear_down().
+		$after                           = isset( $wp_meta_keys['post']['post'] ) ? array_keys( $wp_meta_keys['post']['post'] ) : array();
+		$this->registered_post_meta_keys = array_unique( array_merge( $this->registered_post_meta_keys, array_diff( $after, $before ) ) );
+	}
+
+	/**
 	 * Test to get array of label correspond to data.
 	 */
 	function test_01() {
@@ -786,6 +861,24 @@ class DefaultTest extends WP_UnitTestCase {
 				'expected'            => 'http://example.com/logo.png',
 			),
 			array(
+				'test_condition_name' => '%20 とクエリとフラグメントを含む URL を送信 => そのまま保存される',
+				'saved'               => '',
+				'posted'              => 'https://example.com/a%20b.png?x=1#y',
+				'expected'            => 'https://example.com/a%20b.png?x=1#y',
+			),
+			array(
+				'test_condition_name' => '半角スペースを含む URL を送信 => スペースを %20 にして保存される',
+				'saved'               => '',
+				'posted'              => 'https://example.com/a b.png',
+				'expected'            => 'https://example.com/a%20b.png',
+			),
+			array(
+				'test_condition_name' => '日本語のファイル名を % で表した URL を送信 => そのまま保存される',
+				'saved'               => '',
+				'posted'              => 'https://example.com/%E3%83%AD%E3%82%B4.png',
+				'expected'            => 'https://example.com/%E3%83%AD%E3%82%B4.png',
+			),
+			array(
 				'test_condition_name' => '前後に空白がある URL を送信 => 空白を除いて保存される',
 				'saved'               => '',
 				'posted'              => ' https://example.com/logo.png ',
@@ -871,27 +964,37 @@ class DefaultTest extends WP_UnitTestCase {
 			),
 		);
 
-		foreach ( $test_cases as $case ) {
-			// 保存済みの値を入れた投稿を用意する。
-			// Prepare a post that already has the saved value.
-			$post_id = self::factory()->post->create( array( 'post_author' => $admin_id ) );
-			if ( '' !== $case['saved'] ) {
-				update_post_meta( $post_id, 'vkjp_logo', $case['saved'] );
+		// 同じケースを、投稿メタが未登録の状態と、投稿タイプを有効にしてメタを登録した状態（実際のサイトと同じ）の両方で確かめる。
+		// 登録したメタの整形は update_post_meta() の中でも走るため、結果が変わらないことを確かめる。
+		// Check the same cases without the registered meta and with it, as on real sites where the post type is enabled.
+		// The registered sanitize callback also runs inside update_post_meta(), so the result must not change.
+		foreach ( array( '投稿メタ未登録', '投稿メタ登録済み' ) as $state ) {
+			if ( '投稿メタ登録済み' === $state ) {
+				$this->register_panel_meta_for_posts();
 			}
 
-			global $post;
-			$post = get_post( $post_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			foreach ( $test_cases as $case ) {
+				// 保存済みの値を入れた投稿を用意する。
+				// Prepare a post that already has the saved value.
+				$post_id = self::factory()->post->create( array( 'post_author' => $admin_id ) );
+				if ( '' !== $case['saved'] ) {
+					update_post_meta( $post_id, 'vkjp_logo', $case['saved'] );
+				}
 
-			// クラシックエディターの「更新」と同じく、nonce 付きで値を送信して保存する。
-			// Submit the value with the nonce, as the classic editor does when the post is updated.
-			wp_set_current_user( $admin_id );
-			$_POST = array(
-				'noncename__fields' => wp_create_nonce( 'vk_custom_field_builder' ),
-				'vkjp_logo'         => wp_slash( $case['posted'] ),
-			);
-			VK_Custom_Field_Builder::save_cf_value( $fields );
+				global $post;
+				$post = get_post( $post_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
-			$this->assertSame( $case['expected'], get_post_meta( $post_id, 'vkjp_logo', true ), $case['test_condition_name'] );
+				// クラシックエディターの「更新」と同じく、nonce 付きで値を送信して保存する。
+				// Submit the value with the nonce, as the classic editor does when the post is updated.
+				wp_set_current_user( $admin_id );
+				$_POST = array(
+					'noncename__fields' => wp_create_nonce( 'vk_custom_field_builder' ),
+					'vkjp_logo'         => wp_slash( $case['posted'] ),
+				);
+				VK_Custom_Field_Builder::save_cf_value( $fields );
+
+				$this->assertSame( $case['expected'], get_post_meta( $post_id, 'vkjp_logo', true ), $state . ' / ' . $case['test_condition_name'] );
+			}
 		}
 
 		// 送信値と現在のユーザーを戻す。
