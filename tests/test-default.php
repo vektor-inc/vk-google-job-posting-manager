@@ -51,6 +51,81 @@ class VGJPM_Injection_Probe {
 class DefaultTest extends WP_UnitTestCase {
 
 	/**
+	 * Post meta keys that a test registered for posts, to be unregistered in tear_down().
+	 * テストが投稿（post）に新しく登録し、tear_down() で外すメタキー。
+	 *
+	 * @var array
+	 */
+	private $registered_post_meta_keys = array();
+
+	/**
+	 * Previous value of the option that enables the job posting fields for posts, or false if it did not exist.
+	 * 投稿（post）で求人情報の入力を有効にするオプションの元の値。無かったときは false。
+	 *
+	 * @var string|false|null
+	 */
+	private $post_fields_option_backup = null;
+
+	/**
+	 * Undo what register_panel_meta_for_posts() changed, even when a test fails.
+	 * テストが失敗しても、register_panel_meta_for_posts() で変えたものを元に戻す。
+	 *
+	 * Registered meta is not restored by WP_UnitTestCase, so it is unregistered here.
+	 * 登録したメタは WP_UnitTestCase が自動で戻さないため、ここで外す。
+	 *
+	 * @return void
+	 */
+	public function tear_down() {
+		// このテストで新しく登録したメタだけを外す。
+		// Unregister only the meta that this test newly registered.
+		foreach ( $this->registered_post_meta_keys as $meta_key ) {
+			unregister_post_meta( 'post', $meta_key );
+		}
+		$this->registered_post_meta_keys = array();
+
+		// オプションを元の値に戻す。
+		// Restore the option.
+		if ( null !== $this->post_fields_option_backup ) {
+			if ( false === $this->post_fields_option_backup ) {
+				delete_option( 'vgjpm_post_type_display_customfieldspost' );
+			} else {
+				update_option( 'vgjpm_post_type_display_customfieldspost', $this->post_fields_option_backup );
+			}
+			$this->post_fields_option_backup = null;
+		}
+
+		parent::tear_down();
+	}
+
+	/**
+	 * Enable the job posting fields for posts and register their post meta, as on real sites.
+	 * 実際のサイトと同じく、投稿（post）で求人情報の入力を有効にして投稿メタを登録する。
+	 *
+	 * What is changed here is undone in tear_down().
+	 * ここで変えたものは tear_down() で元に戻す。
+	 *
+	 * @return void
+	 */
+	private function register_panel_meta_for_posts() {
+		global $wp_meta_keys;
+
+		// 登録前のメタキーとオプションを控える。
+		// Keep the meta keys and the option before registering.
+		$before = isset( $wp_meta_keys['post']['post'] ) ? array_keys( $wp_meta_keys['post']['post'] ) : array();
+		if ( null === $this->post_fields_option_backup ) {
+			$this->post_fields_option_backup = get_option( 'vgjpm_post_type_display_customfieldspost' );
+		}
+
+		update_option( 'vgjpm_post_type_display_customfieldspost', 'true' );
+		vgjpm_register_panel_meta();
+
+		// 新しく登録されたメタキーを、tear_down() で外す対象にする。
+		// Mark the newly registered meta keys to be unregistered in tear_down().
+		$after                           = isset( $wp_meta_keys['post']['post'] ) ? array_keys( $wp_meta_keys['post']['post'] ) : array();
+		$this->registered_post_meta_keys = array_unique( array_merge( $this->registered_post_meta_keys, array_diff( $after, $before ) ) );
+	}
+
+	/**
 	 * Test to get array of label correspond to data.
 	 */
 	function test_01() {
@@ -755,6 +830,177 @@ class DefaultTest extends WP_UnitTestCase {
 
 		$this->assertFalse( VGJPM_Injection_Probe::$woken );
 		$this->assertIsString( $form_html );
+	}
+
+	/**
+	 * Test that save_cf_value() keeps an attachment ID or an http / https URL in the image field, and saves nothing else.
+	 * save_cf_value() が、画像フィールド（会社ロゴ）の添付 ID と http / https の URL は保存し、それ以外は保存しないこと。
+	 *
+	 * @return void
+	 */
+	public function test_save_cf_value() {
+		$admin_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		$old_url  = 'https://example.com/old-logo.png';
+
+		// 会社ロゴの項目だけを、プラグインの設定のまま保存対象にする。
+		// Save only the logo field, using the plugin's own field settings.
+		$all_fields = VGJPM_Custom_Field_Job_Post::custom_fields_array();
+		$fields     = array( 'vkjp_logo' => $all_fields['vkjp_logo'] );
+
+		$test_cases = array(
+			array(
+				'test_condition_name' => 'URL が保存済みの投稿を、同じ URL のまま更新 => URL が残る',
+				'saved'               => 'https://example.com/logo.png',
+				'posted'              => 'https://example.com/logo.png',
+				'expected'            => 'https://example.com/logo.png',
+			),
+			array(
+				'test_condition_name' => 'http の URL を送信 => そのまま保存される',
+				'saved'               => '',
+				'posted'              => 'http://example.com/logo.png',
+				'expected'            => 'http://example.com/logo.png',
+			),
+			array(
+				'test_condition_name' => '%20 とクエリとフラグメントを含む URL を送信 => そのまま保存される',
+				'saved'               => '',
+				'posted'              => 'https://example.com/a%20b.png?x=1#y',
+				'expected'            => 'https://example.com/a%20b.png?x=1#y',
+			),
+			array(
+				'test_condition_name' => '半角スペースを含む URL を送信 => スペースを %20 にして保存される',
+				'saved'               => '',
+				'posted'              => 'https://example.com/a b.png',
+				'expected'            => 'https://example.com/a%20b.png',
+			),
+			array(
+				'test_condition_name' => '日本語のファイル名を % で表した URL を送信 => そのまま保存される',
+				'saved'               => '',
+				'posted'              => 'https://example.com/%E3%83%AD%E3%82%B4.png',
+				'expected'            => 'https://example.com/%E3%83%AD%E3%82%B4.png',
+			),
+			array(
+				'test_condition_name' => '前後に空白がある URL を送信 => 空白を除いて保存される',
+				'saved'               => '',
+				'posted'              => ' https://example.com/logo.png ',
+				'expected'            => 'https://example.com/logo.png',
+			),
+			array(
+				'test_condition_name' => '前後にタブや改行がある URL を送信 => タブと改行を除いて保存される',
+				'saved'               => '',
+				'posted'              => "\thttps://example.com/a.png\n",
+				'expected'            => 'https://example.com/a.png',
+			),
+			array(
+				'test_condition_name' => 'ホスト名が制御文字（0x7F）だけの URL を送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => "https://\x7f/logo.png",
+				'expected'            => '',
+			),
+			array(
+				'test_condition_name' => 'ホスト名の途中にタブを含む URL を送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => "https://exa\tmple.com/logo.png",
+				'expected'            => '',
+			),
+			array(
+				'test_condition_name' => 'ホスト名が整えると消える記号だけの URL を送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => 'https://<>/logo.png',
+				'expected'            => '',
+			),
+			array(
+				'test_condition_name' => '添付 ID が保存済みの投稿を、同じ ID のまま更新 => ID が残る',
+				'saved'               => '4',
+				'posted'              => '4',
+				'expected'            => '4',
+			),
+			array(
+				'test_condition_name' => '添付 ID を送信 => ID が保存される',
+				'saved'               => $old_url,
+				'posted'              => '12',
+				'expected'            => '12',
+			),
+			array(
+				'test_condition_name' => '添付 ID に 0 を送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => '0',
+				'expected'            => '',
+			),
+			array(
+				'test_condition_name' => 'script タグを送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => '<script>alert(1)</script>',
+				'expected'            => '',
+			),
+			array(
+				'test_condition_name' => 'javascript: で始まる値を送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => 'javascript:alert(1)',
+				'expected'            => '',
+			),
+			array(
+				'test_condition_name' => 'http / https 以外のスキームの URL を送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => 'ftp://example.com/logo.png',
+				'expected'            => '',
+			),
+			array(
+				'test_condition_name' => 'スキームの無い URL を送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => '//example.com/logo.png',
+				'expected'            => '',
+			),
+			array(
+				'test_condition_name' => 'URL でも添付 ID でもない文字列を送信 => 保存されない（空になる）',
+				'saved'               => $old_url,
+				'posted'              => 'not-a-logo',
+				'expected'            => '',
+			),
+			array(
+				'test_condition_name' => '空で送信 => 空になる',
+				'saved'               => $old_url,
+				'posted'              => '',
+				'expected'            => '',
+			),
+		);
+
+		// 同じケースを、投稿メタが未登録の状態と、投稿タイプを有効にしてメタを登録した状態（実際のサイトと同じ）の両方で確かめる。
+		// 登録したメタの整形は update_post_meta() の中でも走るため、結果が変わらないことを確かめる。
+		// Check the same cases without the registered meta and with it, as on real sites where the post type is enabled.
+		// The registered sanitize callback also runs inside update_post_meta(), so the result must not change.
+		foreach ( array( '投稿メタ未登録', '投稿メタ登録済み' ) as $state ) {
+			if ( '投稿メタ登録済み' === $state ) {
+				$this->register_panel_meta_for_posts();
+			}
+
+			foreach ( $test_cases as $case ) {
+				// 保存済みの値を入れた投稿を用意する。
+				// Prepare a post that already has the saved value.
+				$post_id = self::factory()->post->create( array( 'post_author' => $admin_id ) );
+				if ( '' !== $case['saved'] ) {
+					update_post_meta( $post_id, 'vkjp_logo', $case['saved'] );
+				}
+
+				global $post;
+				$post = get_post( $post_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
+				// クラシックエディターの「更新」と同じく、nonce 付きで値を送信して保存する。
+				// Submit the value with the nonce, as the classic editor does when the post is updated.
+				wp_set_current_user( $admin_id );
+				$_POST = array(
+					'noncename__fields' => wp_create_nonce( 'vk_custom_field_builder' ),
+					'vkjp_logo'         => wp_slash( $case['posted'] ),
+				);
+				VK_Custom_Field_Builder::save_cf_value( $fields );
+
+				$this->assertSame( $case['expected'], get_post_meta( $post_id, 'vkjp_logo', true ), $state . ' / ' . $case['test_condition_name'] );
+			}
+		}
+
+		// 送信値と現在のユーザーを戻す。
+		// Restore the submitted values and the current user.
+		$_POST = array();
+		wp_set_current_user( 0 );
 	}
 
 	/**
