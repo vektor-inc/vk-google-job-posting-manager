@@ -11,11 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once __DIR__ . '/class-vk-custom-field-builder-sanitizer.php';
+
 if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 	class VK_Custom_Field_Builder {
 
-		public static $version = '0.2.5';
+		public static $version = '0.2.11';
 
 		// define( 'Bill_URL', get_template_directory_uri() );
 		public static function init() {
@@ -123,7 +125,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				$posted_value = wp_unslash( $_POST[ $post_field ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below.
 			}
 			if ( isset( $_POST['noncename__fields'] ) && null !== $posted_value ) {
-				$noncename__fields = sanitize_text_field( wp_unslash( $_POST['noncename__fields'] ) );
+				$noncename__fields = sanitize_key( wp_unslash( $_POST['noncename__fields'] ) );
 				if ( ! wp_verify_nonce( $noncename__fields, 'vk_custom_field_builder' ) ) {
 					return $value;
 				}
@@ -140,6 +142,110 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 		public static function form_required() {
 			$required = '<span class="required">' . __( 'Required', 'vk-google-job-posting-manager' ) . '</span>';
 			return $required;
+		}
+
+		/*
+		-------------------------------------------
+		保存値の取得と復元
+		-------------------------------------------
+		*/
+
+		/**
+		 * 投稿メタの値を、復元せず保存されているままの形で取得する
+		 *
+		 * get_post_meta() は単一キーを要求すると保存値を自前で復元するため、
+		 * シリアライズされたオブジェクトが保存されていた場合はそれを生成してしまう。
+		 * 生成してしまってから中身を検査しても手遅れなので、取得の時点で復元させない。
+		 * get_post_custom() は全メタをまとめて要求するので、どの値も保存されたまま返る。
+		 *
+		 * @param  int    $post_id  Post ID to read the value of.
+		 * @param  string $meta_key Meta key to read.
+		 * @return string Stored value, or an empty string when the key holds no string value.
+		 */
+		public static function get_raw_post_meta( $post_id, $meta_key ) {
+			$stored_all = get_post_custom( $post_id );
+
+			if ( ! isset( $stored_all[ $meta_key ][0] ) || ! is_string( $stored_all[ $meta_key ][0] ) ) {
+				return '';
+			}
+
+			return $stored_all[ $meta_key ][0];
+		}
+
+		/**
+		 * 保存されている値を復元する。その際 PHP オブジェクトの生成は許可しない
+		 *
+		 * このライブラリが保存する値は、素の文字列かシリアライズされた配列のみ。
+		 * シリアライズされたオブジェクトは復元せず破棄する。復元してしまうと、
+		 * 保存されていたデータが別クラスのマジックメソッドに渡されてしまうため。
+		 *
+		 * @param  mixed $value Stored value as it is saved in the database.
+		 * @return mixed Restored value, the value itself when it is not serialized, or an empty string when it cannot be restored safely.
+		 */
+		public static function maybe_unserialize_without_object( $value ) {
+			// シリアライズされた文字列でなければ復元するものはない
+			if ( ! is_string( $value ) || ! is_serialized( $value ) ) {
+				return $value;
+			}
+
+			// シリアライズされた false だけは復元結果が正しく false になるため、
+			// 後続の失敗判定より前に処理する
+			if ( 'b:0;' === $value ) {
+				return false;
+			}
+
+			// allowed_classes => false により、読み込み中に PHP がどのクラスも
+			// インスタンス化しないため、どのクラスのマジックメソッドにも到達できない。
+			// max_depth => 64 は復元そのものを 64 階層で打ち切る。復元し終えてから
+			// contains_object() で階層を見るだけでは、打ち切るまでの復元にスタックと
+			// メモリを使うため、復元の時点で止める（contains_object() の上限と同じ値）。
+			// 壊れたデータの警告は意図的に抑制している。値はデータベース由来であり、
+			// 壊れていた場合は直後で処理するため、画面表示のたびにエラーログを埋めてはならない
+			// phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- allowed_classes => false prevents PHP object injection, and a malformed value is handled below.
+			$restored = @unserialize(
+				$value,
+				array(
+					'allowed_classes' => false,
+					'max_depth'       => 64,
+				)
+			);
+
+			// 壊れたデータ、およびオブジェクトを含んだままのデータは、どちらも利用できない
+			if ( false === $restored || self::contains_object( $restored ) ) {
+				return '';
+			}
+
+			return $restored;
+		}
+
+		/**
+		 * 値がオブジェクトか、あるいは何階層目かにオブジェクトを含む配列かを判定する
+		 *
+		 * @param  mixed $value Value to inspect.
+		 * @param  int   $depth Current recursion depth.
+		 * @return bool True when an object is found, or when the value nests deeper than the limit.
+		 */
+		public static function contains_object( $value, $depth = 0 ) {
+			// 自分自身を指す配列を渡されると再帰が止まらずメモリを使い切るため、階層の上限で打ち切る。
+			// このライブラリが保存するのはチェックボックスの選択値の配列で、入れ子はごく浅い。
+			// 上限を超えた値は正常な保存値ではないので、オブジェクトを含む場合と同じく使わずに破棄する
+			if ( 64 < $depth ) {
+				return true;
+			}
+
+			if ( is_object( $value ) ) {
+				return true;
+			}
+
+			if ( is_array( $value ) ) {
+				foreach ( $value as $item ) {
+					if ( self::contains_object( $item, $depth + 1 ) ) {
+						return true;
+					}
+				}
+			}
+
+			return false;
 		}
 
 		/*
@@ -245,17 +351,14 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 
 				} elseif ( $value['type'] == 'checkbox' || $value['type'] == 'radio' ) {
 					// 保存値はそのままの形で取得し、シリアライズして保存されてたら戻す
-					// get_post_meta() は保存値を自前で復元するため、ここでは使わない
-					// Take the stored value as it is and restore it here, because
-					// get_post_meta() would restore it on its own.
-					$field_value = vgjpm_maybe_unserialize_without_object( vgjpm_get_raw_post_meta( $post->ID, $key ) );
+					// get_post_meta() は取得時に自前で復元してしまうため、ここでは使わない
+					$field_value = self::maybe_unserialize_without_object( self::get_raw_post_meta( $post->ID, $key ) );
 					if ( empty( $field_value ) ) {
 						$field_value = ( ! empty( $options[ $key ] ) ) ? $options[ $key ] : array();
 					}
 					$form_html .= '<ul>';
 
 					// チェックボックスは配列としてしか扱えないため、配列以外は空配列にする
-					// A checkbox can only be handled as an array, so anything else becomes an empty array.
 					if ( $value['type'] == 'checkbox' && ! is_array( $field_value ) ) {
 						$field_value = array();
 					}
@@ -285,7 +388,11 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 					$form_html .= '</ul>';
 
 				} elseif ( $value['type'] == 'image' ) {
-					if ( $post->$key ) {
+					// 保存値が URL（添付 ID ではない値）のときは、その URL をプレビューに使う.
+					$saved_image_url = is_scalar( $post->$key ) ? self::sanitize_image_url( $post->$key ) : '';
+					if ( $saved_image_url ) {
+						$thumb_image_url = $saved_image_url;
+					} elseif ( $post->$key ) {
 						$thumb_image = wp_get_attachment_image_src( $post->$key, 'medium', false );
 						if ( is_array( $thumb_image ) && ! empty( $thumb_image[0] ) ) {
 							$thumb_image_url = $thumb_image[0];
@@ -310,7 +417,8 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 						$post_value = $options[ $key ];
 					}
 					// ダミー & プレビュー画像
-					$form_html .= '<img src="' . esc_url( $thumb_image_url ) . '" id="thumb_' . esc_attr( $key ) . '" alt="" class="input_thumb" style="width:200px;height:auto;"> ';
+					// data-no-image は、プレビューの読み込み失敗時・画像削除時に js が差し替える「画像なし」の URL.
+					$form_html .= '<img src="' . esc_url( $thumb_image_url ) . '" id="thumb_' . esc_attr( $key ) . '" alt="" class="input_thumb" data-no-image="' . esc_url( $vgjpm_custom_field_builder_url . 'images/no_image.png' ) . '" style="width:200px;height:auto;"> ';
 
 					// 実際に送信する値
 					$form_html .= '<input type="hidden" name="' . esc_attr( $key ) . '" id="' . esc_attr( $key ) . '" value="' . esc_attr( $post_value ) . '" style="width:60%;" />';
@@ -361,24 +469,28 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 		入力された値の保存
 		-------------------------------------------
 		*/
+		/**
+		 * 入力されたカスタムフィールドの値を保存する.
+		 *
+		 * @param array $custom_fields_array カスタムフィールドの定義.
+		 * @return void
+		 */
 		public static function save_cf_value( $custom_fields_array ) {
 
 			global $post;
 
-			// 設定したnonce を取得（CSRF対策）
-			$noncename__fields = isset( $_POST['noncename__fields'] ) ? sanitize_text_field( wp_unslash( $_POST['noncename__fields'] ) ) : null;
+			if ( ! $post instanceof WP_Post ) {
+				return;
+			}
 
-			// nonce を確認し、値が書き換えられていれば、何もしない（CSRF対策）
-			if ( ! wp_verify_nonce( $noncename__fields, 'vk_custom_field_builder' ) ) {
+			// nonce の確認（CSRF 対策）。アクション名はフォーム側の wp_nonce_field() と同じ固定文字列にすること.
+			$nonce = isset( $_POST['noncename__fields'] ) ? sanitize_key( wp_unslash( $_POST['noncename__fields'] ) ) : '';
+			if ( ! wp_verify_nonce( $nonce, 'vk_custom_field_builder' ) ) {
 				return;
 			}
 
 			// 自動保存ルーチンかどうかチェック。そうだった場合は何もしない（記事の自動保存処理として呼び出された場合の対策）
 			if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-				return;
-			}
-
-			if ( ! $post instanceof WP_Post ) {
 				return;
 			}
 
@@ -410,38 +522,25 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 		}
 
 		/**
-		 * 送信された値を、項目の種類（type）に合わせて整える.
+		 * フィールド定義に従って値を整える.
 		 *
-		 * @param string|array $field_value  送信された値（チェックボックスは配列）.
-		 * @param array        $field_config 項目の設定（type などを持つ配列）.
-		 * @return string|array 整えた値（配列で送信された場合は配列）.
+		 * @param mixed $field_value 送信された値.
+		 * @param array $field_config フィールド定義.
+		 * @return mixed 整えた値.
 		 */
 		private static function sanitize_field_value( $field_value, $field_config ) {
-			if ( is_array( $field_value ) ) {
-				return array_map( 'sanitize_text_field', $field_value );
-			}
-
-			if ( ! isset( $field_config['type'] ) ) {
-				return sanitize_text_field( $field_value );
-			}
-
-			switch ( $field_config['type'] ) {
-				case 'textarea':
-					return wp_kses_post( $field_value );
-				case 'url':
-					return esc_url_raw( $field_value );
-				case 'image':
-					return self::sanitize_image_value( $field_value );
-				default:
-					return sanitize_text_field( $field_value );
-			}
+			return VK_Custom_Field_Builder_Sanitizer::sanitize_value(
+				$field_value,
+				$field_config,
+				array( __CLASS__, 'sanitize_image_value' )
+			);
 		}
 
 		/**
 		 * 画像フィールドの値を整える.
 		 *
 		 * 数値は添付 ID として、http / https の URL は esc_url_raw で整えて残し、それ以外は空文字にする.
-		 * 投稿メタの登録（register_post_meta）の sanitize_callback からも呼ばれ、保存時に重ねて通るため、整えた値をもう一度通しても変わらないこと.
+		 * 整えた値をもう一度通しても変わらないこと.
 		 *
 		 * @param mixed $value 整える値.
 		 * @return string 添付 ID（正の整数の文字列）か URL. どちらでもなければ空文字.
@@ -464,14 +563,18 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 		/**
 		 * 画像フィールドに送信された、添付 ID ではない値を URL として整える.
 		 *
-		 * 画面から画像を選ぶと添付 ID が保存されるが、REST API やインポートで画像の URL を保存している投稿もある.
-		 * その投稿を更新しても値が消えないよう、http / https の URL だけを残す.
+		 * REST API やインポートで画像の URL を保存している投稿を更新しても値が消えないよう、http / https の URL だけを残す.
 		 *
-		 * @param string $field_value 送信された値.
-		 * @return string 整えた URL. http / https の URL でない値と、制御文字を含む値は空文字.
+		 * @param mixed $value 送信された値.
+		 * @return string 整えた URL. http / https の URL でない値と、制御文字を含む値と、整形の前後どちらかで長さが上限（VK_Custom_Field_Builder_Sanitizer::VALUE_MAX_LENGTH バイト）を超える値は空文字.
 		 */
-		private static function sanitize_image_url( $field_value ) {
-			$image_url = trim( (string) $field_value );
+		public static function sanitize_image_url( $value ) {
+			// 現実的でない長さの値は保存しない（前後の空白を除く前の値で測る）.
+			if ( strlen( (string) $value ) > VK_Custom_Field_Builder_Sanitizer::VALUE_MAX_LENGTH ) {
+				return '';
+			}
+
+			$image_url = trim( (string) $value );
 
 			// 制御文字を含む値は保存しない（esc_url_raw が取り除くため、検査した URL と保存される URL がずれる）.
 			if ( preg_match( '/[\x00-\x1F\x7F]/', $image_url ) ) {
@@ -487,10 +590,15 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				return '';
 			}
 
-			// 整えたあとの URL にもホスト名が残っていることを確かめる（esc_url_raw が取り除く文字だけのホスト名は保存しない）.
+			// 整えたあとの URL にもホスト名が残っていることを確かめる.
 			$sanitized_url   = esc_url_raw( $image_url, array( 'http', 'https' ) );
 			$sanitized_parts = wp_parse_url( $sanitized_url );
 			if ( ! is_array( $sanitized_parts ) || empty( $sanitized_parts['host'] ) ) {
+				return '';
+			}
+
+			// 整形すると空白が %20 に変わり長くなることがあるため、整形後の値も上限以内か確かめる.
+			if ( strlen( $sanitized_url ) > VK_Custom_Field_Builder_Sanitizer::VALUE_MAX_LENGTH ) {
 				return '';
 			}
 
@@ -533,7 +641,7 @@ if ( ! class_exists( 'VK_Custom_Field_Builder' ) ) {
 				'select' => array( 'id' => true, 'name' => true, 'class' => true ),
 				'option' => array( 'value' => true, 'selected' => true ),
 				'button' => array( 'id' => true, 'class' => true, 'type' => true ),
-				'img'    => array( 'src' => true, 'id' => true, 'alt' => true, 'class' => true, 'style' => true ),
+				'img'    => array( 'src' => true, 'id' => true, 'alt' => true, 'class' => true, 'style' => true, 'data-no-image' => true ),
 				'a'      => array( 'href' => true, 'target' => true, 'class' => true, 'rel' => true, 'id' => true ),
 			);
 		}
