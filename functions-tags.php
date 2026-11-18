@@ -355,6 +355,34 @@ function vgjpm_get_initial_currency( $post_currency, $common_currency, $currency
 	return vgjpm_get_default_currency( $currency_options );
 }
 
+/**
+ * Return the description of the postal code field.
+ * 郵便番号欄の説明文を返す。
+ *
+ * Only when the display language is Japanese, the example number in the translated text is replaced with 4901211 (the postal code of Vektor's head office).
+ * 画面の表示言語が日本語のときだけ、訳文の中の例の番号を 4901211（ベクトル本店の郵便番号）に置き換える。
+ * The display language is determine_locale() (the user's profile language in the admin), which is also the language the text is translated into.
+ * 画面の表示言語は determine_locale()（管理画面ではユーザーのプロフィール言語）で、説明文の訳もこの言語で選ばれる。
+ *
+ * @return string Description of the postal code field. 郵便番号欄の説明文。
+ */
+function vgjpm_get_postal_code_description() {
+	// 原文（msgid）は変えないこと。変えると翻訳サイトで新しい訳が承認されるまで訳が付かず、日本語の画面でも英語の文が出る。
+	// Do not change the source text (msgid). A changed msgid has no translation until a new one is approved on translate.wordpress.org, so Japanese screens would show the English text meanwhile.
+	$description = __( 'Example : 94043. Do not include hyphens. ', 'vk-google-job-posting-manager' );
+
+	// 画面の表示言語を言語コード（ja_JP・ja-JP → ja）に直す。
+	// Convert the display language to a language code (ja_JP / ja-JP -> ja).
+	$language = strtolower( strtok( str_replace( '-', '_', determine_locale() ), '_' ) );
+	if ( 'ja' !== $language ) {
+		return $description;
+	}
+
+	// 訳文はそのまま使い、例の番号だけを置き換える。'94043' は上の原文の番号とそろえること。
+	// Replace only the example number and keep the translated sentence. '94043' must match the number in the source text above.
+	return str_replace( '94043', '4901211', $description );
+}
+
 
 function vgjpm_array_to_string( $custom_fields ) {
 	foreach ( $custom_fields as $key => $value ) {
