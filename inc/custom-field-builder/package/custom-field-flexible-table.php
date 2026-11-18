@@ -14,6 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once __DIR__ . '/class-vk-custom-field-builder-sanitizer.php';
+
 class VK_Custom_Field_Builder_Flexible_Table {
 
 	public static $version = '0.1.1';
@@ -146,21 +148,19 @@ class VK_Custom_Field_Builder_Flexible_Table {
 
 		global $post;
 
-		// 設定したnonce を取得（CSRF対策）
-		$nonce_name             = 'noncename__' . $custom_fields_array['field_name'];
-		$noncename__bill_fields = isset( $_POST[ $nonce_name ] ) ? sanitize_text_field( wp_unslash( $_POST[ $nonce_name ] ) ) : null;
+		if ( ! $post instanceof WP_Post ) {
+			return;
+		}
 
-		// nonce を確認し、値が書き換えられていれば、何もしない（CSRF対策）
-		if ( ! wp_verify_nonce( $noncename__bill_fields, 'vk_custom_field_flexible_table' ) ) {
+		// nonce の確認（CSRF 対策）。アクション名はフォーム側の wp_nonce_field() と同じ固定文字列にすること.
+		$nonce_name = 'noncename__' . $custom_fields_array['field_name'];
+		$nonce      = isset( $_POST[ $nonce_name ] ) ? sanitize_key( wp_unslash( $_POST[ $nonce_name ] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, 'vk_custom_field_flexible_table' ) ) {
 			return;
 		}
 
 		// 自動保存ルーチンかどうかチェック。そうだった場合は何もしない（記事の自動保存処理として呼び出された場合の対策）
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			return;
-		}
-
-		if ( ! $post instanceof WP_Post ) {
 			return;
 		}
 
@@ -175,7 +175,19 @@ class VK_Custom_Field_Builder_Flexible_Table {
 		if ( isset( $_POST[ $field ] ) ) {
 			$field_value = wp_unslash( $_POST[ $field ] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized below.
 		}
-		$field_value = self::sanitize_field_value( $field_value, $custom_fields_array['items'] );
+		if ( is_array( $field_value ) ) {
+			foreach ( $field_value as $row_key => $row_value ) {
+				$field_value[ $row_key ] = VK_Custom_Field_Builder_Sanitizer::sanitize_value(
+					$row_value,
+					$custom_fields_array['items']
+				);
+			}
+		} else {
+			$field_value = VK_Custom_Field_Builder_Sanitizer::sanitize_value(
+				$field_value,
+				$custom_fields_array['items']
+			);
+		}
 
 		// 配列の空の行を削除する
 		if ( is_array( $field_value ) ) {
@@ -222,32 +234,6 @@ class VK_Custom_Field_Builder_Flexible_Table {
 			'select' => array( 'id' => true, 'name' => true, 'class' => true ),
 			'option' => array( 'value' => true, 'selected' => true ),
 		);
-	}
-
-	private static function sanitize_field_value( $value, $field_config = null ) {
-		if ( is_array( $value ) ) {
-			foreach ( $value as $key => $item ) {
-				$item_config   = null;
-				if ( is_array( $field_config ) && isset( $field_config[ $key ] ) ) {
-					$item_config = $field_config[ $key ];
-				} else {
-					$item_config = $field_config;
-				}
-				$value[ $key ] = self::sanitize_field_value( $item, $item_config );
-			}
-			return $value;
-		}
-
-		if ( is_array( $field_config ) && isset( $field_config['type'] ) ) {
-			switch ( $field_config['type'] ) {
-				case 'textarea':
-					return wp_kses_post( $value );
-				case 'url':
-					return esc_url_raw( $value );
-			}
-		}
-
-		return sanitize_text_field( $value );
 	}
 
 	/*
@@ -322,7 +308,8 @@ class VK_Custom_Field_Builder_Flexible_Table {
 			} // if ( $exist_value || $custom_fields_array['row_empty_display'] ) {
 
 		}
-		return $table_body_html;
+		// 出力する HTML を整える.
+		return wp_kses_post( $table_body_html );
 	}
 
 }

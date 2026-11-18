@@ -46,6 +46,9 @@ You can overwrite common fields value by fill out each post's custom fields.
 
 == Changelog ==
 
+[ Spec Change ] Values longer than 2048 bytes (about 680 Japanese characters) in the job posting fields are no longer saved as they are: a Hiring Organization Logo URL is left empty, and other fields except Description are shortened to 2048 bytes when saved in the classic editor.
+[ Bug Fix ] Fixed an issue in the classic editor where the Hiring Organization Logo preview showed "no image" when the logo was saved as an image URL.
+[ Design Bug Fix ] Fixed an issue in the classic editor where the Hiring Organization Logo preview disappeared and the buttons shifted when the image could not be loaded or after clicking "Delete Image".
 = 1.4.3 =
 [ Spec Change ] Updated the currency list to the latest ISO 4217 data. Obsolete currencies (ANG, BGN, CUC, HRK, LVL, SLL) were removed and new currencies (VED, XCG) were added.
 = 1.4.2 =
