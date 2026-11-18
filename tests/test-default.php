@@ -1592,6 +1592,110 @@ class DefaultTest extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Provide display language x translation cases for the postal code description.
+	 * 郵便番号欄の説明文について、画面の表示言語 × 訳の有無の組み合わせ表を返す。
+	 *
+	 * The display language is the site language on the front end, and the user's profile language in the admin.
+	 * 画面の表示言語は、公開側ではサイトの言語、管理画面ではユーザーのプロフィール言語。
+	 *
+	 * @return array Site language, admin display language (null for the front end), translated text (null for no translation), expected description.
+	 *               サイトの言語・管理画面の表示言語（null は公開側）・訳文（null は訳なし）・期待する説明文。
+	 */
+	public function provide_postal_code_description_cases() {
+		$original      = 'Example : 94043. Do not include hyphens. ';
+		$ja_translated = '例: 94043。ハイフンは含めないでください。';
+
+		$cases = array();
+
+		// 公開側: 日本語（言語コードの書き方 3 通り）のときだけ、例の番号が 4901211 になる。
+		// Front end: only Japanese (three ways of writing the locale) changes the example number to 4901211.
+		foreach ( array( 'ja', 'ja_JP', 'ja-JP' ) as $locale ) {
+			$cases[ "$locale / 訳なし => 例の番号だけ 4901211" ]                = array( $locale, null, null, 'Example : 4901211. Do not include hyphens. ' );
+			$cases[ "$locale / ja 訳あり => 訳文の 94043 が 4901211 に置き換わる" ] = array( $locale, null, $ja_translated, '例: 4901211。ハイフンは含めないでください。' );
+		}
+
+		// 公開側: 日本語以外は、訳文に 94043 があっても変わらない。
+		// Front end: other languages are not changed, even if the translated text contains 94043.
+		foreach ( array( 'en_US', 'fr_FR' ) as $locale ) {
+			$cases[ "$locale / 訳なし => 変わらない" ]    = array( $locale, null, null, $original );
+			$cases[ "$locale / ja 訳あり => 変わらない" ] = array( $locale, null, $ja_translated, $ja_translated );
+		}
+
+		// 境界: 訳文に 94043 が無い（翻訳者が別の例にした）ときは、訳文のまま。
+		// Boundary: when the translated text has no 94043, it is returned as it is.
+		$cases['ja / 訳文に 94043 が無い => 訳文のまま'] = array( 'ja', null, '例: 1000001。ハイフンは含めないでください。', '例: 1000001。ハイフンは含めないでください。' );
+
+		// 管理画面: サイトの言語ではなく、ユーザーのプロフィール言語（表示言語）で判定する。
+		// Admin: judged by the user's profile language (display language), not by the site language.
+		$cases['管理画面 / サイト ja・表示 en_US / 訳なし => 変わらない']      = array( 'ja', 'en_US', null, $original );
+		$cases['管理画面 / サイト en_US・表示 ja / ja 訳あり => 4901211'] = array( 'en_US', 'ja', $ja_translated, '例: 4901211。ハイフンは含めないでください。' );
+
+		return $cases;
+	}
+
+	/**
+	 * Test vgjpm_get_postal_code_description() changes the example number to 4901211 only when the display language is Japanese.
+	 * 画面の表示言語が日本語のときだけ、郵便番号欄の説明文の例が 4901211 になり、他の言語は変わらないこと。
+	 *
+	 * The description given to the common settings page and the classic editor (custom_fields_array()) is also checked.
+	 * 共通設定ページとクラシックエディターに渡す説明文（custom_fields_array()）も確かめる。
+	 *
+	 * @dataProvider provide_postal_code_description_cases
+	 *
+	 * @param string      $site_locale サイトの言語。Site language.
+	 * @param string|null $user_locale 管理画面の表示言語（null は公開側）。Display language in the admin, or null for the front end.
+	 * @param string|null $translation gettext が返す訳文（null は訳なし）。Translated text returned by gettext, or null for no translation.
+	 * @param string      $expected    期待する説明文。Expected description.
+	 */
+	public function test_vgjpm_get_postal_code_description( $site_locale, $user_locale, $translation, $expected ) {
+		// サイトの言語を設定する。
+		// Set the site language.
+		$this->set_site_locale( $site_locale );
+
+		// 管理画面のケースは、プロフィール言語を設定したユーザーで管理画面を開いた状態にする。
+		// 画面とユーザーは WP_UnitTestCase の tear_down() が戻す。
+		// For admin cases, open an admin screen as a user with the profile language.
+		// The screen and the user are reset by tear_down() of WP_UnitTestCase.
+		if ( null !== $user_locale ) {
+			$user_id = $this->factory->user->create(
+				array(
+					'role'   => 'administrator',
+					'locale' => $user_locale,
+				)
+			);
+			wp_set_current_user( $user_id );
+			set_current_screen( 'settings_page_vgjpm_settings' );
+		}
+
+		// 訳ありのケースは、翻訳ファイルの代わりに gettext フィルターで訳文を返す。
+		// For cases with a translation, return the translated text with the gettext filter instead of a translation file.
+		if ( null !== $translation ) {
+			add_filter(
+				'gettext_vk-google-job-posting-manager',
+				/**
+				 * 郵便番号欄の原文だけ、このケースの訳文に差し替える。
+				 * Replace only the source text of the postal code field with the translated text of this case.
+				 *
+				 * @param string $translated 現在の訳文。Current translated text.
+				 * @param string $text       原文。Source text.
+				 * @return string 訳文。Translated text.
+				 */
+				function ( $translated, $text ) use ( $translation ) {
+					return 'Example : 94043. Do not include hyphens. ' === $text ? $translation : $translated;
+				},
+				10,
+				2
+			);
+		}
+
+		// 画面に渡す説明文と、関数の戻り値の両方を確かめる。
+		// Check both the description given to the screens and the return value.
+		$fields = VGJPM_Custom_Field_Job_Post::custom_fields_array();
+		$this->assertSame( $expected, $fields['vkjp_postalCode']['description'] );
+		$this->assertSame( $expected, vgjpm_get_postal_code_description() );
+	}
+
+	/**
 	 * Run vgjpm_enqueue_editor_panel() on the block editor screen for posts and return the data passed to JavaScript.
 	 * 投稿のブロックエディター画面で vgjpm_enqueue_editor_panel() を実行し、JavaScript に渡すデータを返す。
 	 *

@@ -187,7 +187,7 @@ class VGJPM_Custom_Field_Job_Post extends VK_Custom_Field_Builder {
 			'vkjp_postalCode'                         => array(
 				'label'       => __( 'Postal Code of work Location', 'vk-google-job-posting-manager' ),
 				'type'        => 'text',
-				'description' => __( 'Example : 94043. Do not include hyphens. ', 'vk-google-job-posting-manager' ),
+				'description' => vgjpm_get_postal_code_description(),
 				'required'    => false,
 			),
 			'vkjp_addressCountry'                     => array(
