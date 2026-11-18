@@ -1610,25 +1610,25 @@ class DefaultTest extends WP_UnitTestCase {
 		// 公開側: 日本語（言語コードの書き方 3 通り）のときだけ、例の番号が 4901211 になる。
 		// Front end: only Japanese (three ways of writing the locale) changes the example number to 4901211.
 		foreach ( array( 'ja', 'ja_JP', 'ja-JP' ) as $locale ) {
-			$cases[ "$locale / 訳なし => 例の番号だけ 4901211" ]                = array( $locale, null, null, 'Example : 4901211. Do not include hyphens. ' );
-			$cases[ "$locale / ja 訳あり => 訳文の 94043 が 4901211 に置き換わる" ] = array( $locale, null, $ja_translated, '例: 4901211。ハイフンは含めないでください。' );
+			$cases[ "$locale / no translation => only the example number becomes 4901211" ]  = array( $locale, null, null, 'Example : 4901211. Do not include hyphens. ' );
+			$cases[ "$locale / ja translation => 94043 in the translation becomes 4901211" ] = array( $locale, null, $ja_translated, '例: 4901211。ハイフンは含めないでください。' );
 		}
 
 		// 公開側: 日本語以外は、訳文に 94043 があっても変わらない。
 		// Front end: other languages are not changed, even if the translated text contains 94043.
 		foreach ( array( 'en_US', 'fr_FR' ) as $locale ) {
-			$cases[ "$locale / 訳なし => 変わらない" ]    = array( $locale, null, null, $original );
-			$cases[ "$locale / ja 訳あり => 変わらない" ] = array( $locale, null, $ja_translated, $ja_translated );
+			$cases[ "$locale / no translation => unchanged" ] = array( $locale, null, null, $original );
+			$cases[ "$locale / ja translation => unchanged" ] = array( $locale, null, $ja_translated, $ja_translated );
 		}
 
 		// 境界: 訳文に 94043 が無い（翻訳者が別の例にした）ときは、訳文のまま。
 		// Boundary: when the translated text has no 94043, it is returned as it is.
-		$cases['ja / 訳文に 94043 が無い => 訳文のまま'] = array( 'ja', null, '例: 1000001。ハイフンは含めないでください。', '例: 1000001。ハイフンは含めないでください。' );
+		$cases['ja / translation without 94043 => translation unchanged'] = array( 'ja', null, '例: 1000001。ハイフンは含めないでください。', '例: 1000001。ハイフンは含めないでください。' );
 
 		// 管理画面: サイトの言語ではなく、ユーザーのプロフィール言語（表示言語）で判定する。
 		// Admin: judged by the user's profile language (display language), not by the site language.
-		$cases['管理画面 / サイト ja・表示 en_US / 訳なし => 変わらない']      = array( 'ja', 'en_US', null, $original );
-		$cases['管理画面 / サイト en_US・表示 ja / ja 訳あり => 4901211'] = array( 'en_US', 'ja', $ja_translated, '例: 4901211。ハイフンは含めないでください。' );
+		$cases['admin / site ja, display en_US / no translation => unchanged'] = array( 'ja', 'en_US', null, $original );
+		$cases['admin / site en_US, display ja / ja translation => 4901211']   = array( 'en_US', 'ja', $ja_translated, '例: 4901211。ハイフンは含めないでください。' );
 
 		return $cases;
 	}
