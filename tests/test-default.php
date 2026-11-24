@@ -1751,7 +1751,13 @@ class DefaultTest extends WP_UnitTestCase {
 		if ( ! preg_match( '/<select[^>]*' . preg_quote( $select_attr, '/' ) . '[^>]*>(.*?)<\/select>/s', $html, $m ) ) {
 			return $selected;
 		}
-		preg_match_all( '/<option value="([^"]*)"[^>]*selected/', $m[1], $opts );
-		return $opts[1];
+		// WordPress 7.2 から wp_kses() は属性をアルファベット順に出力するため、selected が value より前に来ても拾えるよう、option タグごとに属性を個別に調べる.
+		preg_match_all( '/<option\b[^>]*>/', $m[1], $tags );
+		foreach ( $tags[0] as $tag ) {
+			if ( preg_match( '/\sselected\b/', $tag ) && preg_match( '/\svalue="([^"]*)"/', $tag, $value ) ) {
+				$selected[] = $value[1];
+			}
+		}
+		return $selected;
 	}
 }
